@@ -7,14 +7,15 @@ CFLAGS = -Wall -Wextra -Werror -g
 RM = rm -rf
 
 LIBFT_DIR = libft
+LIBFT = libft/libft.a
 
 MLX_DIR = mlx/
 
 INCS = -Iincs -Ilibft -Imlx
-LINKER = -Lincs -Llibft -Lmlx
+LINKER = -Lincs -Llibft -Lmlx -lmlx -framework OpenGL -framework AppKit 
 
 SRCS_DIR = srcs/
-SRCS = main.c parsing.c
+SRCS = main.c parsing.c utils.c drawing.c free.c
 
 OBJS_DIR = objs/
 OBJS = $(addprefix $(OBJS_DIR), $(SRCS:.c=.o))
@@ -23,10 +24,10 @@ all: $(NAME)
 
 bonus: $(NAME)
 
-$(NAME): $(OBJS)
+$(NAME): $(OBJS) $(LIBFT)
 	make -C $(LIBFT_DIR)
 	make -C $(MLX_DIR)
-	@$(CC) $(CFLAGS) $(LINKER) $^ -o $@
+	$(CC) $(CFLAGS) $(LINKER) $^ -o $@
 	@echo "minirt is ready"
 
 $(OBJS_DIR)%.o: $(SRCS_DIR)%.c
@@ -35,12 +36,12 @@ $(OBJS_DIR)%.o: $(SRCS_DIR)%.c
 
 clean:
 	$(RM) $(OBJS_DIR)
-	@make clean -C $(LIBFT_DIR)
+	# @make clean -C $(LIBFT_DIR)
 
 fclean: clean
 	$(RM) $(NAME) *.dSYM
-	@make fclean -C $(LIBFT_DIR)
-	@make clean -C $(MLX_DIR)
+	# @make fclean -C $(LIBFT_DIR)
+	# @make clean -C $(MLX_DIR)
 
 re: fclean all
 
