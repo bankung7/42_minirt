@@ -27,20 +27,26 @@ int ft_parsing(t_mrt *mrt, char *file)
     {
         ft_checkline(line, mrt);
         free(line);
-        line = 0;
+        line = get_next_line(fd);
     }
+
+    printf("\n");
+    // test print
+    // ft_penv(mrt);
 
     return (0);
 }
 
 int ft_checkline(char *line, t_mrt *mrt)
 {
-    (void)mrt;
-    printf("line : %s\n", line);
     while (line)
     {
         if (ft_isalnum(*line) && (*line == 'A'))
             return (ft_getAmbt(line, mrt));
+        if (ft_isalnum(*line) && (*line == 'C'))
+            return (ft_getCam(line, mrt));
+        else
+            return (0);
         line++;
     }
     return (0);
@@ -54,21 +60,23 @@ int ft_checkline(char *line, t_mrt *mrt)
 // R,G,B colors in range [0-255]: 255, 255, 255
 int ft_getAmbt(char *line, t_mrt *mrt)
 {
-    (void)line;
-    (void)mrt;
-    printf("get ambient arg\n");
+    printf("Setting up : Ambient\n");
     char **attr = ft_split(line, ' ');
-    ft_parr(attr);
-    mrt->ambt.ratio = ft_atoi(attr[1]);
+    if (ft_arrlen(attr) != 3)
+    {
+        printf("Ambient argument failed\n");
+        return (1);
+    }
+    mrt->ambt.ratio = ft_atof(attr[1]);
     char **attr1 = ft_split(attr[2], ',');
-    mrt->ambt.color.r = ft_atoi(attr1[0]);
-    mrt->ambt.color.g = ft_atoi(attr1[1]);
-    mrt->ambt.color.b = ft_atoi(attr1[2]);
-    ft_free2(attr1);
+    if (ft_arrlen(attr1) == 3)
+    {
+        mrt->ambt.color.r = ft_atoi(attr1[0]);
+        mrt->ambt.color.g = ft_atoi(attr1[1]);
+        mrt->ambt.color.b = ft_atoi(attr1[2]);
+        ft_free2(attr1);
+    }
     ft_free2(attr);
-
-    printf("ratio: %f\n", mrt->ambt.ratio);
-    printf("color: %d %d %d\n", mrt->ambt.color.r, mrt->ambt.color.g, mrt->ambt.color.b);
     return (0);
 }
 
@@ -79,6 +87,37 @@ int ft_getAmbt(char *line, t_mrt *mrt)
 // x,y,z coordinates of the view point: -50.0,0,20
 // 3d normalized orientation vector. In range [-1,1] for each x,y,z axis: 0.0,0.0,1.0
 // FOV : Horizontal field of view in degrees in range [0,180]: 70
+
+int ft_getCam(char *line, t_mrt *mrt)
+{
+    (void)line;
+    (void)mrt;
+    printf("Setting up : Camera\n");
+    char **attr = ft_split(line, ' ');
+    if (ft_arrlen(attr) != 4)
+    {
+        printf("Camera argument failed\n");
+        return (1);
+    }
+    char **attr1 = ft_split(attr[1], ',');
+    if (ft_arrlen(attr1) == 3)
+    {
+        mrt->cam.crdt.x = ft_atof(attr1[0]);
+        mrt->cam.crdt.y = ft_atof(attr1[1]);
+        mrt->cam.crdt.z = ft_atof(attr1[2]);
+        ft_free2(attr1);
+    }
+    char **attr2 = ft_split(attr[2], ',');
+    if (ft_arrlen(attr2) == 3)
+    {
+        mrt->cam.rot.x = ft_atof(attr2[0]);
+        mrt->cam.rot.y = ft_atof(attr2[1]);
+        mrt->cam.rot.z = ft_atof(attr2[2]);
+        ft_free2(attr2);
+    }
+    ft_free2(attr);
+    return (0);
+}
 
 // Light:
 // L -40.0,50.0,0.0 0.6 10,0,255

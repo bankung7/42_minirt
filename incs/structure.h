@@ -1,13 +1,5 @@
 #include "minirt.h"
 
-#ifndef WIN_WIDTH
-# define WIN_WIDTH 800
-#endif
-
-#ifndef WIN_HEIGHT
-# define WIN_HEIGHT 600
-#endif
-
 typedef struct s_color
 {
     int r;
@@ -23,31 +15,43 @@ typedef struct s_ambt
 
 typedef struct s_cam
 {
-    t_vector crdt;
-    t_vector rot;
+    t_vec crdt;
+    t_vec rot;
     int fov;
+    double vpHgt;
+    double vpWdt;
+    double flen;
+    t_vec hoz;
+    t_vec vet;
+    t_vec llc;
 } t_cam;
 
 typedef struct s_lght
 {
-    t_vector crdt;
+    t_vec crdt;
     double brght;
     t_color color;
 } t_lght;
 
 typedef struct s_sphere
 {
-    t_vector crdt;
+    t_vec crdt;
     double dmt;
     t_color color;
 } t_sphere;
 
 typedef struct s_cynd
 {
-    t_vector crdt;
-    t_vector rot;
+    t_vec crdt;
+    t_vec rot;
     t_color color;
 } t_cynd;
+
+typedef struct s_ray
+{
+    t_vec o;
+    t_vec dir;
+} t_ray;
 
 typedef struct s_data
 {
@@ -60,7 +64,11 @@ typedef struct s_data
 
 typedef struct s_mrt
 {
+    void *mlx;
+    void *mlx_win;
+    t_data img;
     t_ambt ambt;
     t_cam cam;
     t_lght lght;
+    int w_hgt;
 }   t_mrt;
