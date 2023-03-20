@@ -7,26 +7,28 @@ int ft_setup(t_mrt *mrt)
     mrt->img.img = mlx_new_image(mrt->mlx, W_WIDTH, W_WIDTH / CAM_RATIO);
     mrt->img.addr = mlx_get_data_addr(mrt->img.img, &mrt->img.bpp, &mrt->img.len, &mrt->img.end);
     
+    // settin cam
+    mrt->cam.crdt = (t_vec){0, 0, 0};
+    mrt->cam.fov = 70;
+
+    // setting up image
+    mrt->w_hgt = W_WIDTH / CAM_RATIO;
+
     mrt->cam.vpHgt = 2.0;
     mrt->cam.vpWdt = CAM_RATIO * mrt->cam.vpHgt;
     mrt->cam.flen = 1.0;
-    mrt->w_hgt = W_WIDTH / CAM_RATIO;
 
-    // get from input later
-    mrt->cam.crdt.x = 0;
-    mrt->cam.crdt.y = 0;
-    mrt->cam.crdt.z = 0;
+    mrt->cam.hoz = (t_vec){mrt->cam.vpWdt, 0, 0};
+    mrt->cam.vet = (t_vec){0, mrt->cam.vpHgt, 0};
+    mrt->cam.llc = ft_vecMinus(mrt->cam.crdt, ft_vecDev(mrt->cam.hoz, 2));
+    mrt->cam.llc = ft_vecMinus(mrt->cam.llc, ft_vecDev(mrt->cam.vet, 2));
+    mrt->cam.llc = ft_vecMinus(mrt->cam.llc, (t_vec){0, 0, mrt->cam.flen});
 
-    // follow the guide
-    mrt->cam.hoz.x = mrt->cam.vpHgt;
-    mrt->cam.hoz.y = 0;
-    mrt->cam.hoz.z = 0;
-    mrt->cam.vet.x = 0;
-    mrt->cam.vet.y = mrt->cam.vpWdt;
-    mrt->cam.vet.z = 0;
-    mrt->cam.llc.x = mrt->cam.crdt.x - mrt->cam.hoz.x / 2 - mrt->cam.vet.x / 2;
-    mrt->cam.llc.y = mrt->cam.crdt.y - mrt->cam.hoz.y / 2 - mrt->cam.vet.y / 2;
-    mrt->cam.llc.z = mrt->cam.crdt.z - mrt->cam.hoz.z / 2 - mrt->cam.vet.z / 2 - mrt->cam.flen;
+    // ft_info(mrt->cam.crdt);printf("\n");
+    // ft_info(mrt->cam.hoz);printf("\n");
+    // ft_info(mrt->cam.vet);printf("\n");
+    // ft_info(mrt->cam.llc);
+
 
     return (0);
 }

@@ -13,11 +13,11 @@
 # include "structure.h"
 
 #ifndef W_WIDTH
-#define W_WIDTH 1024
+#define W_WIDTH 800
 #endif
 
 #ifndef CAM_RATIO
-#define CAM_RATIO (16 / (double)9)
+#define CAM_RATIO (16.0 / 9.0)
 #endif
 
 // setup.c

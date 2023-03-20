@@ -13,41 +13,44 @@ int ft_makeColor(t_color c)
     return (c.r << 16 | c.g << 8 | c.b);
 }
 
-// may thing still wrong here
 bool ft_hitSphere(t_vec o, double rd, t_ray r)
 {
-    t_vec oc;
-    oc = ft_vecMinus(r.o, o);
-    double a = 1;
+    t_vec oc = ft_vecMinus(o, r.o);
+    // sleep(1);
+    double a = ft_vecDot(r.dir, r.dir);
     double b = 2.0 * ft_vecDot(oc, r.dir);
     double c = ft_vecDot(oc, oc) - (rd * rd);
-    double dis = (b * b) - (4 * a * c);
+    double dis = (b * b) - (4.0 * a * c);
+    // printf("[%f][%f][%f]\n", b, c, dis);
     return (dis > 0);
 }
 
-int ft_rayColor(t_ray ray)
+int ft_rayColor(t_ray r)
 {
-    // sphere center
-    t_vec v;
-    v.x = 0;
-    v.y = 0;
-    v.z = -1;
-    if (ft_hitSphere(v, 0.5, ray))
+    if (ft_hitSphere((t_vec){0, 0, -1}, 0.5, r))
         return (255 << 16);
-
-    t_vec uVec;
-    uVec = ft_vecNrml(ray.dir);
-    double t = 0.5 * (uVec.y + 1);
-    (void)t;
-    return (100 << 8 | 200);
+    t_vec uni = ft_vecNrml(r.dir);
+    double t = 0.5 * (uni.y + 1.0);
+    t_vec c = ft_vecMul((t_vec){1, 1, 1}, (1.0 - t));
+    c = ft_vecPlus(c, ft_vecMul((t_vec){0.5, 0.7, 1.0}, t));
+    c = ft_vecMul(c, 255);
+    return ((int)c.x << 16 | (int)c.y << 8 | (int)c.z);
 }
 
+// ray r(origin, lower_left_corner + u*horizontal + v*vertical - origin);
 t_ray ft_createRay(t_cam cam, double u, double v)
 {
     t_ray r;
-    r.o = ft_vecMul(cam.crdt, 1);
-    r.dir = ft_vecPlus(ft_vecMul(cam.llc, 1), ft_vecMul(cam.hoz, u));
-    r.dir = ft_vecPlus(r.dir, ft_vecMul(cam.vet, v));
-    r.dir = ft_vecMinus(r.dir, r.o);
+    r.o = cam.crdt;
+    // fixed ray direction
+    r.dir.x = cam.llc.x + u * cam.hoz.x + v * cam.vet.x;
+    r.dir.y = cam.llc.y + u * cam.hoz.y + v * cam.vet.y;
+    r.dir.z = cam.llc.z + u * cam.hoz.z + v * cam.vet.z;
+    // ft_info(r.dir);
     return (r);
 }
+
+// u = l + (r - l)(i + 0.5)/Nx
+// v = b + (t - b)(j + 0.5)/Ny
+
+// Ray direction → -d*(w-axis) + u*(u-axis) + v*(v-axis)
