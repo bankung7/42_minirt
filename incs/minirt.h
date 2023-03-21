@@ -27,8 +27,7 @@ int ft_setup(t_mrt *mrt);
 int ft_parsing(t_mrt *mrt, char *file);
 int ft_checkline(char *line, t_mrt *mrt);
 int ft_getAmbient(char **arr, t_mrt *mrt);
-int ft_getCam(char *line, t_mrt *mrt);
-char **ft_getAttr(char *input, int n);
+int ft_getCamera(char **arr, t_mrt *mrt);
 
 // utils.c
 void ft_info(t_vec v);
@@ -36,9 +35,20 @@ void ft_parr(char **arr);
 double ft_atof(char *str);
 void ft_penv(t_mrt *mrt);
 int ft_arrlen(char **arr);
+int ft_error(char *str, int res);
+int ft_error2(char *str, int res, char **f2, char *f1);
+
+int ft_checkValue(double n, double min, double max);
+int ft_checkColor(t_color c);
+int ft_checkVector(t_vec v, double min, double max);
+
+int ft_setColor(t_color *color, char **cstr);
+int ft_setValue(double *value, char **str, double min, double max);
+
+char **ft_getAttr(char *input, int n);
 
 // free.c
-void ft_free2(char **arr);
+int ft_free2(char **arr);
 
 // drawing.c
 void ft_mlx_put_pixel(t_data *data, int x, int y, int color);

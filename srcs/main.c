@@ -19,7 +19,7 @@ int main(int argc, char **argv)
     // setting up in setup.c
     // ft_setup(&mrt);
     
-    // // render
+    // render
     // for (int j = mrt.w_hgt - 1; j >= 0; --j)
     // {
     //     for (int i = 0; i < W_WIDTH; ++i)

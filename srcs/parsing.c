@@ -4,30 +4,26 @@
 int ft_parsing(t_mrt *mrt, char *file)
 {
     int fd;
-    (void)mrt;
+    char *line;
 
     // check file extension
     if (ft_strlen(file) < 4 || ft_strncmp(&file[ft_strlen(file) - 3], ".rt", 3)
         || ft_strlen(file) - (ft_strchr(file, '.') - file) != 3)
-    {
-        printf("minirt: error: file name incorrect\n");
-        return (1);
-    }
+        return (ft_error("minirt: error: file name incorrect", 1));
 
     fd = open(file, O_RDONLY);
     if (fd == -1)
-    {
-        perror("minirt: error: ");
-        return (1);
-    }
+        return (ft_error("minirt: error: file cannot open", 1));
 
-    char *line;
     line = get_next_line(fd);
     if (!line)
-        return (1);
+        return (ft_error("minirt: error: file is empty", 1));
+    
+    // handle when input from file is error
     while (line)
     {
-        ft_checkline(line, mrt);
+        if (ft_checkline(line, mrt))
+            return (ft_error2(0, 1, 0, line));
         free(line);
         line = get_next_line(fd);
     }
@@ -36,16 +32,16 @@ int ft_parsing(t_mrt *mrt, char *file)
 
 int ft_checkline(char *line, t_mrt *mrt)
 {
-    char **arr = ft_split(line, ' ');
-    // ft_parr(arr);
+    char **arr;
     
-    if (!ft_strncmp(arr[0], "A", 2))
-        ft_getAmbient(arr, mrt);
-    ft_free2(arr);
+    arr = ft_split(line, ' ');
 
-    return (0);
+    if (!ft_strncmp(arr[0], "A", 2) && ft_getAmbient(arr, mrt))
+        return (ft_error2("error: Ambient value error", 1, arr, 0));
+    if (!ft_strncmp(arr[0], "C", 2) && ft_getCamera(arr, mrt))
+        return (ft_error2("error: Camera value error", 1, arr, 0));
+    return (ft_free2(arr));
 }
-
 
 // Ambient lightning:
 // A 0.2 255,255,255
@@ -55,37 +51,20 @@ int ft_checkline(char *line, t_mrt *mrt)
 // R,G,B colors in range [0-255]: 255, 255, 255
 int ft_getAmbient(char **arr, t_mrt *mrt)
 {
-    (void)mrt;
     printf("this is Ambient value\n");
-    // ft_parr(arr);
-    char **ratio = ft_getAttr(arr[1], 1);
-    char **color = ft_getAttr(arr[2], 3);
 
-    mrt->ambt.ratio = ft_atof(ratio[0]);
-    mrt->ambt.color.r = ft_atoi(color[0]);
-    mrt->ambt.color.g = ft_atoi(color[1]);
-    mrt->ambt.color.b = ft_atoi(color[2]);
+    if (ft_arrlen(arr) != 3)
+        return (ft_error2("error: Ambient incomplete", 1, 0, 0));
+
+    if (ft_setValue(&mrt->ambt.ratio, ft_getAttr(arr[1], 1), 0.0, 1.0)
+        || ft_setColor(&mrt->ambt.color, ft_getAttr(arr[2], 3)))
+        return (1);
 
     printf("ratio : %0.1f\n", mrt->ambt.ratio);
     printf("color : [%d][%d][%d]\n", mrt->ambt.color.r, mrt->ambt.color.g, mrt->ambt.color.b);
 
-    ft_free2(ratio);
-    ft_free2(color);
     return (0);
 }
-
-char **ft_getAttr(char *input, int n)
-{
-    char **attr = ft_split(input, ',');
-
-    if (ft_arrlen(attr) != n)
-    {
-        printf("attr mismatch\n");
-        return (0);
-    }
-    return (attr);
-}
-
 
 // Camera:
 // C -50.0,0,20 0,0,1 70
@@ -94,6 +73,15 @@ char **ft_getAttr(char *input, int n)
 // x,y,z coordinates of the view point: -50.0,0,20
 // 3d normalized orientation vector. In range [-1,1] for each x,y,z axis: 0.0,0.0,1.0
 // FOV : Horizontal field of view in degrees in range [0,180]: 70
+int ft_getCamera(char **arr, t_mrt *mrt)
+{
+    (void)mrt;
+    printf("This is Camera value\n");
+    if (ft_arrlen(arr) != 4)
+        return (1);
+    
+    return (0);
+}
 
 // Light:
 // L -40.0,50.0,0.0 0.6 10,0,255
