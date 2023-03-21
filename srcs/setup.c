@@ -32,3 +32,9 @@ int ft_setup(t_mrt *mrt)
 
     return (0);
 }
+
+// 1 = check type of input line
+// 2 = split the arg and check complete arg
+// 3 = loop throgh each arg and split if required
+// 4 = check each arg val for limit
+// 5 = return to the setup

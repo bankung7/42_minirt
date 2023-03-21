@@ -13,24 +13,33 @@ int ft_makeColor(t_color c)
     return (c.r << 16 | c.g << 8 | c.b);
 }
 
-bool ft_hitSphere(t_vec o, double rd, t_ray r)
+double ft_hitSphere(t_vec o, double rd, t_ray r)
 {
-    t_vec oc = ft_vecMinus(o, r.o);
-    // sleep(1);
-    double a = ft_vecDot(r.dir, r.dir);
-    double b = 2.0 * ft_vecDot(oc, r.dir);
-    double c = ft_vecDot(oc, oc) - (rd * rd);
-    double dis = (b * b) - (4.0 * a * c);
-    // printf("[%f][%f][%f]\n", b, c, dis);
-    return (dis > 0);
+    t_vec oc = ft_vecMinus(r.o, o);
+    double a = pow(ft_vecLen(r.dir), 2);
+    double hb = ft_vecDot(oc, r.dir);
+    double c = pow(ft_vecLen(oc), 2) - (rd * rd);
+    double dis = (hb * hb) - (a * c);
+    if (dis < 0)
+        return (-1.0);
+    // printf("[%f]\n", (-hb - sqrt(dis)) / a);
+    return ((-hb - sqrt(dis)) / a);
 }
 
 int ft_rayColor(t_ray r)
 {
-    if (ft_hitSphere((t_vec){0, 0, -1}, 0.5, r))
-        return (255 << 16);
+    double t = ft_hitSphere((t_vec){0, 0, -1}, 0.5, r);
+    if (t > 0.0)
+    {
+        // printf("[%f]\n", t);
+        t_vec pAt = ft_vecPlus(r.o, ft_vecMul(r.dir, t));
+        t_vec uni = ft_vecNrml(ft_vecMinus(pAt, (t_vec){0, 0, -1}));
+        t_vec c = ft_vecMul((t_vec){uni.x + 1, uni.y + 1, uni.z + 1}, 0.5);
+        c = ft_vecMul(c, 255);
+        return ((int)c.x << 16 | (int)c.y << 8 | (int)c.z);
+    }
     t_vec uni = ft_vecNrml(r.dir);
-    double t = 0.5 * (uni.y + 1.0);
+    t = 0.5 * (uni.y + 1.0);
     t_vec c = ft_vecMul((t_vec){1, 1, 1}, (1.0 - t));
     c = ft_vecPlus(c, ft_vecMul((t_vec){0.5, 0.7, 1.0}, t));
     c = ft_vecMul(c, 255);

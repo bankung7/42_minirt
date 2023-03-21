@@ -52,7 +52,7 @@ double ft_atof(char *str)
     if (*str == '.' && (str++) != 0 && ft_isdigit(*str))
         n += (double)(*str - '0') / 10;
     n *= sign;
-    printf("atof : %f\n", n);
+    // printf("atof : %f\n", n);
     return (n);
 }
 

@@ -26,8 +26,9 @@ int ft_setup(t_mrt *mrt);
 // parsing.c
 int ft_parsing(t_mrt *mrt, char *file);
 int ft_checkline(char *line, t_mrt *mrt);
-int ft_getAmbt(char *line, t_mrt *mrt);
+int ft_getAmbient(char **arr, t_mrt *mrt);
 int ft_getCam(char *line, t_mrt *mrt);
+char **ft_getAttr(char *input, int n);
 
 // utils.c
 void ft_info(t_vec v);
@@ -42,7 +43,7 @@ void ft_free2(char **arr);
 // drawing.c
 void ft_mlx_put_pixel(t_data *data, int x, int y, int color);
 int ft_makeColor(t_color c);
-bool ft_hitSphere(t_vec o, double rd, t_ray r);
+double ft_hitSphere(t_vec o, double rd, t_ray r);
 int ft_rayColor(t_ray ray);
 t_ray ft_createRay(t_cam cam, double u, double v);
 
