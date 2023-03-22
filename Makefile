@@ -9,10 +9,15 @@ RM = rm -rf
 LIBFT_DIR = libft/
 LIBFT = libft/libft.a
 
-MLX_DIR = mlx/
-
-INCS = -Iincs -Ilibft -Imlx
-LINKER = -Lincs -Llibft -Lmlx -lmlx -framework OpenGL -framework AppKit 
+ifeq ($(shell uname), Linux)
+	MLX_DIR = mlx_Linux/
+	INCS = -Iincs -Ilibft -I$(MLX_DIR) -I/usr/include
+	LINKER = -L/usr/lib -Lincs -Llibft -Lmlx_Linux -lmlx_Linux -lXext -lX11 -lm -lz -lft
+else
+	MLX_DIR = mlx/
+	INCS = -Iincs -Ilibft -Imlx
+	LINKER = -Lincs -Llibft -Lmlx -lmlx -framework OpenGL -framework AppKit
+endif
 
 SRCS_DIR = srcs/
 SRCS = main.c parsing.c utils.c drawing.c free.c vector.c setup.c
@@ -24,10 +29,12 @@ all: $(NAME)
 
 bonus: $(NAME)
 
+$(LIBFT):
+	make re -C $(LIBFT_DIR)
+
 $(NAME): $(OBJS) $(LIBFT)
-	make -C $(LIBFT_DIR)
 	make -C $(MLX_DIR)
-	$(CC) $(CFLAGS) $(LINKER) $^ -o $@
+	$(CC) $(CFLAGS) $^ -o $@ $(LINKER)
 	@echo "minirt is ready"
 
 $(OBJS_DIR)%.o: $(SRCS_DIR)%.c
@@ -40,8 +47,8 @@ clean:
 
 fclean: clean
 	$(RM) $(NAME) *.dSYM
-	# @make fclean -C $(LIBFT_DIR)
-	# @make clean -C $(MLX_DIR)
+	@make fclean -C $(LIBFT_DIR)
+	@make clean -C $(MLX_DIR)
 
 re: fclean all
 
