@@ -92,29 +92,36 @@ int ft_error2(char *str, int res, char **f2, char *f1)
 }
 
 // check normal value
-int ft_checkValue(double n, double min, double max)
+int ft_checkFValue(double *n, double min, double max)
 {
-    if (n < min || n > max)
+    if (*n < min || *n > max)
+        return (1);
+    return (0);
+}
+
+int ft_checkIValue(int *n, int min, int max)
+{
+    if (*n < min || *n > max)
         return (1);
     return (0);
 }
 
 // check vector value
-int ft_checkVector(t_vec v, double min, double max)
+int ft_checkVector(t_vec *v, double min, double max)
 {
-    if (v.x < min || v.y < min || v.z < min)
+    if (v->x < min || v->y < min || v->z < min)
         return (1);
-    if (v.x > max || v.y > max || v.z > max)
+    if (v->x > max || v->y > max || v->z > max)
         return (1);
     return (0);
 }
 
 // check color value
-int ft_checkColor(t_color c)
+int ft_checkColor(t_color *c)
 {
-    if (c.r < 0 || c.g < 0 || c.b < 0)
+    if (c->r < 0 || c->g < 0 || c->b < 0)
         return (1);
-    if (c.r > 255 || c.g > 255 || c.b > 255)
+    if (c->r > 255 || c->g > 255 || c->b > 255)
         return (1);
     return (0);
 }
@@ -128,17 +135,37 @@ int ft_setColor(t_color *color, char **attr)
     color->g = ft_atoi(attr[1]);
     color->b = ft_atoi(attr[2]);
     ft_free2(attr);
-    return (ft_checkColor(*color));
+    return (ft_checkColor(color));
 }
 
 // set value
-int ft_setValue(double *value, char **str, double min, double max)
+int ft_setFValue(double *value, char **arr, double min, double max)
 {
-    if (!str || ft_arrlen(str) != 1)
-        return (ft_error2("error: value wrong", 1, str, 0));
-    *value = ft_atof(str[0]);
-    ft_free2(str);
-    return (ft_checkValue(*value, min, max));
+    if (!arr)
+        return (ft_error2("error: value wrong", 1, arr, 0));
+    *value = ft_atof(arr[0]);
+    ft_free2(arr);
+    return (ft_checkFValue(value, min, max));
+}
+
+int ft_setIValue(int *value, char **arr, int min, int max)
+{
+    if (!arr)
+        return (ft_error2("error: value wrong", 1, arr, 0));
+    *value = ft_atoi(arr[0]);
+    ft_free2(arr);
+    return (ft_checkIValue(value, min, max));
+}
+
+int ft_setVector(t_vec *vec, char **arr, double min, double max)
+{
+    if (!arr)
+        return (ft_error2("error: crdt wrong", 1, arr, 0));
+    vec->x = ft_atof(arr[0]);
+    vec->y = ft_atof(arr[1]);
+    vec->z = ft_atof(arr[2]);
+    ft_free2(arr);
+    return (ft_checkVector(vec, min, max));
 }
 
 char **ft_getAttr(char *input, int n)

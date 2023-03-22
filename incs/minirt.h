@@ -28,6 +28,8 @@ int ft_parsing(t_mrt *mrt, char *file);
 int ft_checkline(char *line, t_mrt *mrt);
 int ft_getAmbient(char **arr, t_mrt *mrt);
 int ft_getCamera(char **arr, t_mrt *mrt);
+int ft_getLight(char **arr, t_mrt *mrt);
+int ft_getPlane(char **arr, t_mrt *mrt);
 
 // utils.c
 void ft_info(t_vec v);
@@ -38,12 +40,15 @@ int ft_arrlen(char **arr);
 int ft_error(char *str, int res);
 int ft_error2(char *str, int res, char **f2, char *f1);
 
-int ft_checkValue(double n, double min, double max);
-int ft_checkColor(t_color c);
-int ft_checkVector(t_vec v, double min, double max);
+int ft_checkFValue(double *n, double min, double max);
+int ft_checkIValue(int *n, int min, int max);
+int ft_checkColor(t_color *c);
+int ft_checkVector(t_vec *v, double min, double max);
 
-int ft_setColor(t_color *color, char **cstr);
-int ft_setValue(double *value, char **str, double min, double max);
+int ft_setColor(t_color *color, char **arr);
+int ft_setFValue(double *value, char **arr, double min, double max);
+int ft_setIValue(int *value, char **arr, int min, int max);
+int ft_setVector(t_vec *vec, char **arr, double min, double max);
 
 char **ft_getAttr(char *input, int n);
 

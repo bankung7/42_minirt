@@ -40,6 +40,11 @@ int ft_checkline(char *line, t_mrt *mrt)
         return (ft_error2("error: Ambient value error", 1, arr, 0));
     if (!ft_strncmp(arr[0], "C", 2) && ft_getCamera(arr, mrt))
         return (ft_error2("error: Camera value error", 1, arr, 0));
+    // when multiple light, plane and other shape, deal later
+    if (!ft_strncmp(arr[0], "L", 2) && ft_getLight(arr, mrt))
+        return (ft_error2("error: Light value error", 1, arr, 0));
+    if (!ft_strncmp(arr[0], "pl", 3) && ft_getPlane(arr, mrt))
+        return (ft_error2("error: Plane value error", 1, arr, 0));
     return (ft_free2(arr));
 }
 
@@ -51,12 +56,13 @@ int ft_checkline(char *line, t_mrt *mrt)
 // R,G,B colors in range [0-255]: 255, 255, 255
 int ft_getAmbient(char **arr, t_mrt *mrt)
 {
+    printf("====================================\n");
     printf("this is Ambient value\n");
 
     if (ft_arrlen(arr) != 3)
         return (ft_error2("error: Ambient incomplete", 1, 0, 0));
 
-    if (ft_setValue(&mrt->ambt.ratio, ft_getAttr(arr[1], 1), 0.0, 1.0)
+    if (ft_setFValue(&mrt->ambt.ratio, ft_getAttr(arr[1], 1), 0.0, 1.0)
         || ft_setColor(&mrt->ambt.color, ft_getAttr(arr[2], 3)))
         return (1);
 
@@ -75,10 +81,19 @@ int ft_getAmbient(char **arr, t_mrt *mrt)
 // FOV : Horizontal field of view in degrees in range [0,180]: 70
 int ft_getCamera(char **arr, t_mrt *mrt)
 {
-    (void)mrt;
+    printf("====================================\n");
     printf("This is Camera value\n");
     if (ft_arrlen(arr) != 4)
         return (1);
+    
+    if (ft_setVector(&mrt->cam.crdt, ft_getAttr(arr[1], 3), -100, 100)
+        || ft_setVector(&mrt->cam.rot, ft_getAttr(arr[2], 3), -1.0, 1.0)
+        || ft_setIValue(&mrt->cam.fov, ft_getAttr(arr[3], 1), 0, 180))
+        return (1);
+    
+    printf("crdt : [%.1f][%.1f][%.1f]\n", mrt->cam.crdt.x, mrt->cam.crdt.y, mrt->cam.crdt.z);
+    printf("rot : [%.1f][%.1f][%.1f]\n", mrt->cam.rot.x, mrt->cam.rot.y, mrt->cam.rot.z);
+    printf("fov : %d\n", mrt->cam.fov);
     
     return (0);
 }
@@ -90,6 +105,24 @@ int ft_getCamera(char **arr, t_mrt *mrt)
 // x,y,z coordinates of the light point: -40.0,50.0,0.0
 // the light brightness ratio in range [0.0,1.0]: 0.6
 // (unused in mandatory part)R,G,B colors in range [0-255]: 10, 0, 255
+int ft_getLight(char **arr, t_mrt *mrt)
+{
+    printf("====================================\n");
+    printf("This is Light value\n");
+    if (ft_arrlen(arr) != 4)
+        return (1);
+    
+    if (ft_setVector(&mrt->lght.crdt, ft_getAttr(arr[1], 3), -100, 100)
+        || ft_setFValue(&mrt->lght.brght, ft_getAttr(arr[2], 1), 0.0, 1.0)
+        || ft_setColor(&mrt->lght.color, ft_getAttr(arr[3], 3)))
+        return (1);
+
+    printf("crdt : [%.1f][%.1f][%.1f]\n", mrt->lght.crdt.x, mrt->lght.crdt.y, mrt->lght.crdt.z);
+    printf("brightness : %.1f\n", mrt->lght.brght);
+    printf("color : [%d][%d][%d]\n", mrt->lght.color.r, mrt->lght.color.g, mrt->lght.color.b);
+    mrt->lght.next = 0;
+    return (0);
+}
 
 // Plane:
 // pl 0.0,0.0,-10.0 0.0,1.0,0.0 0,0,225
@@ -98,6 +131,24 @@ int ft_getCamera(char **arr, t_mrt *mrt)
 // x,y,z coordinates of a point in the plane: 0.0,0.0,-10.0
 // 3d normalized normal vector. In range [-1,1] for each x,y,z axis: 0.0,1.0,0.0
 // R,G,B colors in range [0-255]: 0,0,225
+int ft_getPlane(char **arr, t_mrt *mrt)
+{
+    printf("====================================\n");
+    printf("This is Plane value\n");
+    if (ft_arrlen(arr) != 4)
+        return (1);
+    
+    if (ft_setVector(&mrt->plane.crdt, ft_getAttr(arr[1], 3), -100, 100)
+        || ft_setVector(&mrt->plane.rot, ft_getAttr(arr[2], 3), -1.0, 1.0)
+        || ft_setColor(&mrt->plane.color, ft_getAttr(arr[3], 3)))
+        return (1);
+
+    printf("crdt : [%.1f][%.1f][%.1f]\n", mrt->plane.crdt.x, mrt->plane.crdt.y, mrt->plane.crdt.z);
+    printf("rot : [%.1f][%.1f][%.1f]\n", mrt->plane.rot.x, mrt->plane.rot.y, mrt->plane.rot.z);
+    printf("color : [%d][%d][%d]\n", mrt->plane.color.r, mrt->plane.color.g, mrt->plane.color.b);
+
+    return (0);
+}
 
 // Sphere:
 // sp 0.0,0.0,20.6 12.6 10,0,255
