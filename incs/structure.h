@@ -24,8 +24,6 @@ typedef struct s_cam
     t_vec hoz;
     t_vec vet;
     t_vec llc;
-    // assume
-    double x0, x1, y0, y1, xStep, yStep;
 } t_cam;
 
 typedef struct s_lght
@@ -83,5 +81,7 @@ typedef struct s_mrt
     t_cam cam;
     t_lght lght;
     t_plane plane;
+    t_sphere sphere;
+    t_cynd cynd;
     int w_hgt;
 }   t_mrt;

@@ -16,25 +16,37 @@ int ft_setup(t_mrt *mrt)
 
     mrt->cam.vpHgt = 2.0;
     mrt->cam.vpWdt = CAM_RATIO * mrt->cam.vpHgt;
-    mrt->cam.flen = 1.0;
 
+    mrt->cam.hoz = (t_vec){mrt->cam.vpWdt, 0, 0};
+    mrt->cam.vet = (t_vec){0, mrt->cam.vpHgt, 0};
+    // printf("%f\n", mrt->cam.flen);
+    ft_recal(mrt);
+    return (0);
+}
+
+// recal
+int ft_recal(t_mrt *mrt)
+{
+    mrt->cam.flen = (mrt->cam.vpWdt / 2) * tan(mrt->cam.fov * M_PI / 360);
     mrt->cam.hoz = (t_vec){mrt->cam.vpWdt, 0, 0};
     mrt->cam.vet = (t_vec){0, mrt->cam.vpHgt, 0};
     mrt->cam.llc = ft_vecMinus(mrt->cam.crdt, ft_vecDev(mrt->cam.hoz, 2));
     mrt->cam.llc = ft_vecMinus(mrt->cam.llc, ft_vecDev(mrt->cam.vet, 2));
     mrt->cam.llc = ft_vecMinus(mrt->cam.llc, (t_vec){0, 0, mrt->cam.flen});
-
-    // ft_info(mrt->cam.crdt);printf("\n");
-    // ft_info(mrt->cam.hoz);printf("\n");
-    // ft_info(mrt->cam.vet);printf("\n");
-    // ft_info(mrt->cam.llc);
-
-
     return (0);
 }
 
-// 1 = check type of input line
-// 2 = split the arg and check complete arg
-// 3 = loop throgh each arg and split if required
-// 4 = check each arg val for limit
-// 5 = return to the setup
+void ft_render(t_mrt *mrt)
+{
+    for (int j = mrt->w_hgt - 1; j >= 0; --j)
+    {
+        for (int i = 0; i < W_WIDTH; ++i)
+        {
+            double v = (double)j / mrt->w_hgt;
+            double u = (double)i / W_WIDTH;
+            t_ray r = ft_createRay(mrt->cam, u, v);
+            ft_mlx_put_pixel(&mrt->img, i, j, ft_rayColor(r));
+        }
+    }
+    mlx_put_image_to_window(mrt->mlx, mrt->mlx_win, mrt->img.img, 0, 0);
+}

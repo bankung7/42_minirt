@@ -15,7 +15,8 @@ INCS = -Iincs -Ilibft -Imlx
 LINKER = -Lincs -Llibft -Lmlx -lmlx -framework OpenGL -framework AppKit 
 
 SRCS_DIR = srcs/
-SRCS = main.c parsing.c utils.c drawing.c free.c vector.c setup.c
+SRCS = main.c parsing.c utils.c drawing.c free.c vector.c render.c \
+	hook.c
 
 OBJS_DIR = objs/
 OBJS = $(addprefix $(OBJS_DIR), $(SRCS:.c=.o))
