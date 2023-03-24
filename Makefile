@@ -26,7 +26,7 @@ all: $(NAME)
 bonus: $(NAME)
 
 $(NAME): $(OBJS) $(LIBFT)
-	make -C $(LIBFT_DIR)
+	make bonus -C $(LIBFT_DIR)
 	make -C $(MLX_DIR)
 	$(CC) $(CFLAGS) $(LINKER) $^ -o $@
 	@echo "minirt is ready"

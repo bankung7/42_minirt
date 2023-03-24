@@ -13,7 +13,7 @@ int main(int argc, char **argv)
     }
 
     t_mrt mrt;
-    // ft_parsing(&mrt, argv[1]);
+    ft_parsing(&mrt, argv[1]);
 
     // setting up in setup.c
     ft_setup(&mrt);

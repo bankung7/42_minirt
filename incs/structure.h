@@ -39,6 +39,7 @@ typedef struct s_plane
     t_vec crdt;
     t_vec rot;
     t_color color;
+    struct s_plane *next;
 } t_plane;
 
 typedef struct s_sphere
@@ -81,7 +82,7 @@ typedef struct s_mrt
     t_cam cam;
     t_lght lght;
     t_plane plane;
-    t_sphere sphere;
-    t_cynd cynd;
+    t_sphere *sphere;
+    t_cynd *cynd;
     int w_hgt;
 }   t_mrt;

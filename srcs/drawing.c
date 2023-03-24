@@ -26,9 +26,13 @@ double ft_hitSphere(t_vec o, double rd, t_ray r)
     return ((-hb - sqrt(dis)) / a);
 }
 
-int ft_rayColor(t_ray r)
+int ft_rayColor(t_mrt *mrt, t_ray r)
 {
-    double t = ft_hitSphere((t_vec){0, 0, -1}, 0.5, r);
+    (void)mrt;
+    // printf("test %f\n", mrt->sphere->dmt);
+    double t = ft_hitSphere((t_vec){0, 0, -1}, ft_convertVP(mrt, mrt->sphere->dmt), r);
+    // double t = ft_hitSphere(ft_convertVec(mrt, mrt->sphere->crdt), ft_convertVP(mrt, mrt->sphere->dmt), r);
+    
     if (t > 0.0)
     {
         // printf("[%f]\n", t);
@@ -59,7 +63,18 @@ t_ray ft_createRay(t_cam cam, double u, double v)
     return (r);
 }
 
-// u = l + (r - l)(i + 0.5)/Nx
+double ft_convertVP(t_mrt *mrt, double n)
+{
+    return (n * mrt->cam.vpWdt / W_WIDTH);
+}
+
+t_vec ft_convertVec(t_mrt *mrt, t_vec v)
+{
+    double c = mrt->cam.vpWdt / W_WIDTH;
+    return ((t_vec){v.x * c, v.y * c, v.z * c});
+}
+
+// u = l + ( - l)(i + 0.5)/Nx
 // v = b + (t - b)(j + 0.5)/Ny
 
 // Ray direction → -d*(w-axis) + u*(u-axis) + v*(v-axis)

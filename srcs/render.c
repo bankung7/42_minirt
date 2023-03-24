@@ -3,16 +3,13 @@
 int ft_setup(t_mrt *mrt)
 {
     mrt->mlx = mlx_init();
-    mrt->mlx_win = mlx_new_window(mrt->mlx, W_WIDTH, W_WIDTH / CAM_RATIO, "RayTracer");
-    mrt->img.img = mlx_new_image(mrt->mlx, W_WIDTH, W_WIDTH / CAM_RATIO);
+    mrt->mlx_win = mlx_new_window(mrt->mlx, W_WIDTH, W_HEIGHT, "RayTracer");
+    mrt->img.img = mlx_new_image(mrt->mlx, W_WIDTH, W_HEIGHT);
     mrt->img.addr = mlx_get_data_addr(mrt->img.img, &mrt->img.bpp, &mrt->img.len, &mrt->img.end);
     
     // settin cam
     mrt->cam.crdt = (t_vec){0, 0, 0};
     mrt->cam.fov = 70;
-
-    // setting up image
-    mrt->w_hgt = W_WIDTH / CAM_RATIO;
 
     mrt->cam.vpHgt = 2.0;
     mrt->cam.vpWdt = CAM_RATIO * mrt->cam.vpHgt;
@@ -21,6 +18,10 @@ int ft_setup(t_mrt *mrt)
     mrt->cam.vet = (t_vec){0, mrt->cam.vpHgt, 0};
     // printf("%f\n", mrt->cam.flen);
     ft_recal(mrt);
+
+    // set object
+    // mrt->sphere = 0;
+    mrt->cynd = 0;
     return (0);
 }
 
@@ -38,14 +39,14 @@ int ft_recal(t_mrt *mrt)
 
 void ft_render(t_mrt *mrt)
 {
-    for (int j = mrt->w_hgt - 1; j >= 0; --j)
+    for (int j = W_HEIGHT - 1; j >= 0; --j)
     {
         for (int i = 0; i < W_WIDTH; ++i)
         {
-            double v = (double)j / mrt->w_hgt;
+            double v = (double)j / W_HEIGHT;
             double u = (double)i / W_WIDTH;
             t_ray r = ft_createRay(mrt->cam, u, v);
-            ft_mlx_put_pixel(&mrt->img, i, j, ft_rayColor(r));
+            ft_mlx_put_pixel(&mrt->img, i, j, ft_rayColor(mrt, r));
         }
     }
     mlx_put_image_to_window(mrt->mlx, mrt->mlx_win, mrt->img.img, 0, 0);

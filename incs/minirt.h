@@ -20,6 +20,10 @@
 #define CAM_RATIO (16.0 / 9.0)
 #endif
 
+#ifndef W_HEIGHT
+#define W_HEIGHT (int)(W_WIDTH / CAM_RATIO)
+#endif
+
 // render.c
 int ft_setup(t_mrt *mrt);
 int ft_recal(t_mrt *mrt);
@@ -32,6 +36,7 @@ int ft_getAmbient(char **arr, t_mrt *mrt);
 int ft_getCamera(char **arr, t_mrt *mrt);
 int ft_getLight(char **arr, t_mrt *mrt);
 int ft_getPlane(char **arr, t_mrt *mrt);
+int ft_getSphere(char **arr, t_mrt *mrt);
 
 // utils.c
 void ft_info(t_vec v);
@@ -61,8 +66,10 @@ int ft_free2(char **arr);
 void ft_mlx_put_pixel(t_data *data, int x, int y, int color);
 int ft_makeColor(t_color c);
 double ft_hitSphere(t_vec o, double rd, t_ray r);
-int ft_rayColor(t_ray ray);
+int ft_rayColor(t_mrt *mrt, t_ray ray);
 t_ray ft_createRay(t_cam cam, double u, double v);
+double ft_convertVP(t_mrt *mrt, double n);
+t_vec ft_convertVec(t_mrt *mrt, t_vec v);
 
 // hook.c
 int	ft_keyhook(int keycode, t_mrt *mrt);

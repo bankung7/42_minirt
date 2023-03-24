@@ -52,6 +52,8 @@ int ft_checkline(char *line, t_mrt *mrt)
         return (ft_error2("error: Light value error", 1, arr, 0));
     if (!ft_strncmp(arr[0], "pl", 3) && ft_getPlane(arr, mrt))
         return (ft_error2("error: Plane value error", 1, arr, 0));
+    if (!ft_strncmp(arr[0], "sp", 3) && ft_getSphere(arr, mrt))
+        return (ft_error2("error: Sphere value error", 1, arr, 0));
     return (ft_free2(arr));
 }
 
@@ -164,6 +166,31 @@ int ft_getPlane(char **arr, t_mrt *mrt)
 // x,y,z coordinates of the sphere center: 0.0,0.0,20.6
 // the sphere diameter: 12.6
 // R,G,B colors in range [0-255]: 10, 0, 255
+int ft_getSphere(char **arr, t_mrt *mrt)
+{
+    (void)mrt;
+    printf("====================================\n");
+    printf("This is Sphere value\n");
+    if (ft_arrlen(arr) != 4)
+        return (1);
+    
+    t_sphere *spr = malloc(sizeof(t_sphere));
+    if (!spr)
+        return (1);
+    
+    if (ft_setVector(&spr->crdt, ft_getAttr(arr[1], 3), -100, 100)
+        || ft_setFValue(&spr->dmt, ft_getAttr(arr[2], 1), 1.0, 100.0)
+        || ft_setColor(&spr->color, ft_getAttr(arr[3], 3)))
+        return (1);
+    ft_lstadd_back((t_list**)&mrt->sphere, (t_list*)spr);
+
+    printf("crdt : [%.1f][%.1f][%.1f]\n", mrt->sphere->crdt.x, mrt->sphere->crdt.y, mrt->sphere->crdt.z);
+    printf("dmt : %0.1f\n", mrt->sphere->dmt); 
+    printf("color : [%d][%d][%d]\n", mrt->sphere->color.r, mrt->sphere->color.g, mrt->sphere->color.b);
+    // free(spr);
+    return (0);
+}
+
 
 // Cylinder:
 // cy 50.0,0.0,20.6 0.0,0.0,1.0 14.2 21.42 10,0,255

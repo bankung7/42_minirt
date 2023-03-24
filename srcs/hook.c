@@ -11,13 +11,14 @@ int	ft_keyhook(int keycode, t_mrt *mrt)
     else
         return (0);
     ft_recal(mrt);
-    printf("%d\n", mrt->cam.fov);
+    // printf("%d\n", mrt->cam.fov);
     ft_render(mrt);
 	return (0);
 }
 
 int ft_close(t_mrt *mrt)
 {
+    mlx_destroy_image(mrt->mlx, mrt->img.img);
     mlx_destroy_window(mrt->mlx, mrt->mlx_win);
     printf("Nice to see you\n");
     exit(0);
