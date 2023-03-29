@@ -58,8 +58,11 @@ int ft_free2(char **arr);
 // drawing.c
 void ft_mlx_put_pixel(t_data *data, int x, int y, int color);
 int ft_makeColor(t_color c);
-double ft_hitSphere(t_vec o, double rd, t_ray r);
-int ft_rayColor(t_ray ray);
+// double ft_hitSphere(t_vec o, double rd, t_ray r);
+double ft_hitSphere(t_sphere sp, t_ray r);
+double ft_hitPlane(t_plane pl, t_ray r);
+double ft_hitCynd(t_cynd cy, t_ray r);
+int ft_rayColor(t_ray ray, t_mrt m);
 t_ray ft_createRay(t_cam cam, double u, double v);
 
 #endif

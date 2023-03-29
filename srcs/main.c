@@ -28,7 +28,7 @@ int main(int argc, char **argv)
             double u = (double)i / W_WIDTH;
             t_ray r = ft_createRay(mrt.cam, u, v);
             // ft_info(r.dir);
-            ft_mlx_put_pixel(&mrt.img, i, j, ft_rayColor(r));
+            ft_mlx_put_pixel(&mrt.img, i, j, ft_rayColor(r, mrt));
             // printf("[%f][%f]\n", u, v);
         }
     }
