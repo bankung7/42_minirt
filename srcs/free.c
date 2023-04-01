@@ -10,3 +10,16 @@ int ft_free2(char **arr)
     free(arr);
     return (0);
 }
+
+int ft_end(t_mrt *mrt, int res)
+{
+    t_list *head;
+
+    while (mrt->sphere)
+    {
+        head = (t_list*)mrt->sphere;
+        mrt->sphere = mrt->sphere->next;
+        free(head);
+    }
+    return (res);
+}

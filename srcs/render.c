@@ -2,6 +2,7 @@
 
 int ft_setup(t_mrt *mrt)
 {
+    // setup mlx
     mrt->mlx = mlx_init();
     mrt->mlx_win = mlx_new_window(mrt->mlx, W_WIDTH, W_HEIGHT, "RayTracer");
     mrt->img.img = mlx_new_image(mrt->mlx, W_WIDTH, W_HEIGHT);
@@ -11,6 +12,7 @@ int ft_setup(t_mrt *mrt)
     mrt->cam.crdt = (t_vec){0, 0, 0};
     mrt->cam.fov = 70;
 
+    // setup viewport
     mrt->cam.vpHgt = 2.0;
     mrt->cam.vpWdt = CAM_RATIO * mrt->cam.vpHgt;
 
@@ -20,7 +22,7 @@ int ft_setup(t_mrt *mrt)
     ft_recal(mrt);
 
     // set object
-    // mrt->sphere = 0;
+    mrt->sphere = 0;
     mrt->cynd = 0;
     return (0);
 }

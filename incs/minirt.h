@@ -31,36 +31,26 @@ void ft_render(t_mrt *mrt);
 
 // parsing.c
 int ft_parsing(t_mrt *mrt, char *file);
-int ft_checkline(char *line, t_mrt *mrt);
-int ft_getAmbient(char **arr, t_mrt *mrt);
-int ft_getCamera(char **arr, t_mrt *mrt);
-int ft_getLight(char **arr, t_mrt *mrt);
-int ft_getPlane(char **arr, t_mrt *mrt);
-int ft_getSphere(char **arr, t_mrt *mrt);
+int ft_readline(t_mrt *mrt, char *line);
+int ft_getVector(t_vec *vec, char **attr, double min, double max);
+int ft_checkVector(t_vec *vec, double min, double max);
+
+// parsing1.c
+char **ft_getAttr(char *line, int n, int c);
+int ft_getSphere(t_mrt *mrt, char **arr);
 
 // utils.c
-void ft_info(t_vec v);
-void ft_parr(char **arr);
-double ft_atof(char *str);
-void ft_penv(t_mrt *mrt);
-int ft_arrlen(char **arr);
-int ft_error(char *str, int res);
-int ft_error2(char *str, int res, char **f2, char *f1);
-
-int ft_checkFValue(double *n, double min, double max);
-int ft_checkIValue(int *n, int min, int max);
-int ft_checkColor(t_color *c);
-int ft_checkVector(t_vec *v, double min, double max);
-
-int ft_setColor(t_color *color, char **arr);
-int ft_setFValue(double *value, char **arr, double min, double max);
-int ft_setIValue(int *value, char **arr, int min, int max);
-int ft_setVector(t_vec *vec, char **arr, double min, double max);
-
-char **ft_getAttr(char *input, int n);
+int ft_arrLen(char **arr);
+int ft_printArr(char **arr);
+double ft_atod(char *str);
 
 // free.c
 int ft_free2(char **arr);
+int ft_end(t_mrt *mrt, int res);
+
+// error.c
+int ft_error(char *str, int res);
+int ft_error2(char *str, int res, char **f2, char *f1);
 
 // drawing.c
 void ft_mlx_put_pixel(t_data *data, int x, int y, int color);
@@ -75,5 +65,9 @@ t_vec ft_convertVec(t_mrt *mrt, t_vec v);
 int	ft_keyhook(int keycode, t_mrt *mrt);
 int ft_recal(t_mrt *mrt);
 int ft_close(t_mrt *mrt);
+
+// test function
+void ft_readVector(t_vec vec);
+void ft_readSphere(t_mrt *mrt);
 
 #endif

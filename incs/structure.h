@@ -84,5 +84,5 @@ typedef struct s_mrt
     t_plane plane;
     t_sphere *sphere;
     t_cynd *cynd;
-    int w_hgt;
+    int status;
 }   t_mrt;
