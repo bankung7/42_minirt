@@ -20,8 +20,14 @@
 #define CAM_RATIO (16.0 / 9.0)
 #endif
 
-// setup.c
+#ifndef INFINITY
+#define INFINITY 100000000.0
+#endif
+
+// render.c
 int ft_setup(t_mrt *mrt);
+int ft_recal(t_mrt *mrt);
+void ft_render(t_mrt *mrt);
 
 // parsing.c
 int ft_parsing(t_mrt *mrt, char *file);
@@ -58,8 +64,15 @@ int ft_free2(char **arr);
 // drawing.c
 void ft_mlx_put_pixel(t_data *data, int x, int y, int color);
 int ft_makeColor(t_color c);
-double ft_hitSphere(t_vec o, double rd, t_ray r);
+double ft_hitSphere(t_sphere sp, t_ray r);
+// double ft_hitSphere(t_vec o, double rd, t_ray r);
 int ft_rayColor(t_ray ray);
 t_ray ft_createRay(t_cam cam, double u, double v);
+double ft_hitPlane(t_plane pl, t_ray r);
+
+// hook.c
+int	ft_keyhook(int keycode, t_mrt *mrt);
+int ft_recal(t_mrt *mrt);
+int ft_close(t_mrt *mrt);
 
 #endif

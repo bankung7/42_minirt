@@ -17,25 +17,32 @@ int ft_parsing(t_mrt *mrt, char *file)
 
     line = get_next_line(fd);
     if (!line)
+    {
+        close(fd);
         return (ft_error("minirt: error: file is empty", 1));
-    
+    }
+
     // handle when input from file is error
     while (line)
     {
         if (ft_checkline(line, mrt))
+        {
+            close(fd);
             return (ft_error2(0, 1, 0, line));
+        }
         free(line);
         line = get_next_line(fd);
     }
+    close(fd);
     return (0);
 }
 
+// for the capital letter, do later again.
 int ft_checkline(char *line, t_mrt *mrt)
 {
     char **arr;
     
     arr = ft_split(line, ' ');
-
     if (!ft_strncmp(arr[0], "A", 2) && ft_getAmbient(arr, mrt))
         return (ft_error2("error: Ambient value error", 1, arr, 0));
     if (!ft_strncmp(arr[0], "C", 2) && ft_getCamera(arr, mrt))
