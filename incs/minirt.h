@@ -32,12 +32,15 @@ void ft_render(t_mrt *mrt);
 // parsing.c
 int ft_parsing(t_mrt *mrt, char *file);
 int ft_readline(t_mrt *mrt, char *line);
-int ft_getVector(t_vec *vec, char **attr, double min, double max);
-int ft_checkVector(t_vec *vec, double min, double max);
+int ft_getAmbient(t_mrt *mrt, char **attr);
+int ft_getCamera(t_mrt *mrt, char **attr);
+int ft_getLight(t_mrt *mrt, char **attr);
+int ft_getPlane(t_mrt *mrt, char **attr);
 
 // parsing1.c
 char **ft_getAttr(char *line, int n, int c);
-int ft_getSphere(t_mrt *mrt, char **arr);
+int ft_getColor(t_color *color, char **attr);
+int ft_getVector(t_vec *vec, char **attr);
 
 // utils.c
 int ft_arrLen(char **arr);
@@ -69,5 +72,7 @@ int ft_close(t_mrt *mrt);
 // test function
 void ft_readVector(t_vec vec);
 void ft_readSphere(t_mrt *mrt);
+void ft_readColor(t_color color);
+void ft_readEnv(t_mrt *mrt);
 
 #endif

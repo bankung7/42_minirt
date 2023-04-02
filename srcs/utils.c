@@ -39,5 +39,10 @@ double ft_atod(char *str)
     }
     while (str[i] && ft_isdigit(str[i]) == 1)
         n = (n * 10) + (str[i++] - '0');
+    if (str[i++] == '.')
+    {
+        while (str[i] && ft_isdigit(str[i]) == 1)
+            n += (double)(str[i++] - '0') / 10;
+    }
     return (n * sign);
 }

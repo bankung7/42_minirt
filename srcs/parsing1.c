@@ -1,18 +1,5 @@
 #include "minirt.h"
 
-char **ft_getAttr(char *line, int n, int c)
-{
-    char **attr;
-
-    attr = ft_split(line, c);
-    if (!attr)
-        return (0);
-    if (n == 0 || (ft_arrLen(attr) == n))
-        return (attr);
-    ft_free2(attr);
-    return (0);
-}
-
 // Sphere:
 // sp 0.0,0.0,20.6 12.6 10,0,255
 // [iden] [coordinate] [diameter] [colorRGB]
@@ -20,18 +7,6 @@ char **ft_getAttr(char *line, int n, int c)
 // x,y,z coordinates of the sphere center: 0.0,0.0,20.6
 // the sphere diameter: 12.6
 // R,G,B colors in range [0-255]: 10, 0, 255
-int ft_getSphere(t_mrt *mrt, char **arr)
-{
-    t_sphere *spr = malloc(sizeof(t_sphere));
-    if (!spr)
-        return (ft_error2("minirt: parsing sphere error", 1, arr, 0));
-    if (ft_getVector(&spr->crdt, ft_getAttr(arr[1], 3, ','), 0, 100))
-        return (ft_error2("minirt: parsing sphere error", 1, arr, 0));
-    ft_free2(arr);
-    spr->next = mrt->sphere;
-    mrt->sphere = spr;
-    return (0);
-}
 
 // Cylinder:
 // cy 50.0,0.0,20.6 0.0,0.0,1.0 14.2 21.42 10,0,255
@@ -44,4 +19,31 @@ int ft_getSphere(t_mrt *mrt, char **arr)
 // the cylinder height: 21.42
 // R,G,B colors in range [0,255]: 10, 0, 255
 
-// the problem is the space request is nothing for sphere now
+char **ft_getAttr(char *line, int n, int c)
+{
+    char **attr = ft_split(line, c);
+    if (n == -1 || ft_arrLen(attr) == n)
+        return (attr);
+    ft_free2(attr);
+    return (0);
+}
+
+int ft_getColor(t_color *color, char **attr)
+{
+    if (!attr)
+        return (1);
+    color->r = ft_atoi(attr[0]);
+    color->g = ft_atoi(attr[1]);
+    color->b = ft_atoi(attr[2]);
+    return (0);
+}
+
+int ft_getVector(t_vec *vec, char **attr)
+{
+    if (!attr)
+        return (1);
+    vec->x = ft_atod(attr[0]);
+    vec->y = ft_atod(attr[1]);
+    vec->z = ft_atod(attr[2]);
+    return (0);
+}
