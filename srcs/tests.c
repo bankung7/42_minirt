@@ -10,24 +10,46 @@ void ft_readColor(t_color color)
     printf("[%d][%d][%d]\n", color.r, color.g, color.b);
 }
 
+void ft_readLight(t_mrt *mrt)
+{
+    t_lght *head;
+
+    head = mrt->lght;
+    while (head)
+    {
+        printf("Light => coordinate : "); ft_readVector(head->crdt);
+        printf("Light => brightness : [%.1f]\n", head->brght);
+        printf("Light => color : "); ft_readColor(head->color);
+        head = head->next;
+    }
+}
+
+void ft_readPlane(t_mrt *mrt)
+{
+    t_plane *head;
+
+    head = mrt->plane;
+    while (head)
+    {
+        printf("plane => coordinate : "); ft_readVector(head->crdt);
+        printf("plane => rot : "); ft_readVector(head->rot);
+        printf("plane => color : "); ft_readColor(head->color);
+        head = head->next;
+    }
+}
+
 void ft_readSphere(t_mrt *mrt)
 {
-    int i = 0;
     t_sphere *head;
 
     head = mrt->sphere;
-    if (!head)
-        return ;
-    printf("========== test sphere ==========\n");
     while (head)
     {
-        printf("sphere object [%d]\n", ++i);
-        printf("sphere coordinate : [%.1f] [%.1f] [%.1f]\n", head->crdt.x, head->crdt.y, head->crdt.z);
-        printf("dmt : %0.1f\n", head->dmt); 
-        printf("color : [%d][%d][%d]\n", head->color.r, head->color.g, head->color.b);
+        printf("sphere => coordinate : "); ft_readVector(head->crdt);
+        printf("sphere => dmt : [%.1f]\n", head->dmt);
+        printf("sphere => color : "); ft_readColor(head->color);
         head = head->next;
     }
-    printf("========= Total sphere : %d ==========\n", i);
 }
 
 void ft_readEnv(t_mrt *mrt)
@@ -37,8 +59,7 @@ void ft_readEnv(t_mrt *mrt)
     printf("Camera => coordinate : "); ft_readVector(mrt->cam.crdt);
     printf("Camera => rotation vector : "); ft_readVector(mrt->cam.rot);
     printf("Camera => FOV : [%d]\n", mrt->cam.fov);
-    printf("Light => coordinate : "); ft_readVector(mrt->lght.crdt);
-    printf("Light => brightness : [%.1f]\n", mrt->lght.brght);
-    printf("Light => color : "); ft_readColor(mrt->lght.color);
-
+    ft_readLight(mrt);
+    ft_readPlane(mrt);
+    ft_readSphere(mrt);
 }

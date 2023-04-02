@@ -80,8 +80,8 @@ typedef struct s_mrt
     t_data img;
     t_ambt ambt;
     t_cam cam;
-    t_lght lght;
-    t_plane plane;
+    t_lght *lght;
+    t_plane *plane;
     t_sphere *sphere;
     t_cynd *cynd;
     int status;

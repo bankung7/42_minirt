@@ -36,6 +36,7 @@ int ft_getAmbient(t_mrt *mrt, char **attr);
 int ft_getCamera(t_mrt *mrt, char **attr);
 int ft_getLight(t_mrt *mrt, char **attr);
 int ft_getPlane(t_mrt *mrt, char **attr);
+int ft_getSphere(t_mrt *mrt, char **attr);
 
 // parsing1.c
 char **ft_getAttr(char *line, int n, int c);
@@ -49,7 +50,8 @@ double ft_atod(char *str);
 
 // free.c
 int ft_free2(char **arr);
-int ft_end(t_mrt *mrt, int res);
+int ft_freeList(t_list *list);
+int ft_clean(t_mrt *mrt);
 
 // error.c
 int ft_error(char *str, int res);
