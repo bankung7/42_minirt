@@ -13,14 +13,21 @@ int ft_makeColor(t_color c)
     return (c.r << 16 | c.g << 8 | c.b);
 }
 
+<<<<<<< HEAD
 // o = Sphere center, rd = Radius, r = Ray
+=======
+>>>>>>> c0aeddc6047fe7e51b5791d6a5926ef8fe967b09
 double ft_hitSphere(t_sphere sp, t_ray r)
 {
     t_vec oc = ft_vecMinus(r.o, sp.crdt);
     double a = pow(ft_vecLen(r.dir), 2);
     double hb = ft_vecDot(oc, r.dir);
+<<<<<<< HEAD
     // double b = 2.0 * ft_vecDot(oc, r.dir);
     double c = pow(ft_vecLen(oc), 2) - ((sp.dmt / 2.0) * (sp.dmt / 2.0));
+=======
+    double c = pow(ft_vecLen(oc), 2) - ((sp.dmt / 2) * (sp.dmt / 2));
+>>>>>>> c0aeddc6047fe7e51b5791d6a5926ef8fe967b09
     double dis = (hb * hb) - (a * c);
     // double dis = (b * b) - (4.0 * a * c);
     // return ((- b - sqrt(dis)) / (2.0 * a));
@@ -42,7 +49,7 @@ double ft_hitPlane(t_plane pl, t_ray r)
     return (t);
 }
 
-int ft_rayColor(t_ray r)
+double ft_hitPlane(t_plane pl, t_ray r)
 {
     // double t = ft_hitSphere((t_sphere){(t_vec){0,0,-1}, 1.0, (t_color){255,0,0}, NULL}, r);
     double mint = INFINITY;

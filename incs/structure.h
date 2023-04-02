@@ -39,7 +39,11 @@ typedef struct s_plane
     t_vec crdt;
     t_vec rot;
     t_color color;
+<<<<<<< HEAD
     struct s_plane *next;
+=======
+	struct s_plane *next;
+>>>>>>> c0aeddc6047fe7e51b5791d6a5926ef8fe967b09
 } t_plane;
 
 typedef struct s_sphere
