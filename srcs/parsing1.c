@@ -30,3 +30,33 @@ int ft_getVector(t_vec *vec, char **attr)
     ft_free2(attr);
     return (0);
 }
+
+int ft_checkValueD(double value, double min, double max)
+{
+    if (value < min || value > max)
+        return (1);
+    return (0);
+}
+
+int ft_checkValueI(int value, int min, int max)
+{
+    if (value < min || value > max)
+        return (1);
+    return (0);
+}
+
+int ft_checkColor(t_color color)
+{
+    if (color.r < 0 || color.g < 0 || color.b < 0
+        || color.r > 255 || color.g > 255 || color.b > 255)
+        return (1);
+    return (0);
+}
+
+int ft_checkVector(t_vec vec, double min, double max)
+{
+    if (vec.x < min || vec.y < min || vec.z < min
+        || vec.x > max || vec.y > max || vec.z > max)
+        return (1);
+    return (0);
+}

@@ -65,12 +65,12 @@ t_ray ft_createRay(t_cam cam, double u, double v)
 
 double ft_convertVP(t_mrt *mrt, double n)
 {
-    return (n * mrt->cam.vpWdt / W_WIDTH);
+    return (n * mrt->cam->vpWdt / W_WIDTH);
 }
 
 t_vec ft_convertVec(t_mrt *mrt, t_vec v)
 {
-    double c = mrt->cam.vpWdt / W_WIDTH;
+    double c = mrt->cam->vpWdt / W_WIDTH;
     return ((t_vec){v.x * c, v.y * c, v.z * c});
 }
 

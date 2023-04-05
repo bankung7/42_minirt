@@ -14,10 +14,14 @@ int ft_free2(char **arr)
 int ft_clean(t_mrt *mrt)
 {
     t_list *head;
-    while (mrt->lght)
+    if (mrt->ambt)
+        free(mrt->ambt);
+    if (mrt->cam)
+        free(mrt->cam);
+    while (mrt->light)
     {
-        head = (t_list*)mrt->lght;
-        mrt->lght = mrt->lght->next;
+        head = (t_list*)mrt->light;
+        mrt->light = mrt->light->next;
         free(head);
     }
     while (mrt->plane)
@@ -32,10 +36,10 @@ int ft_clean(t_mrt *mrt)
         mrt->sphere = mrt->sphere->next;
         free(head);
     }
-    while (mrt->cynd)
+    while (mrt->cylinder)
     {
-        head = (t_list*)mrt->cynd;
-        mrt->cynd = mrt->cynd->next;
+        head = (t_list*)mrt->cylinder;
+        mrt->cylinder = mrt->cylinder->next;
         free(head);
     }
     return (0);

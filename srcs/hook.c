@@ -2,16 +2,16 @@
 
 int	ft_keyhook(int keycode, t_mrt *mrt)
 {
-    if (keycode == 125 && mrt->cam.fov > 0)
-        mrt->cam.fov--;
-    else if (keycode == 126 && mrt->cam.fov < 180)
-        mrt->cam.fov++;
+    if (keycode == 125 && mrt->cam->fov > 0)
+        mrt->cam->fov--;
+    else if (keycode == 126 && mrt->cam->fov < 180)
+        mrt->cam->fov++;
     else if (keycode == 53)
         return (ft_close(mrt));
     else
         return (0);
     ft_recal(mrt);
-    // printf("%d\n", mrt->cam.fov);
+    // printf("%d\n", mrt->cam->fov);
     ft_render(mrt);
 	return (0);
 }

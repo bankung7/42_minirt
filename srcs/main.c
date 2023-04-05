@@ -2,19 +2,18 @@
 
 int main(int argc, char **argv)
 {
-    (void)argv;
-
     printf("Welcome to RayTracer\n");
     if (argc != 2)
         return (ft_error("usage: ./minirt [filename]", 1));
 
     // parsing
     t_mrt mrt;
-    mrt.lght = 0;
+    mrt.light = 0;
     mrt.plane = 0;
     mrt.sphere = 0;
-    mrt.cynd = 0;
-    ft_parsing(&mrt, argv[1]);
+    mrt.cylinder = 0;
+    if (ft_parsing(&mrt, argv[1]))
+        return (ft_clean(&mrt));
 
     ft_readEnv(&mrt);
 

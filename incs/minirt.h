@@ -7,6 +7,7 @@
 # include <errno.h>
 # include <math.h>
 # include <stdbool.h>
+# include <limits.h>
 # include "mlx.h"
 # include "libft.h"
 # include "vector.h"
@@ -37,11 +38,18 @@ int ft_getCamera(t_mrt *mrt, char **attr);
 int ft_getLight(t_mrt *mrt, char **attr);
 int ft_getPlane(t_mrt *mrt, char **attr);
 int ft_getSphere(t_mrt *mrt, char **attr);
+int ft_getCylinder(t_mrt *mrt, char **attr);
 
 // parsing1.c
 char **ft_getAttr(char *line, int n, int c);
 int ft_getColor(t_color *color, char **attr);
 int ft_getVector(t_vec *vec, char **attr);
+
+int ft_checkValueD(double value, double min, double max);
+int ft_checkValueI(int value, int min, int max);
+int ft_checkColor(t_color color);
+int ft_checkVector(t_vec vec, double min, double max);
+
 
 // utils.c
 int ft_arrLen(char **arr);
