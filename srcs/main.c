@@ -18,12 +18,12 @@ int main(int argc, char **argv)
     ft_readEnv(&mrt);
 
     // setting up in setup.c
-    // ft_setup(&mrt);
+    ft_setup(&mrt);
     
-    // ft_render(&mrt);
+    ft_render(&mrt);
 
-    // mlx_hook(mrt.mlx_win, 2, 1L<<0, ft_keyhook, &mrt);
-    // mlx_loop(mrt.mlx);
+    mlx_hook(mrt.mlx_win, 2, 1L<<0, ft_keyhook, &mrt);
+    mlx_loop(mrt.mlx);
 
     ft_clean(&mrt);
     printf("end of program\n");

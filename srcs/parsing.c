@@ -20,11 +20,13 @@ int ft_parsing(t_mrt *mrt, char *file)
     while (line)
     {
         if (ft_readline(mrt, line))
+        {
+            close(fd);
             return (ft_error2("minirt: readline error", 1, 0, line));
+        }
         free(line);
         line = get_next_line(fd);
     }
-    printf("file is open and closed\n");
     close(fd);
     return (0);
 }
