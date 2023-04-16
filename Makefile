@@ -1,8 +1,8 @@
-NAME = miniRT
+NAME = minirt
 
 CC = gcc
 
-CFLAGS = -Wall -Wextra -Werror -g
+CFLAGS = -Wall -Wextra -Werror
 
 RM = rm -rf
 
@@ -15,8 +15,7 @@ INCS = -Iincs -Ilibft -Imlx
 LINKER = -Lincs -Llibft -Lmlx -lmlx -framework OpenGL -framework AppKit 
 
 SRCS_DIR = srcs/
-SRCS = main.c parsing.c parsing1.c utils.c drawing.c free.c vector.c render.c \
-	hook.c tests.c setup.c error.c
+SRCS = main.c
 
 OBJS_DIR = objs/
 OBJS = $(addprefix $(OBJS_DIR), $(SRCS:.c=.o))
@@ -26,14 +25,14 @@ all: $(NAME)
 bonus: $(NAME)
 
 $(NAME): $(OBJS) $(LIBFT)
-	make bonus -C $(LIBFT_DIR)
-	make -C $(MLX_DIR)
-	$(CC) $(CFLAGS) $(LINKER) $^ -o $@
+	# make bonus -C $(LIBFT_DIR)
+	# make -C $(MLX_DIR)
+	$(CC) $(CFLAGS) $^ -o $@ $(LINKER) 
 	@echo "minirt is ready"
 
 $(OBJS_DIR)%.o: $(SRCS_DIR)%.c
 	@mkdir -p $(OBJS_DIR)
-	$(CC) $(CFLAGS) $(INCS) -c $^ -o $@
+	$(CC) $(CFLAGS) -c $^ -o $@ $(INCS)
 
 clean:
 	$(RM) $(OBJS_DIR)
