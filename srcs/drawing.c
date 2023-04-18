@@ -19,18 +19,11 @@ double ft_hitSphere(t_sphere sp, t_ray r)
     t_vec oc = ft_vecMinus(r.o, sp.crdt);
     double a = pow(ft_vecLen(r.dir), 2);
     double hb = ft_vecDot(oc, r.dir);
-    // double b = 2.0 * ft_vecDot(oc, r.dir);
     double c = pow(ft_vecLen(oc), 2) - ((sp.dmt / 2.0) * (sp.dmt / 2.0));
     double dis = (hb * hb) - (a * c);
-    // double dis = (b * b) - (4.0 * a * c);
-    // return ((- b - sqrt(dis)) / (2.0 * a));
     if (dis < 0.0 || a == 0)
         return (INFINITY);
     return ((- hb - sqrt(dis)) / a);
-    // if (dis < 0)
-    //     return (-1.0);
-    // printf("[%f]\n", (-hb - sqrt(dis)) / a);
-    // return ((-hb - sqrt(dis)) / a);
 }
 
 double ft_hitPlane(t_plane pl, t_ray r)
@@ -41,6 +34,21 @@ double ft_hitPlane(t_plane pl, t_ray r)
     double t = ft_vecDot(oc, pl.rot) / ft_vecDot(r.dir, pl.rot);
     return (t);
 }
+
+double ft_hitCynd(t_cynd cy, t_ray r)
+{
+	t_vec x = ft_vecMinus(r.o, cy.crdt);
+	double dv = ft_vecDot(r.dir, cy.rot);
+	double xv = ft_vecDot(x, cy.rot);
+	double a = pow(ft_vecLen(r.dir), 2) - pow(dv, 2);
+    double hb = ft_vecDot(x, r.dir) - (dv * xv);
+    double c = pow(ft_vecLen(x), 2) - ((cy.dmt / 2.0) * (cy.dmt / 2.0)) - pow(xv, 2);
+    double dis = (hb * hb) - (a * c);
+    if (dis < 0.0 || a == 0)
+        return (INFINITY);
+    return ((- hb - sqrt(dis)) / a);
+}
+
 
 int ft_rayColor(t_ray r)
 {
@@ -67,7 +75,28 @@ int ft_rayColor(t_ray r)
     pl2.rot = (t_vec){0,sin(3.14/4),cos(3.14/4)};
     pl2.color = (t_color){10,100,100};
     pl2.next = NULL;
-    t_plane *ptrp;
+
+	t_cynd cy;
+	cy.crdt = (t_vec){0,0,-1.5};
+	cy.rot = (t_vec){0,1,0};
+	cy.dmt = 0.5;
+	cy.hgt = 1.0;
+	cy.color = (t_color){229,193,253};
+	cy.next = NULL;
+
+	t_cynd *ptrcy;
+	ptrcy = &cy;
+	while (ptrcy)
+	{
+		t = ft_hitCynd(*ptrcy, r);
+		if (t < mint)
+		{
+			mint = t;
+			cl = ptrcy->color;
+		}
+		ptrcy = ptrcy->next;
+	}
+	t_plane *ptrp;
     ptrp = &pl1;
     while (ptrp)
     {

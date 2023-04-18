@@ -54,6 +54,8 @@ typedef struct s_cynd
 {
     t_vec crdt;
     t_vec rot;
+    double dmt;
+    double hgt;
     t_color color;
     struct s_cynd *next;
 } t_cynd;
