@@ -77,7 +77,7 @@ int ft_rayColor(t_ray r)
     pl2.next = NULL;
 
 	t_cynd cy;
-	cy.crdt = (t_vec){0,0,-1.5};
+	cy.crdt = (t_vec){-1.0,0,-1.5};
 	cy.rot = (t_vec){0,1,0};
 	cy.dmt = 0.5;
 	cy.hgt = 1.0;
