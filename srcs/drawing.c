@@ -13,21 +13,14 @@ int ft_makeColor(t_color c)
     return (c.r << 16 | c.g << 8 | c.b);
 }
 
-<<<<<<< HEAD
 // o = Sphere center, rd = Radius, r = Ray
-=======
->>>>>>> c0aeddc6047fe7e51b5791d6a5926ef8fe967b09
 double ft_hitSphere(t_sphere sp, t_ray r)
 {
     t_vec oc = ft_vecMinus(r.o, sp.crdt);
     double a = pow(ft_vecLen(r.dir), 2);
     double hb = ft_vecDot(oc, r.dir);
-<<<<<<< HEAD
     // double b = 2.0 * ft_vecDot(oc, r.dir);
     double c = pow(ft_vecLen(oc), 2) - ((sp.dmt / 2.0) * (sp.dmt / 2.0));
-=======
-    double c = pow(ft_vecLen(oc), 2) - ((sp.dmt / 2) * (sp.dmt / 2));
->>>>>>> c0aeddc6047fe7e51b5791d6a5926ef8fe967b09
     double dis = (hb * hb) - (a * c);
     // double dis = (b * b) - (4.0 * a * c);
     // return ((- b - sqrt(dis)) / (2.0 * a));
@@ -49,7 +42,7 @@ double ft_hitPlane(t_plane pl, t_ray r)
     return (t);
 }
 
-double ft_hitPlane(t_plane pl, t_ray r)
+int ft_rayColor(t_ray r)
 {
     // double t = ft_hitSphere((t_sphere){(t_vec){0,0,-1}, 1.0, (t_color){255,0,0}, NULL}, r);
     double mint = INFINITY;
@@ -66,11 +59,11 @@ double ft_hitPlane(t_plane pl, t_ray r)
     sp2.next = NULL;
 
     t_plane pl1, pl2;
-    pl1.crdt = (t_vec){0,0,-2.0}; 
+    pl1.crdt = (t_vec){0,0,-2.0};
     pl1.rot = (t_vec){0,0,1.0};
     pl1.color = (t_color){100,10,100};
     pl1.next = &pl2;
-    pl2.crdt = (t_vec){0,0,-2.0}; 
+    pl2.crdt = (t_vec){0,0,-2.0};
     pl2.rot = (t_vec){0,sin(3.14/4),cos(3.14/4)};
     pl2.color = (t_color){10,100,100};
     pl2.next = NULL;

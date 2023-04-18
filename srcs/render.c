@@ -6,7 +6,7 @@ int ft_setup(t_mrt *mrt)
     mrt->mlx_win = mlx_new_window(mrt->mlx, W_WIDTH, W_WIDTH / CAM_RATIO, "RayTracer");
     mrt->img.img = mlx_new_image(mrt->mlx, W_WIDTH, W_WIDTH / CAM_RATIO);
     mrt->img.addr = mlx_get_data_addr(mrt->img.img, &mrt->img.bpp, &mrt->img.len, &mrt->img.end);
-    
+
     // settin cam
     mrt->cam.crdt = (t_vec){0, 0, 0};
     mrt->cam.fov = 70;
@@ -49,6 +49,7 @@ void ft_render(t_mrt *mrt)
             double u = (double)i / W_WIDTH;
             t_ray r = ft_createRay(mrt->cam, u, v);
             ft_mlx_put_pixel(&mrt->img, i, j, ft_rayColor(r));
+            // ft_mlx_put_pixel(&mrt->img, i, j, ft_hitPlane(r));
         }
     }
     mlx_put_image_to_window(mrt->mlx, mrt->mlx_win, mrt->img.img, 0, 0);
