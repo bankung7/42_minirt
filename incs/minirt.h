@@ -29,12 +29,30 @@ typedef struct s_mlx
     int endian;
 }   t_mlx;
 
+// camera
+typedef struct s_cam
+{
+    t_vec3 o;
+    double fov;
+}   t_cam;
+
+// sphere
+typedef struct s_sphere
+{
+    t_vec3 o;
+    double r;
+    t_vec3 color;
+    struct s_sphere *next;
+}   t_sphere;
+
 // minirt data
 typedef struct s_mrt
 {
     t_mlx mlx;
     int width;
     int height;
+    t_cam cam;
+    t_sphere *sphere;
 }   t_mrt;
 
 // mlx.c
