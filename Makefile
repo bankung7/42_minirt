@@ -16,7 +16,7 @@ LINKER = -Lincs -Llibft -Lmlx -lmlx -framework OpenGL -framework AppKit
 
 SRCS_DIR = srcs/
 SRCS = main.c mlx.c \
-	vector.c
+	vector.c ray.c \
 
 OBJS_DIR = objs/
 OBJS = $(addprefix $(OBJS_DIR), $(SRCS:.c=.o))

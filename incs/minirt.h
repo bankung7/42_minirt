@@ -15,6 +15,11 @@ typedef struct s_ray
 {
     t_vec3 o;
     t_vec3 dir;
+    t_vec3 p;
+    t_vec3 normal;
+    double t;
+    t_vec3 c;
+    int front;
 }   t_ray;
 
 // mlx data
@@ -51,12 +56,18 @@ typedef struct s_mrt
     t_mlx mlx;
     int width;
     int height;
+    double aRatio;
     t_cam cam;
-    t_sphere *sphere;
+    t_sphere sphere[4];
 }   t_mrt;
 
 // mlx.c
 void ft_putPixel(t_mlx *data, int x, int y, int color);
 void ft_setupMLX(t_mrt *mrt);
+
+// ray.c
+t_vec3 ft_rayAt(t_ray r, double t);
+t_ray ft_makeRay(t_mrt *mrt, t_vec3 llc, t_vec3 hoz, t_vec3 ver);
+int ft_rayColor(t_mrt *mrt, t_ray *r);
 
 #endif

@@ -5,64 +5,63 @@ void ft_rayInfo(t_ray *r)
     printf("dir %.2f, %.2f, %.2f\n", r->dir.x, r->dir.y, r->dir.z);
 }
 
-t_ray ft_makeRay(t_mrt *mrt, double x, double y)
+void ft_setSphere(t_mrt *mrt)
 {
-    t_ray ray;
-
-    ray.o = mrt->cam.o;
-    ray.dir = (t_vec3){x, y, -1};
-    return (ray);
-}
-
-int ft_traceSphere(t_mrt *mrt, t_ray *r, t_sphere *spr)
-{
-    (void)mrt;
-    t_vec3 oc = ft_vec3Minus(r->o, spr->o);
-    double a = ft_vec3Dot(r->dir, r->dir);
-    double b = 2 * ft_vec3Dot(oc, r->dir);
-    double c = ft_vec3Dot(oc, oc) - (spr->r * spr->r);
-    double dis = b * b - (4 * a * c);
-    // printf("dis : %.2f\n", dis);
-    return (dis > 0);
-}
-
-int ft_traceRay(t_mrt *mrt, t_ray *ray)
-{
-    mrt->sphere = malloc(sizeof(t_sphere));
-    mrt->sphere->o = (t_vec3){0, -100.5, -1};
-    mrt->sphere->r = 100;
-    return (ft_traceSphere(mrt, ray, mrt->sphere));
+    mrt->sphere[0].o = (t_vec3){0, 0, -1};
+    mrt->sphere[0].r = 0.5;
+    mrt->sphere[0].color = (t_vec3){255, 0, 0};
+    mrt->sphere[1].o = (t_vec3){0, -100.5, -1};
+    mrt->sphere[1].r = 100;
+    mrt->sphere[1].color = (t_vec3){200, 200, 200};
+    mrt->sphere[2].o = (t_vec3){-1, 0, -1};
+    mrt->sphere[2].r = 0.5;
+    mrt->sphere[2].color = (t_vec3){0, 0, 255};
+    mrt->sphere[3].o = (t_vec3){1, 0, -1};
+    mrt->sphere[3].r = 0.5;
+    mrt->sphere[3].color = (t_vec3){0, 255, 0};
 }
 
 int main(void)
 {
     // setup
     t_mrt mrt;
-    mrt.width = 640;
-    mrt.height = 480;
-    mrt.cam.fov = 90;
+
+    // image
+    mrt.width = 800;
+    mrt.aRatio = 16.0 / 9.0;
+    mrt.height = (int)(mrt.width / mrt.aRatio);
+
+    // camera
+    double vh = 2.0;
+    double vw = mrt.aRatio * vh;
+    double flen = 1.0;
+
+    mrt.cam.o = (t_vec3){0, 0, 0};
+    t_vec3 hoz = (t_vec3){vw, 0, 0};
+    t_vec3 ver = (t_vec3){0, vh, 0};
+    t_vec3 llc = (t_vec3){
+        mrt.cam.o.x - hoz.x / 2 - ver.x / 2 - 0,
+        mrt.cam.o.y - hoz.y / 2 - ver.y / 2 - 0,
+        mrt.cam.o.z - hoz.z / 2 - ver.z / 2 - flen
+    };
 
     ft_setupMLX(&mrt);
+    ft_setSphere(&mrt);
 
-    double scale = tanf(mrt.cam.fov * 0.5 * M_PI / 180.0);
-    double aspectRatio = mrt.width / (double)mrt.height;
-    mrt.cam.o = (t_vec3){0, 0, 0};
-
+    // render
     for (int j = 0; j < mrt.height; ++j)
     {
         for (int i = 0; i < mrt.width; ++i)
         {
-            double x = (2 * i / (double)mrt.width - 1) * scale * aspectRatio;
-            double y = (1 - 2 * j / (double)mrt.height) * scale;
-            t_ray ray = ft_makeRay(&mrt, x, y);
-            // ft_rayInfo(&ray);
-            if (ft_traceRay(&mrt, &ray) == 1)
-                ft_putPixel(&mrt.mlx, i, j, 0xFF0000);
-            else
-                ft_putPixel(&mrt.mlx, i, j, 0xFFFFFF);
-            // printf("x,y [%.2f][%.2f]\n", x, y);
+            double u = (double)i / (mrt.width - 1);
+            double v = (double)j / (mrt.height - 1);
+            t_ray r = ft_makeRay(&mrt, llc, ft_vec3Mul(hoz, u), ft_vec3Mul(ver, v));
+            ft_putPixel(&mrt.mlx, i, mrt.height - j, ft_rayColor(&mrt, &r));
+            // ft_rayInfo(&r);
         }
     }
+
+    // render
 
     mlx_put_image_to_window(mrt.mlx.mlx, mrt.mlx.mlx_win, mrt.mlx.img, 0, 0);
     mlx_loop(mrt.mlx.mlx);
