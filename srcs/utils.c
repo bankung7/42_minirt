@@ -12,9 +12,9 @@ double clamp(double x, double min, double max)
 int ft_vec3ToColor(t_vec3 v)
 {
     // for anti lias
-    // double scale = 1.0 / 100;
+    double scale = 1.0 / 100;
     
-    double scale = 1.0;
+    // double scale = 1.0;
     // printf("%.2f %.2f %.2f\n", v.x, v.y, v.z);
     v.x *= scale;
     v.y *= scale;
@@ -33,4 +33,16 @@ double ft_randDouble(void)
 double ft_randDoubleRange(double min, double max)
 {
     return (min + (max - min) * ft_randDouble());
+}
+
+t_vec3 ft_randDoubleVec3(void)
+{
+    return ((t_vec3){ft_randDouble(),
+        ft_randDouble(), ft_randDouble()});
+}
+
+t_vec3 ft_randDoubleVec3Range(double min, double max)
+{
+    return ((t_vec3){ft_randDoubleRange(min, max),
+        ft_randDoubleRange(min, max), ft_randDoubleRange(min, max)});
 }

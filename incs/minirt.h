@@ -62,6 +62,7 @@ typedef struct s_mrt
     t_mlx mlx;
     int width;
     int height;
+    int spp;
     t_cam cam;
     t_sphere sphere[3];
 }   t_mrt;
@@ -83,5 +84,7 @@ int ft_worldHit(t_mrt *mrt, t_rec *rec, double tmin, double tmax);
 double ft_randDouble(void);
 double ft_randDoubleRange(double min, double max);
 int ft_vec3ToColor(t_vec3 v);
+t_vec3 ft_randDoubleVec3(void);
+t_vec3 ft_randDoubleVec3Range(double min, double max);
 
 #endif

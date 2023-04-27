@@ -1,5 +1,16 @@
 #include "minirt.h"
 
+t_vec3 ft_randIntUnitSphere(void)
+{
+    while (1)
+    {
+        t_vec3 p = ft_randDoubleVec3Range(-1, 1);
+        if (ft_vec3Dot(p, p) >= 1)
+            continue;
+        return (p);
+    }
+}
+
 int ft_hitSphere(t_sphere *spr, t_rec *rec, double tmin, double tmax)
 {
     t_vec3 oc = ft_vec3Minus(rec->ray.o, spr->o);
