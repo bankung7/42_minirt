@@ -7,21 +7,10 @@
 //  2.2 determine color seen through that square
 //  2.3 paint the pixel with that color
 
-// convert pixel to world coordinate (raster->NDC->world)
-t_vec3 ft_pixelToSpace(t_mrt *mrt, int i, int j)
-{
-    t_vec3 vec;
-    vec.x = (2 * ((i + 0.5) / mrt->scrn.width) - 1);
-    vec.y = (1 - 2 * ((j + 0.5) / mrt->scrn.height));
-    vec.z = -1;
-    return (vec);
-}
-
 int main(void)
 {
     t_mrt mrt;
     
-
     // setup screen
     mrt.scrn.height = 400;
     mrt.scrn.aspectRatio = 16.0 / 9.0;
@@ -32,20 +21,31 @@ int main(void)
 
     // setup camera
     mrt.cam.o = (t_vec3){0, 0, 0};
-    mrt.cam.fov = tanf(22.5 / 2 * M_PI / 180);
+    mrt.cam.fov = tanf(90 / 2 * M_PI / 180);
+
+    // setup sphere
+    mrt.spr[0].orig = (t_vec3){0, 0, -1};
+    mrt.spr[0].r = 0.5;
+    mrt.spr[0].color = (t_vec3){255, 0 ,0};
+    // setup sphere
+    mrt.spr[1].orig = (t_vec3){0, -100.5, -1};
+    mrt.spr[1].r = 100;
+    mrt.spr[1].color = (t_vec3){0, 230 ,20};
     
     // render
     for (int j = 0; j < mrt.scrn.height; ++j)
     {
         for (int i = 0; i < mrt.scrn.width; ++i)
         {
+            // create ray
             t_vec3 vec = ft_pixelToSpace(&mrt, i, j);
-            printf("%.2f, %.2f, %.2f\n", vec.x, vec.y, vec.z);
+            t_ray ray = ft_makeRay(&mrt, vec);
+            // ft_rayInfo(ray);
+            ft_putPixel(&mrt.mlx, i, j, ft_rayColor(&mrt, &ray));
         }
     }
-
-
-
+    mlx_put_image_to_window(mrt.mlx.mlx, mrt.mlx.mlx_win, mrt.mlx.img, 0, 0);
+    mlx_loop(mrt.mlx.mlx);
 
     return (0);
 }
