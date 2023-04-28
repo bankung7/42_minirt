@@ -21,70 +21,30 @@ typedef struct s_mlx
     int endian;
 }   t_mlx;
 
-// ray
-typedef struct s_ray
-{
-    t_vec3 o;
-    t_vec3 dir;
-}   t_ray;
-
-// record
-typedef struct s_rec
-{
-    t_vec3 p;
-    t_vec3 normal;
-    double t;
-    t_ray ray;
-    int hit;
-    t_vec3 c;
-}   t_rec;
-
 // camera
 typedef struct s_cam
 {
     t_vec3 o;
-    int fov;
-    double ratio;
+    double fov;
 }   t_cam;
 
-// sphere
-typedef struct s_sphere
+typedef struct s_screen
 {
-    t_vec3 o;
-    double r;
-    t_vec3 c;
-    struct s_sphere *next;
-}   t_sphere;
+    int width;
+    int height;
+    double aspectRatio;
+}   t_screen;
 
 // minirt data
 typedef struct s_mrt
 {
     t_mlx mlx;
-    int width;
-    int height;
-    int spp;
+    t_screen scrn;
     t_cam cam;
-    t_sphere sphere[3];
 }   t_mrt;
 
 // mlx.c
 void ft_putPixel(t_mlx *data, int x, int y, int color);
 void ft_setupMLX(t_mrt *mrt);
-
-// ray.c
-t_vec3 ft_rayAt(t_ray *r, double t);
-t_vec3 ft_rayColor(t_mrt *mrt, t_ray *r);
-t_ray ft_makeRay(t_mrt *mrt, t_vec3 w, t_vec3 llc);
-
-// hits.c
-int ft_hitSphere(t_sphere *spr, t_rec *rec, double tmin, double tmax);
-int ft_worldHit(t_mrt *mrt, t_rec *rec, double tmin, double tmax);
-
-// utils.c
-double ft_randDouble(void);
-double ft_randDoubleRange(double min, double max);
-int ft_vec3ToColor(t_vec3 v);
-t_vec3 ft_randDoubleVec3(void);
-t_vec3 ft_randDoubleVec3Range(double min, double max);
 
 #endif

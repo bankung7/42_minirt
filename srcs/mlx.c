@@ -11,7 +11,10 @@ void ft_putPixel(t_mlx *data, int x, int y, int color)
 void ft_setupMLX(t_mrt *mrt)
 {
     mrt->mlx.mlx = mlx_init();
-    mrt->mlx.mlx_win = mlx_new_window(mrt->mlx.mlx, mrt->width, mrt->height, "My minirt");
-    mrt->mlx.img = mlx_new_image(mrt->mlx.mlx, mrt->width, mrt->height);
-    mrt->mlx.addr = mlx_get_data_addr(mrt->mlx.img, &mrt->mlx.bpp, &mrt->mlx.llen, &mrt->mlx.endian);
+    mrt->mlx.mlx_win = mlx_new_window(mrt->mlx.mlx, mrt->scrn.width,
+        mrt->scrn.height, "My minirt");
+    mrt->mlx.img = mlx_new_image(mrt->mlx.mlx, mrt->scrn.width,
+        mrt->scrn.height);
+    mrt->mlx.addr = mlx_get_data_addr(mrt->mlx.img, &mrt->mlx.bpp,
+        &mrt->mlx.llen, &mrt->mlx.endian);
 }
