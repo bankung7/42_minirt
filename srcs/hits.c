@@ -34,3 +34,13 @@ double ft_hitPlane(t_plane *plane, t_ray *r)
     }
     return (0);
 }
+
+double ft_randDouble(double min, double max)
+{
+    return (min + (max - min) * (rand() / (RAND_MAX + 1.)));
+}
+
+t_vec3 ft_randomColor(void)
+{
+    return ((t_vec3){ft_randDouble(0, 255), ft_randDouble(0, 255), ft_randDouble(0, 255)});
+}

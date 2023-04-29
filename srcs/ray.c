@@ -28,11 +28,14 @@ int ft_rayColor(t_mrt *mrt, t_ray *r)
     }
 
     // hit plane
-    t = ft_hitPlane(&mrt->pl[0], r);
-    if (t > 1 && t < tnear)
+    for (int i = 0; i < 5; i++)
     {
-        tnear = t;
-        color = mrt->pl[0].color;
+        t = ft_hitPlane(&mrt->pl[i], r);
+        if (t > 1 && t < tnear)
+        {
+            tnear = t;
+            color = mrt->pl[i].color;
+        }
     }
     return (ft_vec3ToInt(color));
 }

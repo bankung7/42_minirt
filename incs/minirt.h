@@ -74,7 +74,7 @@ typedef struct s_mrt
     t_screen scrn;
     t_cam cam;
     t_sphere spr[2];
-    t_plane pl[1];
+    t_plane pl[5];
 }   t_mrt;
 
 // mlx.c
@@ -84,6 +84,7 @@ void ft_setupMLX(t_mrt *mrt);
 // utils.c
 int ft_vec3ToInt(t_vec3 v);
 t_vec3 ft_pixelToSpace(t_mrt *mrt, int i, int j);
+t_vec3 ft_randomColor(void);
 
 // hit.c
 double ft_hitSphere(t_sphere *spr, t_ray *r, double tmin, double tmax);
