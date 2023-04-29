@@ -21,6 +21,17 @@ typedef struct s_mlx
     int endian;
 }   t_mlx;
 
+// record
+typedef struct s_rec
+{
+    double t1;
+    double t2;
+    t_vec3 phit;
+    t_vec3 normal;
+    int hit;
+    t_vec3 color;
+}   t_rec;
+
 // ray
 typedef struct s_ray
 {
@@ -67,7 +78,7 @@ int ft_vec3ToInt(t_vec3 v);
 t_vec3 ft_pixelToSpace(t_mrt *mrt, int i, int j);
 
 // hit.c
-int ft_hitSphere(t_sphere *spr, t_ray *r);
+double ft_hitSphere(t_sphere *spr, t_ray *r, double tmin, double tmax);
 t_vec3 ft_hitWorld(t_mrt *mrt, t_ray *r);
 
 // ray.c
