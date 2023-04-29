@@ -60,6 +60,13 @@ typedef struct s_sphere
     t_vec3 color;
 }   t_sphere;
 
+typedef struct s_plane
+{
+    t_vec3 p;
+    t_vec3 normal;
+    t_vec3 color;
+}   t_plane;
+
 // minirt data
 typedef struct s_mrt
 {
@@ -67,6 +74,7 @@ typedef struct s_mrt
     t_screen scrn;
     t_cam cam;
     t_sphere spr[2];
+    t_plane pl[1];
 }   t_mrt;
 
 // mlx.c
@@ -79,7 +87,7 @@ t_vec3 ft_pixelToSpace(t_mrt *mrt, int i, int j);
 
 // hit.c
 double ft_hitSphere(t_sphere *spr, t_ray *r, double tmin, double tmax);
-t_vec3 ft_hitWorld(t_mrt *mrt, t_ray *r);
+double ft_hitPlane(t_plane *plane, t_ray *r);
 
 // ray.c
 void ft_rayInfo(t_ray r);

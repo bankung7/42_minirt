@@ -19,3 +19,18 @@ double ft_hitSphere(t_sphere *spr, t_ray *r, double tmin, double tmax)
     }
     return (t);
 }
+
+double ft_hitPlane(t_plane *plane, t_ray *r)
+{
+    double t;
+    double denom = ft_vec3Dot(plane->normal, r->dir);
+    if (fabs(denom) > 0.0001)
+    {
+        t_vec3 pl = ft_vec3Minus(plane->p, r->orig);
+        t = ft_vec3Dot(pl, plane->normal) / denom;
+        // printf("t : %.2f\n", t);
+        if (t > 0.0001)
+            return (t);
+    }
+    return (0);
+}

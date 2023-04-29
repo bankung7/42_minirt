@@ -12,26 +12,31 @@ int main(void)
     t_mrt mrt;
     
     // setup screen
-    mrt.scrn.height = 400;
-    mrt.scrn.aspectRatio = 16.0 / 9.0;
-    mrt.scrn.width = mrt.scrn.height * mrt.scrn.aspectRatio;
+    mrt.scrn.width = 640;
+    mrt.scrn.height = 480;
+    mrt.scrn.aspectRatio = (double)mrt.scrn.width / mrt.scrn.height;
     
     // setup mlx
     ft_setupMLX(&mrt);
 
     // setup camera
     mrt.cam.o = (t_vec3){0, 0, 0};
-    mrt.cam.fov = tanf(90 / 2 * M_PI / 180);
+    mrt.cam.fov = tanf(90 * 0.5 * M_PI / 180);
 
     // setup sphere
-    mrt.spr[0].orig = (t_vec3){0, 0, -1};
-    mrt.spr[0].r = 0.5;
+    mrt.spr[0].orig = (t_vec3){0.5, 0, -1};
+    mrt.spr[0].r = 0.4;
     mrt.spr[0].color = (t_vec3){255, 0 ,0};
     // setup sphere
-    mrt.spr[1].orig = (t_vec3){0, -100.5, -1};
-    mrt.spr[1].r = 100;
+    mrt.spr[1].orig = (t_vec3){-1, 0, -2};
+    mrt.spr[1].r = 0.7;
     mrt.spr[1].color = (t_vec3){0, 230 ,20};
     
+    // setup plane
+    mrt.pl[0].p = (t_vec3){0, -1, -5};
+    mrt.pl[0].normal = (t_vec3){0, 0, 1};
+    mrt.pl[0].color = (t_vec3){0, 0, 230};
+
     // render
     for (int j = 0; j < mrt.scrn.height; ++j)
     {
