@@ -24,12 +24,13 @@ typedef struct s_mlx
 // record
 typedef struct s_rec
 {
-    double t1;
-    double t2;
+    int hit;
+    double t;
     t_vec3 phit;
     t_vec3 normal;
-    int hit;
     t_vec3 color;
+    double tmin;
+    double tmax;
 }   t_rec;
 
 // ray
@@ -39,7 +40,14 @@ typedef struct s_ray
     t_vec3 dir;
 }   t_ray;
 
-// lighting
+typedef struct s_screen
+{
+    int width;
+    int height;
+    double aspectRatio;
+}   t_screen;
+
+// ambient
 typedef struct s_ambient
 {
     double ratio;
@@ -53,13 +61,15 @@ typedef struct s_cam
     double fov;
 }   t_cam;
 
-typedef struct s_screen
+// lighting
+typedef struct s_light
 {
-    int width;
-    int height;
-    double aspectRatio;
-}   t_screen;
+    t_vec3 orig;
+    double ratio;
+    t_vec3 color;
+}   t_light;
 
+// sphere
 typedef struct s_sphere
 {
     t_vec3 orig;
@@ -81,6 +91,7 @@ typedef struct s_mrt
     t_screen scrn;
     t_ambient ambt;
     t_cam cam;
+    t_light lght;
     t_sphere spr[2];
     t_plane pl[5];
 }   t_mrt;
@@ -95,11 +106,13 @@ t_vec3 ft_pixelToSpace(t_mrt *mrt, int i, int j);
 t_vec3 ft_randomColor(void);
 
 // hit.c
-double ft_hitSphere(t_sphere *spr, t_ray *r, double tmin, double tmax);
+// double ft_hitSphere(t_sphere *spr, t_ray *r, double tmin, double tmax);
+double ft_hitSphere(t_sphere *spr, t_ray *r, t_rec *rec);
 double ft_hitPlane(t_plane *plane, t_ray *r);
 
 // ray.c
 void ft_rayInfo(t_ray r);
+t_vec3 ft_lookAt(t_ray *r, double t);
 int ft_rayColor(t_mrt *mrt, t_ray *r);
 t_ray ft_makeRay(t_mrt *mrt, t_vec3 vec);
 

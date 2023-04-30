@@ -27,16 +27,21 @@ int main(void)
     mrt.cam.fov = tanf(90 * 0.5 * M_PI / 180);
 
     // ambient
-    mrt.ambt.ratio = 0.8;
-    mrt.ambt.color = (t_vec3){1.0, 1.0, 1.0};
+    mrt.ambt.ratio = 1;
+    mrt.ambt.color = ft_vec3Mul((t_vec3){1.0, 1.0, 1.0}, mrt.ambt.ratio);
+
+    // light
+    mrt.lght.orig = (t_vec3){0, -1, 3};
+    mrt.lght.ratio = 0.9;
+    mrt.lght.color = (t_vec3){1.0, 1.0, 1.0};
 
     // setup sphere
     mrt.spr[0].orig = (t_vec3){0.5, 0, -1};
     mrt.spr[0].r = 0.4;
     mrt.spr[0].color = (t_vec3){0.8, 0.2, 0.2};
     // setup sphere
-    mrt.spr[1].orig = (t_vec3){-1, 0, -2};
-    mrt.spr[1].r = 0.7;
+    mrt.spr[1].orig = (t_vec3){-0.5, 0, -1};
+    mrt.spr[1].r = 0.4;
     mrt.spr[1].color = (t_vec3){0.2, 0.8, 0.2};
     
     // // setup plane
