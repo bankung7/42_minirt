@@ -5,14 +5,17 @@ void ft_rayInfo(t_ray r)
     printf("dir : %.2f, %.2f, %.2f\n", r.dir.x, r.dir.y, r.dir.z);
 }
 
+void ft_makeColor(t_vec3 *color)
+{
+    color->x *= 255.;
+    color->y *= 255.;
+    color->z *= 255.;
+}
+
 int ft_rayColor(t_mrt *mrt, t_ray *r)
 {
-    // try hit sphere
-    // if(ft_hitSphere(&mrt->spr[0], r) == 1)
-    //     return (ft_vec3ToInt(mrt->spr[0].color));
-
     // hit world
-    t_vec3 color = (t_vec3){255, 255, 255};
+    t_vec3 color = mrt->ambt.color;
     double tnear = INFINITY;
     double t;
 
@@ -23,20 +26,23 @@ int ft_rayColor(t_mrt *mrt, t_ray *r)
         if (t > 1 && t < tnear)
         {
             tnear = t;
-            color = mrt->spr[i].color;
+            // color = mrt->spr[i].color;
+            color = ft_vec3Mulvec3(mrt->ambt.color, mrt->spr[i].color);
+            color = ft_vec3Mul(color, mrt->ambt.ratio);
         }
     }
 
     // hit plane
-    for (int i = 0; i < 5; i++)
-    {
-        t = ft_hitPlane(&mrt->pl[i], r);
-        if (t > 1 && t < tnear)
-        {
-            tnear = t;
-            color = mrt->pl[i].color;
-        }
-    }
+    // for (int i = 0; i < 5; i++)
+    // {
+    //     t = ft_hitPlane(&mrt->pl[i], r);
+    //     if (t > 1 && t < tnear)
+    //     {
+    //         tnear = t;
+    //         color = mrt->pl[i].color;
+    //     }
+    // }
+    ft_makeColor(&color);
     return (ft_vec3ToInt(color));
 }
 

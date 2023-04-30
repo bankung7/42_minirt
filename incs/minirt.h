@@ -39,6 +39,13 @@ typedef struct s_ray
     t_vec3 dir;
 }   t_ray;
 
+// lighting
+typedef struct s_ambient
+{
+    double ratio;
+    t_vec3 color;
+}   t_ambient;
+
 // camera
 typedef struct s_cam
 {
@@ -72,6 +79,7 @@ typedef struct s_mrt
 {
     t_mlx mlx;
     t_screen scrn;
+    t_ambient ambt;
     t_cam cam;
     t_sphere spr[2];
     t_plane pl[5];
