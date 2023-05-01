@@ -28,10 +28,10 @@ int main(void)
 
     // ambient
     mrt.ambt.ratio = 1;
-    mrt.ambt.color = ft_vec3Mul((t_vec3){0, 0, 0}, mrt.ambt.ratio);
+    mrt.ambt.color = ft_vec3Mul((t_vec3){1.0, 1.0, 1.0}, mrt.ambt.ratio);
 
     // light
-    mrt.lght.orig = (t_vec3){0, 2, -1};
+    mrt.lght.orig = (t_vec3){1, 1, 0};
     mrt.lght.ratio = 1.0;
     mrt.lght.color = ft_vec3Mul((t_vec3){1.0, 1.0, 1.0}, mrt.lght.ratio);
 

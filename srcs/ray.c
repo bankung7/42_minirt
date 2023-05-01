@@ -48,13 +48,10 @@ int ft_rayColor(t_mrt *mrt, t_ray *r)
     // try to find light
     if (rec.hit == 1)
     {
-        // shadow
-        
-
         // light
         t_vec3 light = ft_vec3Minus(mrt->lght.orig, rec.phit);
         double factor = fmax(0, ft_vec3Dot(rec.normal, ft_vec3Unit(light)));
-        color = ft_vec3Mulvec3(rec.color, ft_vec3Mul(mrt->lght.color, factor));
+        color = ft_vec3Mulvec3(rec.color, ft_vec3Mul(mrt->ambt.color, factor));
     }
 
     ft_makeColor(&color);
