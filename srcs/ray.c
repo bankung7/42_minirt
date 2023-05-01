@@ -38,19 +38,20 @@ int ft_rayColor(t_mrt *mrt, t_ray *r)
     }
 
     // hit plane
-    // for (int i = 0; i < 5; i++)
-    // {
-    //     t = ft_hitPlane(&mrt->pl[i], r, &rec);
-    //     if (t > 1 && t < tnear)
-    //     {
-    //         tnear = t;
-    //         color = mrt->pl[i].color;
-    //     }
-    // }
+    for (int i = 0; i < 5; i++)
+    {
+        double t = ft_hitPlane(&mrt->pl[i], r, &rec, tnear);
+        if (t > 0.001 && t <= tnear)
+            tnear = t;
+    }
 
     // try to find light
     if (rec.hit == 1)
     {
+        // shadow
+        
+
+        // light
         t_vec3 light = ft_vec3Minus(mrt->lght.orig, rec.phit);
         double factor = fmax(0, ft_vec3Dot(rec.normal, ft_vec3Unit(light)));
         color = ft_vec3Mulvec3(rec.color, ft_vec3Mul(mrt->lght.color, factor));

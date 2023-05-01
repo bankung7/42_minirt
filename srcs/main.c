@@ -28,12 +28,12 @@ int main(void)
 
     // ambient
     mrt.ambt.ratio = 1;
-    mrt.ambt.color = ft_vec3Mul((t_vec3){1.0, 1.0, 1.0}, mrt.ambt.ratio);
+    mrt.ambt.color = ft_vec3Mul((t_vec3){0, 0, 0}, mrt.ambt.ratio);
 
     // light
-    mrt.lght.orig = (t_vec3){1, 1, 0};
+    mrt.lght.orig = (t_vec3){0, 2, -1};
     mrt.lght.ratio = 1.0;
-    mrt.lght.color = (t_vec3){1.0, 1.0, 1.0};
+    mrt.lght.color = ft_vec3Mul((t_vec3){1.0, 1.0, 1.0}, mrt.lght.ratio);
 
     // setup sphere
     mrt.spr[0].orig = (t_vec3){0.6, 0, -1.5};
@@ -44,26 +44,26 @@ int main(void)
     mrt.spr[1].r = 0.5;
     mrt.spr[1].color = (t_vec3){0.2, 0.8, 0.2};
     
-    // // setup plane
-    // mrt.pl[0].p = (t_vec3){0, 0, -5};
-    // mrt.pl[0].normal = (t_vec3){0, 0, 1};
-    // mrt.pl[0].color = ft_randomColor();
-    // // setup plane
-    // mrt.pl[1].p = (t_vec3){4, 0, -5};
-    // mrt.pl[1].normal = (t_vec3){1, 0, 0};
-    // mrt.pl[1].color = ft_randomColor();
-    // // setup plane
-    // mrt.pl[2].p = (t_vec3){-4, 0, -5};
-    // mrt.pl[2].normal = (t_vec3){1, 0, 0};
-    // mrt.pl[2].color = ft_randomColor();
-    // // setup plane
-    // mrt.pl[3].p = (t_vec3){0, -4, -5};
-    // mrt.pl[3].normal = (t_vec3){0, 1, 0};
-    // mrt.pl[3].color = ft_randomColor();
-    // // setup plane
-    // mrt.pl[4].p = (t_vec3){0, 4, -5};
-    // mrt.pl[4].normal = (t_vec3){0, 1, 0};
-    // mrt.pl[4].color = ft_randomColor();
+    // setup back plane
+    mrt.pl[0].p = (t_vec3){0, 0, -5};
+    mrt.pl[0].normal = (t_vec3){0, 0, 1};
+    mrt.pl[0].color = ft_randomColor();
+    // setup right plane
+    mrt.pl[1].p = (t_vec3){4, 0, -5};
+    mrt.pl[1].normal = (t_vec3){-1, 0, 0};
+    mrt.pl[1].color = ft_randomColor();
+    // setup left plane
+    mrt.pl[2].p = (t_vec3){-4, 0, -5};
+    mrt.pl[2].normal = (t_vec3){1, 0, 0};
+    mrt.pl[2].color = ft_randomColor();
+    // setup lower plane
+    mrt.pl[3].p = (t_vec3){0, -1, -5};
+    mrt.pl[3].normal = (t_vec3){0, 1, 0};
+    mrt.pl[3].color = ft_randomColor();
+    // setup upper plane
+    mrt.pl[4].p = (t_vec3){0, 4, -5};
+    mrt.pl[4].normal = (t_vec3){0, -1, 0};
+    mrt.pl[4].color = ft_randomColor();
 
     // render
     for (int j = 0; j < mrt.scrn.height; ++j)
