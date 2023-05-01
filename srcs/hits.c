@@ -12,15 +12,15 @@ double ft_hitSphere(t_sphere *spr, t_ray *r, t_rec *rec)
     double sdis = sqrt(dis);
     double t1 = (-b - sdis) / (2. * a);
     double t2 = (-b + sdis) / (2. * a);
-    if (t1 > rec->tmin && t1 < rec->tmax && t1 < rec->t)
-        rec->t = t1;
-    if (t2 > rec->tmin && t2 < rec->tmax && t2 < rec->t)
-        rec->t = t2;
-    if (rec->t == rec->tmax)
+    if (t1 > rec->tnear && t2 > rec->tnear)
         return (0);
+    if (t1 > rec->tmin && t1 < rec->tmax && t1 < rec->tnear)
+        rec->tnear = t1;
+    if (t2 > rec->tmin && t2 < rec->tmax && t2 < rec->tnear)
+        rec->tnear = t2;
     // set phit and normal vector
     rec->hit = 1;
-    rec->phit = ft_lookAt(r, rec->t);
+    rec->phit = ft_lookAt(r, rec->tnear);
     rec->normal = ft_vec3Unit(ft_vec3Minus(rec->phit, spr->orig));
     rec->color = spr->color;
     return (1);

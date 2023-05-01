@@ -17,6 +17,19 @@ void ft_makeColor(t_vec3 *color)
     color->z *= 255.;
 }
 
+int ft_trace(t_mrt *mrt, t_ray *r)
+{
+    t_rec rec;
+
+    // trace sphere
+    for (int i = 0; i < 2; i++)
+    {
+        if (ft_hitSphere(&mrt->spr[i], r, &rec) == 1)
+            return (1);
+    }
+    return (0);
+}
+
 int ft_rayColor(t_mrt *mrt, t_ray *r)
 {
     // hit world
@@ -25,24 +38,22 @@ int ft_rayColor(t_mrt *mrt, t_ray *r)
     rec.hit = 0;
     rec.color = (t_vec3){0, 0, 0};
     rec.t = INFINITY;
+    rec.tnear = rec.t;
     rec.tmin = 0.001;
     rec.tmax = INFINITY;
 
-    double tnear = INFINITY;
+    // double tnear = INFINITY;
 
     // hit sphere
     for (int i = 0; i < 2; i++)
-    {
-        if (ft_hitSphere(&mrt->spr[i], r, &rec) == 1 && rec.t > 0.001 & rec.t < tnear)
-            tnear = rec.t;
-    }
+        ft_hitSphere(&mrt->spr[i], r, &rec);
 
     // hit plane
     for (int i = 0; i < 5; i++)
     {
-        double t = ft_hitPlane(&mrt->pl[i], r, &rec, tnear);
-        if (t > 0.001 && t <= tnear)
-            tnear = t;
+        double t = ft_hitPlane(&mrt->pl[i], r, &rec, rec.tnear);
+        if (t > 0.001 && t <= rec.tnear)
+            rec.tnear = t;
     }
 
     // try to find light
@@ -52,6 +63,12 @@ int ft_rayColor(t_mrt *mrt, t_ray *r)
         t_vec3 light = ft_vec3Minus(mrt->lght.orig, rec.phit);
         double factor = fmax(0, ft_vec3Dot(rec.normal, ft_vec3Unit(light)));
         color = ft_vec3Mulvec3(rec.color, ft_vec3Mul(mrt->ambt.color, factor));
+
+        // shadow
+        // t_ray sray;
+        // sray.orig = ft_vec3Plus(rec.phit, ft_vec3Mul(rec.normal, 0.01));
+        // sray.dir = ft_vec3Unit(ft_vec3Minus(mrt->lght.orig, rec.phit));
+        // ft_vec3Mul(color, ft_trace(mrt, &sray));
     }
 
     ft_makeColor(&color);

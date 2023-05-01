@@ -31,6 +31,7 @@ typedef struct s_rec
     t_vec3 color;
     double tmin;
     double tmax;
+    double tnear;
 }   t_rec;
 
 // ray

@@ -12,8 +12,8 @@ int main(void)
     t_mrt mrt;
     
     // setup screen
-    mrt.scrn.width = 640;
-    mrt.scrn.height = 480;
+    mrt.scrn.width = 640 * 1.5;
+    mrt.scrn.height = 480 * 1.5;
     mrt.scrn.aspectRatio = (double)mrt.scrn.width / mrt.scrn.height;
     
     // setup mlx
@@ -31,17 +31,17 @@ int main(void)
     mrt.ambt.color = ft_vec3Mul((t_vec3){1.0, 1.0, 1.0}, mrt.ambt.ratio);
 
     // light
-    mrt.lght.orig = (t_vec3){1, 1, 0};
+    mrt.lght.orig = (t_vec3){0, 2, 0};
     mrt.lght.ratio = 1.0;
     mrt.lght.color = ft_vec3Mul((t_vec3){1.0, 1.0, 1.0}, mrt.lght.ratio);
 
     // setup sphere
-    mrt.spr[0].orig = (t_vec3){0.6, 0, -1.5};
-    mrt.spr[0].r = 0.5;
+    mrt.spr[0].orig = (t_vec3){0.3, 0, -1.5};
+    mrt.spr[0].r = 0.6;
     mrt.spr[0].color = (t_vec3){0.8, 0.2, 0.2};
     // setup sphere
-    mrt.spr[1].orig = (t_vec3){-0.6, 0, -1.5};
-    mrt.spr[1].r = 0.5;
+    mrt.spr[1].orig = (t_vec3){-0.3, 0, -1.5};
+    mrt.spr[1].r = 0.8;
     mrt.spr[1].color = (t_vec3){0.2, 0.8, 0.2};
     
     // setup back plane
