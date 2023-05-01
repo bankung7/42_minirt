@@ -21,9 +21,11 @@ int ft_rayColor(t_mrt *mrt, t_ray *r)
 {
     // hit world
     t_rec rec;
+    t_vec3 color = mrt->ambt.color;
     rec.hit = 0;
-    rec.color = mrt->ambt.color;
-    rec.tmin = 1;
+    rec.color = (t_vec3){0, 0, 0};
+    rec.t = INFINITY;
+    rec.tmin = 0.001;
     rec.tmax = INFINITY;
 
     double tnear = INFINITY;
@@ -31,17 +33,14 @@ int ft_rayColor(t_mrt *mrt, t_ray *r)
     // hit sphere
     for (int i = 0; i < 2; i++)
     {
-        if (ft_hitSphere(&mrt->spr[i], r, &rec) == 1 && rec.t > 1 & rec.t < tnear)
-        {
+        if (ft_hitSphere(&mrt->spr[i], r, &rec) == 1 && rec.t > 0.001 & rec.t < tnear)
             tnear = rec.t;
-            rec.color = ft_vec3Mulvec3(mrt->ambt.color, mrt->spr[i].color);
-        }
     }
 
     // hit plane
     // for (int i = 0; i < 5; i++)
     // {
-    //     t = ft_hitPlane(&mrt->pl[i], r);
+    //     t = ft_hitPlane(&mrt->pl[i], r, &rec);
     //     if (t > 1 && t < tnear)
     //     {
     //         tnear = t;
@@ -52,16 +51,13 @@ int ft_rayColor(t_mrt *mrt, t_ray *r)
     // try to find light
     if (rec.hit == 1)
     {
-        t_vec3 pl = ft_vec3Minus(mrt->lght.orig, rec.phit);
-        double cosine = fmax(0, ft_vec3Dot(rec.normal, ft_vec3Unit(pl)));
-        // printf("lambert factor : %.4f\n", cosine);
-        double luminosity = 1.0 / (rec.t * rec.t);
-        t_vec3 lcolor = ft_vec3Mul(mrt->lght.color, (cosine * luminosity));
-        rec.color = ft_vec3Mulvec3(lcolor, rec.color);
+        t_vec3 light = ft_vec3Minus(mrt->lght.orig, rec.phit);
+        double factor = fmax(0, ft_vec3Dot(rec.normal, ft_vec3Unit(light)));
+        color = ft_vec3Mulvec3(rec.color, ft_vec3Mul(mrt->lght.color, factor));
     }
 
-    ft_makeColor(&rec.color);
-    return (ft_vec3ToInt(rec.color));
+    ft_makeColor(&color);
+    return (ft_vec3ToInt(color));
 }
 
 t_ray ft_makeRay(t_mrt *mrt, t_vec3 vec)
