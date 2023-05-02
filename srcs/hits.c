@@ -12,12 +12,24 @@ double ft_hitSphere(t_sphere *spr, t_ray *r, t_rec *rec)
     double sdis = sqrt(dis);
     double t1 = (-b - sdis) / (2. * a);
     double t2 = (-b + sdis) / (2. * a);
-    if (t1 > rec->tnear && t2 > rec->tnear)
+    // if (t1 > rec->tnear && t2 > rec->tnear)
+    //     return (0);
+    // if (t1 > rec->tmin && t1 < rec->tmax && t1 < rec->tnear)
+    //     rec->tnear = t1;
+    // if (t2 > rec->tmin && t2 < rec->tmax && t2 < rec->tnear)
+    //     rec->tnear = t2;
+    
+    if (t1 > t2)
+        t1 = t2;
+    if (t1 < 0)
+    {
+        t1 = t2;
+        if (t1 < 0)
+            return (0);
+    }
+    if (t1 > rec->tnear)
         return (0);
-    if (t1 > rec->tmin && t1 < rec->tmax && t1 < rec->tnear)
-        rec->tnear = t1;
-    if (t2 > rec->tmin && t2 < rec->tmax && t2 < rec->tnear)
-        rec->tnear = t2;
+    rec->tnear = t1;
     // set phit and normal vector
     rec->hit = 1;
     rec->phit = ft_lookAt(r, rec->tnear);
@@ -26,7 +38,7 @@ double ft_hitSphere(t_sphere *spr, t_ray *r, t_rec *rec)
     return (1);
 }
 
-double ft_hitPlane(t_plane *plane, t_ray *r, t_rec *rec, double tnear)
+double ft_hitPlane(t_plane *plane, t_ray *r, t_rec *rec)
 {
     double t;
     double denom = ft_vec3Dot(plane->normal, r->dir);
@@ -34,13 +46,14 @@ double ft_hitPlane(t_plane *plane, t_ray *r, t_rec *rec, double tnear)
     {
         t_vec3 pl = ft_vec3Minus(plane->p, r->orig);
         t = ft_vec3Dot(pl, plane->normal) / denom;
-        if (t > 0.0001 && t < rec->t && t < tnear)
+        if (t > 0.0001 && t < rec->tnear)
         {
             rec->hit = 1;
-            rec->normal = plane->normal;
+            rec->normal = ft_vec3Unit(plane->normal);
             rec->phit = ft_lookAt(r, t);
             rec->color = plane->color;
-            return (t);
+            rec->tnear = t;
+            return (1);
         }
     }
     return (0);

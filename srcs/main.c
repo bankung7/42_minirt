@@ -12,8 +12,8 @@ int main(void)
     t_mrt mrt;
     
     // setup screen
-    mrt.scrn.width = 640 * 1.5;
-    mrt.scrn.height = 480 * 1.5;
+    mrt.scrn.width = 640 * 1.2;
+    mrt.scrn.height = 480 * 1.2;
     mrt.scrn.aspectRatio = (double)mrt.scrn.width / mrt.scrn.height;
     
     // setup mlx
@@ -27,21 +27,21 @@ int main(void)
     mrt.cam.fov = tanf(90 * 0.5 * M_PI / 180);
 
     // ambient
-    mrt.ambt.ratio = 1;
+    mrt.ambt.ratio = 1.0;
     mrt.ambt.color = ft_vec3Mul((t_vec3){1.0, 1.0, 1.0}, mrt.ambt.ratio);
 
     // light
-    mrt.lght.orig = (t_vec3){0, 2, 0};
+    mrt.lght.orig = (t_vec3){1, 2, 0};
     mrt.lght.ratio = 1.0;
     mrt.lght.color = ft_vec3Mul((t_vec3){1.0, 1.0, 1.0}, mrt.lght.ratio);
 
     // setup sphere
-    mrt.spr[0].orig = (t_vec3){0.3, 0, -1.5};
+    mrt.spr[0].orig = (t_vec3){0.4, 0, -1.5};
     mrt.spr[0].r = 0.6;
     mrt.spr[0].color = (t_vec3){0.8, 0.2, 0.2};
     // setup sphere
-    mrt.spr[1].orig = (t_vec3){-0.3, 0, -1.5};
-    mrt.spr[1].r = 0.8;
+    mrt.spr[1].orig = (t_vec3){-0.5, 0, -1.5};
+    mrt.spr[1].r = 0.4;
     mrt.spr[1].color = (t_vec3){0.2, 0.8, 0.2};
     
     // setup back plane
@@ -63,7 +63,7 @@ int main(void)
     // setup upper plane
     mrt.pl[4].p = (t_vec3){0, 4, -5};
     mrt.pl[4].normal = (t_vec3){0, -1, 0};
-    mrt.pl[4].color = ft_randomColor();
+    mrt.pl[4].color = (t_vec3){1, 1, 1};
 
     // render
     for (int j = 0; j < mrt.scrn.height; ++j)

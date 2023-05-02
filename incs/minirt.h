@@ -109,7 +109,7 @@ t_vec3 ft_randomColor(void);
 // hit.c
 // double ft_hitSphere(t_sphere *spr, t_ray *r, double tmin, double tmax);
 double ft_hitSphere(t_sphere *spr, t_ray *r, t_rec *rec);
-double ft_hitPlane(t_plane *plane, t_ray *r, t_rec *rec, double tnear);
+double ft_hitPlane(t_plane *plane, t_ray *r, t_rec *rec);
 
 // ray.c
 void ft_rayInfo(t_ray r);
