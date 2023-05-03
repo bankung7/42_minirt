@@ -22,7 +22,7 @@ int ft_trace(t_mrt *mrt, t_ray *r)
     t_rec rec;
 
     // trace sphere
-    for (int i = 0; i < 3; i++)
+    for (int i = 0; i < 1; i++)
     {
         if (ft_hitSphere(&mrt->spr[i], r, &rec) == 1)
             return (1);
@@ -45,7 +45,7 @@ int ft_rayColor(t_mrt *mrt, t_ray *r)
     // double tnear = INFINITY;
 
     // hit sphere
-    for (int i = 0; i < 3; i++)
+    for (int i = 0; i < 1; i++)
         ft_hitSphere(&mrt->spr[i], r, &rec);
 
     // hit plane

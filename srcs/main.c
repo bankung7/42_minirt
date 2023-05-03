@@ -31,7 +31,7 @@ int main(void)
     mrt.ambt.color = (t_vec3){1.0, 1.0, 1.0};
 
     // light
-    mrt.lght.orig = (t_vec3){-0.5, 1.5, 1};
+    mrt.lght.orig = (t_vec3){2, 2, 1};
     mrt.lght.ratio = 0.5;
     mrt.lght.color = (t_vec3){1.0, 1.0, 1.0};
 
@@ -70,19 +70,22 @@ int main(void)
     mrt.pl[4].color = (t_vec3){1, 1, 1};
 
     // render
-    for (int j = 0; j < mrt.scrn.height; ++j)
-    {
-        for (int i = 0; i < mrt.scrn.width; ++i)
-        {
-            // create ray
-            t_vec3 vec = ft_pixelToSpace(&mrt, i, j);
-            t_ray ray = ft_makeRay(&mrt, vec);
-            // ft_rayInfo(ray);
-            ft_putPixel(&mrt.mlx, i, j, ft_rayColor(&mrt, &ray));
-        }
-    }
-    mlx_put_image_to_window(mrt.mlx.mlx, mrt.mlx.mlx_win, mrt.mlx.img, 0, 0);
-    mlx_loop(mrt.mlx.mlx);
+    // for (int j = 0; j < mrt.scrn.height; ++j)
+    // {
+    //     for (int i = 0; i < mrt.scrn.width; ++i)
+    //     {
+    //         // create ray
+    //         t_vec3 vec = ft_pixelToSpace(&mrt, i, j);
+    //         t_ray ray = ft_makeRay(&mrt, vec);
+    //         // ft_rayInfo(ray);
+    //         ft_putPixel(&mrt.mlx, i, j, ft_rayColor(&mrt, &ray));
+    //     }
+    // }
+
+    ft_render(&mrt);
+    // mlx_put_image_to_window(mrt.mlx.mlx, mrt.mlx.mlx_win, mrt.mlx.img, 0, 0);
+    // mlx_hook(mrt.mlx.mlx_win, 2, 1L<<1, ft_hook, &mrt);
+    // mlx_loop(mrt.mlx.mlx);
 
     return (0);
 }

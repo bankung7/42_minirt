@@ -12,12 +12,6 @@ double ft_hitSphere(t_sphere *spr, t_ray *r, t_rec *rec)
     double sdis = sqrt(dis);
     double t1 = (-b - sdis) / (2. * a);
     double t2 = (-b + sdis) / (2. * a);
-    // if (t1 > rec->tnear && t2 > rec->tnear)
-    //     return (0);
-    // if (t1 > rec->tmin && t1 < rec->tmax && t1 < rec->tnear)
-    //     rec->tnear = t1;
-    // if (t2 > rec->tmin && t2 < rec->tmax && t2 < rec->tnear)
-    //     rec->tnear = t2;
     
     if (t1 > t2)
         t1 = t2;

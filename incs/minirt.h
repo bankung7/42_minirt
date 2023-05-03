@@ -117,4 +117,10 @@ t_vec3 ft_lookAt(t_ray *r, double t);
 int ft_rayColor(t_mrt *mrt, t_ray *r);
 t_ray ft_makeRay(t_mrt *mrt, t_vec3 vec);
 
+// hook.c
+int	ft_hook(int keycode, t_mrt *mrt);
+
+// render.c
+void ft_render(t_mrt *mrt);
+
 #endif
