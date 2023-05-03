@@ -24,25 +24,29 @@ int main(void)
 
     // setup camera
     mrt.cam.o = (t_vec3){0, 0, 0};
-    mrt.cam.fov = tanf(90 * 0.5 * M_PI / 180);
+    mrt.cam.fov = tanf(100 * 0.5 * M_PI / 180);
 
     // ambient
-    mrt.ambt.ratio = 1.0;
-    mrt.ambt.color = ft_vec3Mul((t_vec3){1.0, 1.0, 1.0}, mrt.ambt.ratio);
+    mrt.ambt.ratio = 0.2;
+    mrt.ambt.color = (t_vec3){1.0, 1.0, 1.0};
 
     // light
-    mrt.lght.orig = (t_vec3){1, 2, 0};
-    mrt.lght.ratio = 1.0;
-    mrt.lght.color = ft_vec3Mul((t_vec3){1.0, 1.0, 1.0}, mrt.lght.ratio);
+    mrt.lght.orig = (t_vec3){-1, 1, 1};
+    mrt.lght.ratio = 1;
+    mrt.lght.color = (t_vec3){1.0, 1.0, 1.0};
 
     // setup sphere
     mrt.spr[0].orig = (t_vec3){0.4, 0, -1.5};
-    mrt.spr[0].r = 0.6;
+    mrt.spr[0].r = 0.5;
     mrt.spr[0].color = (t_vec3){0.8, 0.2, 0.2};
     // setup sphere
-    mrt.spr[1].orig = (t_vec3){-0.5, 0, -1.5};
-    mrt.spr[1].r = 0.4;
+    mrt.spr[1].orig = (t_vec3){-0.3, 0, -0.7};
+    mrt.spr[1].r = 0.3;
     mrt.spr[1].color = (t_vec3){0.2, 0.8, 0.2};
+    // setup sphere
+    mrt.spr[2].orig = (t_vec3){0, 0.4, -0.8};
+    mrt.spr[2].r = 0.2;
+    mrt.spr[2].color = (t_vec3){0.2, 0.2, 0.8};
     
     // setup back plane
     mrt.pl[0].p = (t_vec3){0, 0, -5};
@@ -57,7 +61,7 @@ int main(void)
     mrt.pl[2].normal = (t_vec3){1, 0, 0};
     mrt.pl[2].color = ft_randomColor();
     // setup lower plane
-    mrt.pl[3].p = (t_vec3){0, -1, -5};
+    mrt.pl[3].p = (t_vec3){0, -1.5, -5};
     mrt.pl[3].normal = (t_vec3){0, 1, 0};
     mrt.pl[3].color = ft_randomColor();
     // setup upper plane

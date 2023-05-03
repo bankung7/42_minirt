@@ -22,7 +22,7 @@ int ft_trace(t_mrt *mrt, t_ray *r)
     t_rec rec;
 
     // trace sphere
-    for (int i = 0; i < 2; i++)
+    for (int i = 0; i < 3; i++)
     {
         if (ft_hitSphere(&mrt->spr[i], r, &rec) == 1)
             return (1);
@@ -45,7 +45,7 @@ int ft_rayColor(t_mrt *mrt, t_ray *r)
     // double tnear = INFINITY;
 
     // hit sphere
-    for (int i = 0; i < 2; i++)
+    for (int i = 0; i < 3; i++)
         ft_hitSphere(&mrt->spr[i], r, &rec);
 
     // hit plane
@@ -55,16 +55,30 @@ int ft_rayColor(t_mrt *mrt, t_ray *r)
     // try to find light
     if (rec.hit == 1)
     {
-        // light
+        // // ambient light
+        // t_vec3 acolor = ft_vec3Mul(mrt->ambt.color, mrt->ambt.ratio);
+        // // color = ft_vec3Mul(mrt->ambt.color, mrt->ambt.ratio);
+        // // color = ft_vec3Mulvec3(color, rec.color);
+
+        // // diffuse light
+        // t_vec3 light = ft_vec3Unit(ft_vec3Minus(mrt->lght.orig, rec.phit));
+        // double factor = fmax(0, ft_vec3Dot(rec.normal, light));
+        // t_vec3 dcolor = ft_vec3Mul(rec.color, (factor * mrt->lght.ratio));
+        // // color = ft_vec3Mulvec3(color, ft_vec3Mul(mrt->lght.color, 0.8 * factor));
+
+        // total light
+        // color = ft_vec3Plus(acolor, dcolor);
+
+        //light
         t_vec3 light = ft_vec3Unit(ft_vec3Minus(mrt->lght.orig, rec.phit));
         double factor = fmax(0, ft_vec3Dot(rec.normal, light));
         double lightPower = factor * mrt->lght.ratio;
         double lightReflect = 1; // note to think about albedo value
         color = ft_vec3Mul(ft_vec3Mulvec3(rec.color, mrt->lght.color), lightPower * lightReflect);
 
-        // shadow
+        // // shadow
         t_ray shadow;
-        shadow.orig = ft_vec3Plus(rec.phit, ft_vec3Mul(rec.normal, 1e-13));
+        shadow.orig = ft_vec3Plus(rec.phit, ft_vec3Mul(rec.normal, 1e-4));
         shadow.dir = light;
         if (ft_trace(mrt, &shadow) == 1)
             color = ft_vec3Mul(color, 0);

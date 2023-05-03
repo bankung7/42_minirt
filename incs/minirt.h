@@ -93,7 +93,7 @@ typedef struct s_mrt
     t_ambient ambt;
     t_cam cam;
     t_light lght;
-    t_sphere spr[2];
+    t_sphere spr[3];
     t_plane pl[5];
 }   t_mrt;
 
