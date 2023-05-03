@@ -31,8 +31,8 @@ int main(void)
     mrt.ambt.color = (t_vec3){1.0, 1.0, 1.0};
 
     // light
-    mrt.lght.orig = (t_vec3){-1, 1, 1};
-    mrt.lght.ratio = 1;
+    mrt.lght.orig = (t_vec3){-0.5, 1.5, 1};
+    mrt.lght.ratio = 0.5;
     mrt.lght.color = (t_vec3){1.0, 1.0, 1.0};
 
     // setup sphere
@@ -44,7 +44,7 @@ int main(void)
     mrt.spr[1].r = 0.3;
     mrt.spr[1].color = (t_vec3){0.2, 0.8, 0.2};
     // setup sphere
-    mrt.spr[2].orig = (t_vec3){0, 0.4, -0.8};
+    mrt.spr[2].orig = (t_vec3){0.1, 0.3, -0.5};
     mrt.spr[2].r = 0.2;
     mrt.spr[2].color = (t_vec3){0.2, 0.2, 0.8};
     

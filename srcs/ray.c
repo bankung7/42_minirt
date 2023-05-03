@@ -34,7 +34,7 @@ int ft_rayColor(t_mrt *mrt, t_ray *r)
 {
     // hit world
     t_rec rec;
-    t_vec3 color = mrt->ambt.color;
+    t_vec3 color;
     rec.hit = 0;
     rec.color = (t_vec3){0, 0, 0};
     rec.t = INFINITY;
@@ -55,26 +55,32 @@ int ft_rayColor(t_mrt *mrt, t_ray *r)
     // try to find light
     if (rec.hit == 1)
     {
-        // // ambient light
-        // t_vec3 acolor = ft_vec3Mul(mrt->ambt.color, mrt->ambt.ratio);
-        // // color = ft_vec3Mul(mrt->ambt.color, mrt->ambt.ratio);
-        // // color = ft_vec3Mulvec3(color, rec.color);
+        // ambient light
+        t_vec3 aColor = ft_vec3Mulvec3(rec.color, ft_vec3Mul(mrt->ambt.color, mrt->ambt.ratio));
 
-        // // diffuse light
-        // t_vec3 light = ft_vec3Unit(ft_vec3Minus(mrt->lght.orig, rec.phit));
-        // double factor = fmax(0, ft_vec3Dot(rec.normal, light));
-        // t_vec3 dcolor = ft_vec3Mul(rec.color, (factor * mrt->lght.ratio));
-        // // color = ft_vec3Mulvec3(color, ft_vec3Mul(mrt->lght.color, 0.8 * factor));
-
-        // total light
-        // color = ft_vec3Plus(acolor, dcolor);
-
-        //light
+        // diffuse light
         t_vec3 light = ft_vec3Unit(ft_vec3Minus(mrt->lght.orig, rec.phit));
         double factor = fmax(0, ft_vec3Dot(rec.normal, light));
-        double lightPower = factor * mrt->lght.ratio;
-        double lightReflect = 1; // note to think about albedo value
-        color = ft_vec3Mul(ft_vec3Mulvec3(rec.color, mrt->lght.color), lightPower * lightReflect);
+        t_vec3 dColor = ft_vec3Mul(rec.color, factor);
+
+        // specular light
+        t_vec3 reflect = ft_vec3Minus(ft_vec3Mul(rec.normal, 2.0 * ft_vec3Dot(rec.normal, light)), light);
+        t_vec3 toCam = ft_vec3Mul(rec.phit, -1.0);
+        reflect = ft_vec3Unit(reflect);
+        toCam = ft_vec3Unit(toCam);
+        double cosine = fmax(0, ft_vec3Dot(reflect, toCam));
+        cosine = pow(cosine, 100);
+        t_vec3 sColor = (t_vec3){0, 0, 0};
+        if (cosine > 0.0)
+        {
+            sColor = ft_vec3Mul(mrt->lght.color, cosine);
+            dColor = ft_vec3Mul(dColor, 1.0 - cosine);
+        }
+
+        // total light
+        color = ft_vec3Plus(aColor, dColor);
+        color = ft_vec3Plus(color, sColor);
+        color = ft_vec3Mulvec3(rec.color, color);
 
         // // shadow
         t_ray shadow;
