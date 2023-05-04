@@ -2,7 +2,7 @@ NAME = minirt
 
 CC = gcc
 
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -g
 
 RM = rm -rf
 
@@ -15,8 +15,8 @@ INCS = -Iincs -Ilibft -Imlx
 LINKER = -Lincs -Llibft -Lmlx -lmlx -framework OpenGL -framework AppKit 
 
 SRCS_DIR = srcs/
-SRCS = main.c mlx.c \
-	vector.c ray.c hits.c utils.c hook.c render.c \
+SRCS = main.c mlx.c parsing.c parsing2.c free.c \
+	vector.c ray.c hits.c utils.c hook.c render.c log.c
 
 OBJS_DIR = objs/
 OBJS = $(addprefix $(OBJS_DIR), $(SRCS:.c=.o))

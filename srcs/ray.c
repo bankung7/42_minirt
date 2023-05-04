@@ -59,7 +59,7 @@ int ft_rayColor(t_mrt *mrt, t_ray *r)
         t_vec3 aColor = ft_vec3Mulvec3(rec.color, ft_vec3Mul(mrt->ambt.color, mrt->ambt.ratio));
 
         // diffuse light
-        t_vec3 light = ft_vec3Unit(ft_vec3Minus(mrt->lght.orig, rec.phit));
+        t_vec3 light = ft_vec3Unit(ft_vec3Minus(mrt->lght->orig, rec.phit));
         double factor = fmax(0, ft_vec3Dot(rec.normal, light));
         t_vec3 dColor = ft_vec3Mul(rec.color, factor);
 
@@ -73,7 +73,7 @@ int ft_rayColor(t_mrt *mrt, t_ray *r)
         t_vec3 sColor = (t_vec3){0, 0, 0};
         if (cosine > 0.0)
         {
-            sColor = ft_vec3Mul(mrt->lght.color, cosine);
+            sColor = ft_vec3Mul(mrt->lght->color, cosine);
             dColor = ft_vec3Mul(dColor, 1.0 - cosine);
         }
 
@@ -98,5 +98,5 @@ t_ray ft_makeRay(t_mrt *mrt, t_vec3 vec)
 {
     // for the direction is not sure to be normalize or not
     // return ((t_ray){mrt->cam.o, ft_vec3Minus(vec, mrt->cam.o)});
-    return ((t_ray){mrt->cam.o, ft_vec3Unit(ft_vec3Minus(vec, mrt->cam.o))});
+    return ((t_ray){mrt->cam.orig, ft_vec3Unit(ft_vec3Minus(vec, mrt->cam.orig))});
 }
