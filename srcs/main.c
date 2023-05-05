@@ -35,59 +35,10 @@ int main(int argc, char **argv)
     // srand
     srand(0);
 
-    // setup camera
-    mrt.cam.orig = (t_vec3){0, 0, 0};
-    mrt.cam.fov = tanf(100 * 0.5 * M_PI / 180);
-
-    // ambient
-    // mrt.ambt.ratio = 1;
-    // mrt.ambt.color = (t_vec3){1.0, 1.0, 1.0};
-
-    // light
-    // mrt.lght.orig = (t_vec3){2, 2, 1};
-    // mrt.lght.ratio = 0.5;
-    // mrt.lght.color = (t_vec3){1.0, 1.0, 1.0};
-
-    // // setup sphere
-    // mrt.spr[0].orig = (t_vec3){0.4, 0, -1.5};
-    // mrt.spr[0].r = 0.5;
-    // mrt.spr[0].color = (t_vec3){0.8, 0.2, 0.2};
-    // // setup sphere
-    // mrt.spr[1].orig = (t_vec3){-0.3, 0, -0.7};
-    // mrt.spr[1].r = 0.3;
-    // mrt.spr[1].color = (t_vec3){0.2, 0.8, 0.2};
-    // // setup sphere
-    // mrt.spr[2].orig = (t_vec3){0.1, 0.3, -0.5};
-    // mrt.spr[2].r = 0.2;
-    // mrt.spr[2].color = (t_vec3){0.2, 0.2, 0.8};
-    
-    // // setup back plane
-    // mrt.pl[0].p = (t_vec3){0, 0, -5};
-    // mrt.pl[0].normal = (t_vec3){0, 0, 1};
-    // mrt.pl[0].color = ft_randomColor();
-    // // setup right plane
-    // mrt.pl[1].p = (t_vec3){4, 0, -5};
-    // mrt.pl[1].normal = (t_vec3){-1, 0, 0};
-    // mrt.pl[1].color = ft_randomColor();
-    // // setup left plane
-    // mrt.pl[2].p = (t_vec3){-4, 0, -5};
-    // mrt.pl[2].normal = (t_vec3){1, 0, 0};
-    // mrt.pl[2].color = ft_randomColor();
-    // // setup lower plane
-    // mrt.pl[3].p = (t_vec3){0, -1.5, -5};
-    // mrt.pl[3].normal = (t_vec3){0, 1, 0};
-    // mrt.pl[3].color = ft_randomColor();
-    // // setup upper plane
-    // mrt.pl[4].p = (t_vec3){0, 4, -5};
-    // mrt.pl[4].normal = (t_vec3){0, -1, 0};
-    // mrt.pl[4].color = (t_vec3){1, 1, 1};
+    // set fov
+    mrt.cam.fov = tanf(mrt.cam.ifov * 0.5 * M_PI / 180);
 
     ft_render(&mrt);
 
-    // try close window
-    mlx_destroy_image(mrt.mlx.mlx, mrt.mlx.img);
-    mlx_destroy_window(mrt.mlx.mlx, mrt.mlx.mlx_win);
-
-    ft_clean(&mrt);
     return (0);
 }

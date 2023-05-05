@@ -55,9 +55,9 @@ int ft_checkAttr(t_mrt *mrt, char **attr)
 {
     if (ft_strncmp("A", attr[0], 2) == 0 && ft_arrLen(attr) == 3)
         return (ft_getAmbient(mrt, attr));
-    if (ft_strncmp("C", attr[0], 2) == 0)
+    if (ft_strncmp("C", attr[0], 2) == 0 || ft_strncmp("c", attr[0], 2) == 0)
         return (ft_getCamera(mrt, attr));
-    if (ft_strncmp("L", attr[0], 2) == 0)
+    if (ft_strncmp("L", attr[0], 2) == 0 || ft_strncmp("l", attr[0], 2) == 0)
         return (ft_getLight(mrt, attr));
     if (ft_strncmp("sp", attr[0], 3) == 0)
         return (ft_getSphere(mrt, attr));
@@ -98,8 +98,11 @@ int ft_parsing(t_mrt *mrt, char *file)
 {
     // check the extension of the file
     char *extension = ft_strchr(file, '.');
-    if ((extension - file - 1 != 3) || ft_strncmp(".rt", extension, 4))
+    if (((int)ft_strlen(file) - (extension - file) != 3) || ft_strncmp(".rt", extension, 4))
+    {
+        printf("%ld\n", (int)ft_strlen(file) - (extension - file));
         return (ft_log("Error\nFile name : [filename].rt", 1));
+    }
 
     // open file
     int fd = open(file, O_RDONLY);

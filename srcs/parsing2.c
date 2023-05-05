@@ -1,21 +1,5 @@
 #include "minirt.h"
 
-// try read attr
-void ft_readAttr(char **attr)
-{
-    int i = 0;
-    while (attr && attr[i])
-        printf("%s\n", attr[i++]);
-}
-
-int ft_arrLen(char **arr)
-{
-    int i = 0;
-    while (arr && arr[i])
-        i++;
-    return (i);
-}
-
 // get ambient
 // ∗ identifier: A
 // ∗ ambient lighting ratio in range [0.0,1.0]: 0.2
@@ -46,6 +30,7 @@ int ft_getAmbient(t_mrt *mrt, char **input)
 // ∗ FOV : Horizontal field of view in degrees in range [0,180]: 70
 int ft_getCamera(t_mrt *mrt, char **input)
 {
+    ft_readAttr(input);
     if (ft_arrLen(input) != 4)
         return (ft_log("Error\nCamera argument fail", 1));
 
@@ -54,11 +39,11 @@ int ft_getCamera(t_mrt *mrt, char **input)
         return (ft_log("Error\nCamera coordinate fail", 1));
 
     // get 3d normal orientation vector
-    if (ft_setVec3(&mrt->cam.rot, input[2], 0.0, 1.0))
+    if (ft_setVec3(&mrt->cam.rot, input[2], -1.0, 1.0))
         return (ft_log("Error\nCamera rotation fail", 1));
 
     // get fov
-    mrt->cam.fov = ft_atoi(input[3]);
+    mrt->cam.ifov = ft_atoi(input[3]);
     printf("Camera Completed\n");
     return (0);
 }

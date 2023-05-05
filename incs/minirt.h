@@ -67,6 +67,7 @@ typedef struct s_cam
 {
     t_vec3 orig;
     t_vec3 rot;
+    double ifov;
     double fov;
 }   t_cam;
 
@@ -127,9 +128,11 @@ void ft_putPixel(t_mlx *data, int x, int y, int color);
 void ft_setupMLX(t_mrt *mrt);
 
 // utils.c
-int ft_vec3ToInt(t_vec3 v);
-t_vec3 ft_pixelToSpace(t_mrt *mrt, int i, int j);
+double ft_clamp(double v, double min, double max);
 t_vec3 ft_randomColor(void);
+int ft_arrLen(char **arr);
+void ft_readAttr(char **attr);
+void ft_vec3Info(t_vec3 v);
 void ft_addSphere(t_sphere **spr, t_sphere *node);
 void ft_addPlane(t_plane **pl, t_plane *node);
 void ft_addLight(t_light **lght, t_light *node);
@@ -146,16 +149,17 @@ int ft_rayColor(t_mrt *mrt, t_ray *r);
 t_ray ft_makeRay(t_mrt *mrt, t_vec3 vec);
 
 // hook.c
-int	ft_hook(int keycode, t_mrt *mrt);
+int	ft_exit(int keycode, t_mrt *mrt);
 
 // render.c
 void ft_render(t_mrt *mrt);
+int ft_vec3ToInt(t_vec3 v);
+t_vec3 ft_pixelToSpace(t_mrt *mrt, int i, int j);
 void ft_parameter(t_mrt *mrt);
 
 // log.c
 int ft_log(char *str, int res);
 int ft_flog(char *str, int res, char **arr, char *s);
-void ft_vec3Info(t_vec3 v);
 
 // parsing.c
 double ft_getDouble(char *str);
@@ -167,9 +171,6 @@ char **ft_getAttr(char *input, int delim, int n);
 int ft_parsing(t_mrt *mrt, char *file);
 
 // parsing2.c
-int ft_arrLen(char **arr);
-void ft_readAttr(char **attr);
-int ft_free2(char **arr);
 int ft_getAmbient(t_mrt *mrt, char **attr);
 int ft_getCamera(t_mrt *mrt, char **input);
 int ft_getLight(t_mrt *mrt, char **input);
@@ -178,6 +179,8 @@ int ft_getPlane(t_mrt *mrt, char **input);
 int ft_getCylinder(t_mrt *mrt, char **input);
 
 // free.c
+int ft_free2(char **arr);
+void ft_freeList(t_list *node);
 int ft_clean(t_mrt *mrt);
 
 #endif

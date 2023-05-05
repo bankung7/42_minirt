@@ -12,29 +12,34 @@ t_vec3 ft_lookAt(t_ray *r, double t)
 
 void ft_makeColor(t_vec3 *color)
 {
-    color->x *= 255.;
-    color->y *= 255.;
-    color->z *= 255.;
+    color->x *= 255.0;
+    color->y *= 255.0;
+    color->z *= 255.0;
+    color->x = ft_clamp(color->x, 0, 255);
+    color->y = ft_clamp(color->y, 0, 255);
+    color->z = ft_clamp(color->z, 0, 255);
 }
 
 int ft_trace(t_mrt *mrt, t_ray *r)
 {
     t_rec rec;
+    t_sphere *shead = mrt->spr;
 
     // trace sphere
-    for (int i = 0; i < 1; i++)
+    while (shead)
     {
-        if (ft_hitSphere(&mrt->spr[i], r, &rec) == 1)
-            return (1);
+        if (ft_hitSphere(shead, r, &rec) == 1)
+            return (0);
+        shead = shead->next;
     }
-    return (0);
+    return (1);
 }
 
 int ft_rayColor(t_mrt *mrt, t_ray *r)
 {
     // hit world
     t_rec rec;
-    t_vec3 color;
+    t_vec3 color = (t_vec3){0, 0, 0};
     rec.hit = 0;
     rec.color = (t_vec3){0, 0, 0};
     rec.t = INFINITY;
@@ -42,52 +47,48 @@ int ft_rayColor(t_mrt *mrt, t_ray *r)
     rec.tmin = 0.001;
     rec.tmax = INFINITY;
 
-    // double tnear = INFINITY;
-
     // hit sphere
-    for (int i = 0; i < 1; i++)
-        ft_hitSphere(&mrt->spr[i], r, &rec);
+    t_sphere *shead = mrt->spr;
+    while (shead)
+    {
+        ft_hitSphere(shead, r, &rec);
+        shead = shead->next;
+    }
 
     // hit plane
-    for (int i = 0; i < 5; i++)
-        ft_hitPlane(&mrt->pl[i], r, &rec);
+    t_plane *thead = mrt->pl;
+    while (thead)
+    {
+        ft_hitPlane(thead, r, &rec);
+        thead = thead->next;
+    }
 
     // try to find light
     if (rec.hit == 1)
     {
         // ambient light
-        t_vec3 aColor = ft_vec3Mulvec3(rec.color, ft_vec3Mul(mrt->ambt.color, mrt->ambt.ratio));
 
         // diffuse light
         t_vec3 light = ft_vec3Unit(ft_vec3Minus(mrt->lght->orig, rec.phit));
-        double factor = fmax(0, ft_vec3Dot(rec.normal, light));
-        t_vec3 dColor = ft_vec3Mul(rec.color, factor);
+        double factor = fmax(0.0, ft_vec3Dot(rec.normal, light));
 
         // specular light
-        t_vec3 reflect = ft_vec3Minus(ft_vec3Mul(rec.normal, 2.0 * ft_vec3Dot(rec.normal, light)), light);
+        t_vec3 reflection = ft_vec3Minus(ft_vec3Mul(rec.normal, 2.0 * ft_vec3Dot(rec.normal, light)), light);
         t_vec3 toCam = ft_vec3Mul(rec.phit, -1.0);
-        reflect = ft_vec3Unit(reflect);
+        reflection = ft_vec3Unit(reflection);
         toCam = ft_vec3Unit(toCam);
-        double cosine = fmax(0, ft_vec3Dot(reflect, toCam));
-        cosine = pow(cosine, 100);
-        t_vec3 sColor = (t_vec3){0, 0, 0};
-        if (cosine > 0.0)
-        {
-            sColor = ft_vec3Mul(mrt->lght->color, cosine);
-            dColor = ft_vec3Mul(dColor, 1.0 - cosine);
-        }
-
+        double cosine = pow(fmax(0.0, ft_vec3Dot(reflection, toCam)), 180);
+        
         // total light
-        color = ft_vec3Plus(aColor, dColor);
-        color = ft_vec3Plus(color, sColor);
-        color = ft_vec3Mulvec3(rec.color, color);
+        double lightIntensity = mrt->ambt.ratio + factor + cosine;
+        color = ft_vec3Mul(mrt->ambt.color, lightIntensity);
+        color = ft_vec3Mulvec3(color, rec.color);
 
         // // shadow
         t_ray shadow;
-        shadow.orig = ft_vec3Plus(rec.phit, ft_vec3Mul(rec.normal, 1e-4));
+        shadow.orig = ft_vec3Plus(rec.phit, ft_vec3Mul(rec.normal, 1e-13));
         shadow.dir = light;
-        if (ft_trace(mrt, &shadow) == 1)
-            color = ft_vec3Mul(color, 0);
+        color = ft_vec3Mul(color, ft_trace(mrt, &shadow));
     }
 
     ft_makeColor(&color);
