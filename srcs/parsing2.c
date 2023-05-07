@@ -42,6 +42,9 @@ int ft_getCamera(t_mrt *mrt, char **input)
     if (ft_setVec3(&mrt->cam.rot, input[2], -1.0, 1.0))
         return (ft_log("Error\nCamera rotation fail", 1));
 
+    // not sure to normalize it or not
+    mrt->cam.rot = ft_vec3Unit(mrt->cam.rot);
+
     // get fov
     mrt->cam.ifov = ft_atoi(input[3]);
     printf("Camera Completed\n");

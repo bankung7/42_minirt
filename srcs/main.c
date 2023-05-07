@@ -27,6 +27,11 @@ int main(int argc, char **argv)
     mrt.scrn.width = 640 * 1.2;
     mrt.scrn.height = 480 * 1.2;
     mrt.scrn.aspectRatio = (double)mrt.scrn.width / mrt.scrn.height;
+
+    // setup basic vector
+    mrt.cam.w = ft_vec3Unit(ft_vec3Minus(mrt.cam.orig, (t_vec3){0, 0, -1}));
+    mrt.cam.u = ft_vec3Unit(ft_vec3Cross(mrt.cam.rot, mrt.cam.w));
+    mrt.cam.v = ft_vec3Cross(mrt.cam.w, mrt.cam.u);
     
     // setup mlx
     ft_setupMLX(&mrt);

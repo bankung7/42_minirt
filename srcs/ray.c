@@ -99,5 +99,12 @@ t_ray ft_makeRay(t_mrt *mrt, t_vec3 vec)
 {
     // for the direction is not sure to be normalize or not
     // return ((t_ray){mrt->cam.o, ft_vec3Minus(vec, mrt->cam.o)});
-    return ((t_ray){mrt->cam.orig, ft_vec3Unit(ft_vec3Minus(vec, mrt->cam.orig))});
+    t_ray ray;
+    ray.orig = mrt->cam.orig;
+    ray.dir.x = vec.x * mrt->cam.u.x + vec.y * mrt->cam.v.x - 1 * mrt->cam.w.x;
+    ray.dir.y = vec.x * mrt->cam.u.y + vec.y * mrt->cam.v.y - 1 * mrt->cam.w.y;
+    ray.dir.z = vec.x * mrt->cam.u.z + vec.y * mrt->cam.v.z - 1 * mrt->cam.w.z;
+    ray.dir = ft_vec3Unit(ray.dir);
+    // return ((t_ray){mrt->cam.orig, ft_vec3Unit(ft_vec3Minus(vec, mrt->cam.orig))});
+    return (ray);
 }

@@ -69,6 +69,9 @@ typedef struct s_cam
     t_vec3 rot;
     double ifov;
     double fov;
+    t_vec3 u;
+    t_vec3 v;
+    t_vec3 w;
 }   t_cam;
 
 // lighting
