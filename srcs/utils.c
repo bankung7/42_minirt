@@ -56,40 +56,12 @@ void ft_addLight(t_light **lght, t_light *node)
     }
 }
 
-void ft_addSphere(t_sphere **spr, t_sphere *node)
+void ft_addObject(t_object **obj, t_object *node)
 {
-    t_sphere *head;
-    head = *spr;
+    t_object *head;
+    head = *obj;
     if (!head)
-        *spr = node;
-    else
-    {
-        while (head->next)
-            head = head->next;
-        head->next = node;
-    }
-}
-
-void ft_addPlane(t_plane **pl, t_plane *node)
-{
-    t_plane *head;
-    head = *pl;
-    if (!head)
-        *pl = node;
-    else
-    {
-        while (head->next)
-            head = head->next;
-        head->next = node;
-    }
-}
-
-void ft_addCylinder(t_cylinder **cydn, t_cylinder *node)
-{
-    t_cylinder *head;
-    head = *cydn;
-    if (!head)
-        *cydn = node;
+        *obj = node;
     else
     {
         while (head->next)

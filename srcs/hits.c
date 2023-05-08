@@ -1,6 +1,6 @@
 #include "minirt.h"
 
-double ft_hitSphere(t_sphere *spr, t_ray *r, t_rec *rec)
+double ft_hitSphere(t_object *spr, t_ray *r, t_rec *rec)
 {
     t_vec3 oc = ft_vec3Minus(r->orig, spr->orig);
     double a = ft_vec3Dot(r->dir, r->dir);
@@ -32,13 +32,13 @@ double ft_hitSphere(t_sphere *spr, t_ray *r, t_rec *rec)
     return (1);
 }
 
-double ft_hitPlane(t_plane *plane, t_ray *r, t_rec *rec)
+double ft_hitPlane(t_object *plane, t_ray *r, t_rec *rec)
 {
     double t;
     double denom = ft_vec3Dot(plane->normal, r->dir);
     if (fabs(denom) > 0.0001)
     {
-        t_vec3 pl = ft_vec3Minus(plane->p, r->orig);
+        t_vec3 pl = ft_vec3Minus(plane->orig, r->orig);
         t = ft_vec3Dot(pl, plane->normal) / denom;
         if (t > 0.0001 && t < rec->tnear)
         {

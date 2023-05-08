@@ -16,6 +16,12 @@
 #define LIMIT_SIZE 100
 #endif
 
+
+// object type
+#define SPHERE 1
+#define PLANE 2
+#define CYLINDER 3
+
 // mlx data
 typedef struct s_mlx
 {
@@ -83,35 +89,18 @@ typedef struct s_light
     struct s_light *next;
 }   t_light;
 
-// sphere
-typedef struct s_sphere
+// object
+typedef struct s_object
 {
+    int type;
     t_vec3 orig;
-    double dmt;
-    double r;
-    t_vec3 color;
-    struct s_sphere *next;
-}   t_sphere;
-
-typedef struct s_plane
-{
-    t_vec3 p;
     t_vec3 normal;
-    t_vec3 color;
-    struct s_plane *next;
-}   t_plane;
-
-// cylinder
-typedef struct s_cylinder
-{
-    t_vec3 orig;
-    t_vec3 rot;
     double dmt;
     double r;
     double height;
     t_vec3 color;
-    struct s_cylinder *next;
-}   t_cylinder;
+    struct s_object *next;
+}   t_object;
 
 // minirt data
 typedef struct s_mrt
@@ -121,9 +110,7 @@ typedef struct s_mrt
     t_ambient ambt;
     t_cam cam;
     t_light *lght;
-    t_sphere *spr;
-    t_plane *pl;
-    t_cylinder *cydn;
+    t_object *obj;
 }   t_mrt;
 
 // mlx.c
@@ -136,14 +123,12 @@ t_vec3 ft_randomColor(void);
 int ft_arrLen(char **arr);
 void ft_readAttr(char **attr);
 void ft_vec3Info(t_vec3 v);
-void ft_addSphere(t_sphere **spr, t_sphere *node);
-void ft_addPlane(t_plane **pl, t_plane *node);
 void ft_addLight(t_light **lght, t_light *node);
-void ft_addCylinder(t_cylinder **cydn, t_cylinder *node);
+void ft_addObject(t_object **obj, t_object *node);
 
 // hit.c
-double ft_hitSphere(t_sphere *spr, t_ray *r, t_rec *rec);
-double ft_hitPlane(t_plane *plane, t_ray *r, t_rec *rec);
+double ft_hitSphere(t_object *spr, t_ray *r, t_rec *rec);
+double ft_hitPlane(t_object *plane, t_ray *r, t_rec *rec);
 
 // ray.c
 void ft_rayInfo(t_ray r);

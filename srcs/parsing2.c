@@ -93,27 +93,28 @@ int ft_getSphere(t_mrt *mrt, char **input)
 {
     if (ft_arrLen(input) != 4)
         return (ft_log("Error\nSphere argument fail", 1));
-
     // coordinate
-    t_sphere *spr = malloc(sizeof(t_sphere));
-    if (!spr)
+    t_object *obj = malloc(sizeof(t_object));
+    if (!obj)
         return (1);
-    spr->next = 0;
-    if (ft_setVec3(&spr->orig, input[1], -INFINITY, INFINITY))
+    obj->next = 0;
+    obj->type = SPHERE;
+    if (ft_setVec3(&obj->orig, input[1], -INFINITY, INFINITY))
         return (ft_log("Error\nSphere coordinate fail", 1));
 
     // diameter
-    spr->dmt = ft_getDouble(input[2]);
-    if (ft_checkValue(spr->dmt, 0.0 , LIMIT_SIZE))
+    obj->dmt = ft_getDouble(input[2]);
+    if (ft_checkValue(obj->dmt, 0.0 , LIMIT_SIZE))
         return (ft_log("Error\nSphere ratio fail", 1));
-    spr->r = spr->dmt / 2.0;
+    obj->r = obj->dmt / 2.0;
 
     // color
-    if (ft_setVec3(&spr->color, input[3], 0.0, 255.0))
+    if (ft_setVec3(&obj->color, input[3], 0.0, 255.0))
         return (ft_log("Error\nSphere color argument fail", 1));
-    spr->color = ft_vec3Div(spr->color, 255);
+    obj->color = ft_vec3Div(obj->color, 255);
 
-    ft_addSphere(&mrt->spr, spr);
+    ft_addObject(&mrt->obj, obj);
+
     printf("Sphere Completed\n");
     return (0);
 }
@@ -129,23 +130,25 @@ int ft_getPlane(t_mrt *mrt, char **input)
         return (ft_log("Error\nPlane argument fail", 1));
 
     // coordinate
-    t_plane *pl = malloc(sizeof(t_plane));
-    if (!pl)
+    t_object *obj = malloc(sizeof(t_object));
+    if (!obj)
         return (1);
-    pl->next = 0;
-    if (ft_setVec3(&pl->p, input[1], -INFINITY, INFINITY))
+    obj->next = 0;
+    obj->type = PLANE;
+
+    if (ft_setVec3(&obj->orig, input[1], -INFINITY, INFINITY))
         return (ft_log("Error\nPlane coordinate fail", 1));
 
     // normal vector
-    if (ft_setVec3(&pl->normal, input[2], -INFINITY, INFINITY))
+    if (ft_setVec3(&obj->normal, input[2], -INFINITY, INFINITY))
         return (ft_log("Error\nPlane normal vector fail", 1));
 
     // color
-    if (ft_setVec3(&pl->color, input[3], 0.0, 255.0))
+    if (ft_setVec3(&obj->color, input[3], 0.0, 255.0))
         return (ft_log("Error\nPlane color argument fail", 1));
-    pl->color = ft_vec3Div(pl->color, 255);
+    obj->color = ft_vec3Div(obj->color, 255);
 
-    ft_addPlane(&mrt->pl, pl);
+    ft_addObject(&mrt->obj, obj);
     printf("Plane Completed\n");
     return (0);
 }
@@ -164,34 +167,36 @@ int ft_getCylinder(t_mrt *mrt, char **input)
         return (ft_log("Error\nCylinder argument fail", 1));
 
     // coordinate
-    t_cylinder *cydn = malloc(sizeof(t_cylinder));
-    if (!cydn)
+    t_object *obj = malloc(sizeof(t_object));
+    if (!obj)
         return (1);
-    cydn->next = 0;
-    if (ft_setVec3(&cydn->orig, input[1], -INFINITY, INFINITY))
+    obj->next = 0;
+    obj->type = CYLINDER;
+
+    if (ft_setVec3(&obj->orig, input[1], -INFINITY, INFINITY))
         return (ft_log("Error\nCylinder coordinate fail", 1));
 
     // normal vector
-    if (ft_setVec3(&cydn->rot, input[2], -1.0, 1.0))
+    if (ft_setVec3(&obj->normal, input[2], -1.0, 1.0))
         return (ft_log("Error\nCylinder normal vector fail", 1));
 
     // diameter
-    cydn->dmt = ft_getDouble(input[3]);
-    if (ft_checkValue(cydn->dmt, 0.0 , LIMIT_SIZE))
+    obj->dmt = ft_getDouble(input[3]);
+    if (ft_checkValue(obj->dmt, 0.0 , LIMIT_SIZE))
         return (ft_log("Error\nCylinder diameter fail", 1));
-    cydn->r = cydn->dmt / 2.0;
+    obj->r = obj->dmt / 2.0;
 
     // height
-    cydn->height = ft_getDouble(input[4]);
-    if (ft_checkValue(cydn->height, 0.0 , LIMIT_SIZE))
+    obj->height = ft_getDouble(input[4]);
+    if (ft_checkValue(obj->height, 0.0 , LIMIT_SIZE))
         return (ft_log("Error\nCylinder height fail", 1));
 
     // color
-    if (ft_setVec3(&cydn->color, input[5], 0.0, 255.0))
+    if (ft_setVec3(&obj->color, input[5], 0.0, 255.0))
         return (ft_log("Error\nCylinder color argument fail", 1));
-    cydn->color = ft_vec3Div(cydn->color, 255);
+    obj->color = ft_vec3Div(obj->color, 255);
 
-    ft_addCylinder(&mrt->cydn, cydn);
+    ft_addObject(&mrt->obj, obj);
     printf("Cylinder Completed\n");
     return (0);
 }

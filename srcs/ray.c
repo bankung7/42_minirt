@@ -23,14 +23,17 @@ void ft_makeColor(t_vec3 *color)
 int ft_trace(t_mrt *mrt, t_ray *r)
 {
     t_rec rec;
-    t_sphere *shead = mrt->spr;
 
-    // trace sphere
-    while (shead)
+    t_object *head = mrt->obj;
+    while (head)
     {
-        if (ft_hitSphere(shead, r, &rec) == 1)
+        if (head->type == SPHERE)
+            ft_hitSphere(head, r, &rec);
+        else if (head->type == PLANE)
+            ft_hitPlane(head, r, &rec);
+        head = head->next;
+        if (rec.hit == 1)
             return (0);
-        shead = shead->next;
     }
     return (1);
 }
@@ -47,20 +50,15 @@ int ft_rayColor(t_mrt *mrt, t_ray *r)
     rec.tmin = 0.001;
     rec.tmax = INFINITY;
 
-    // hit sphere
-    t_sphere *shead = mrt->spr;
-    while (shead)
+    // hit world
+    t_object *head = mrt->obj;
+    while (head)
     {
-        ft_hitSphere(shead, r, &rec);
-        shead = shead->next;
-    }
-
-    // hit plane
-    t_plane *thead = mrt->pl;
-    while (thead)
-    {
-        ft_hitPlane(thead, r, &rec);
-        thead = thead->next;
+        if (head->type == SPHERE)
+            ft_hitSphere(head, r, &rec);
+        else if (head->type == PLANE)
+            ft_hitPlane(head, r, &rec);
+        head = head->next;
     }
 
     // try to find light
@@ -89,6 +87,7 @@ int ft_rayColor(t_mrt *mrt, t_ray *r)
         shadow.orig = ft_vec3Plus(rec.phit, ft_vec3Mul(rec.normal, 1e-13));
         shadow.dir = light;
         color = ft_vec3Mul(color, ft_trace(mrt, &shadow));
+        // shadow still have bug on this custom.rt
     }
 
     ft_makeColor(&color);

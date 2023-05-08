@@ -29,9 +29,12 @@ void ft_freeList(t_list *node)
 // clean all object in mrt
 int ft_clean(t_mrt *mrt)
 {
-    ft_freeList((t_list*)mrt->lght);
-    ft_freeList((t_list*)mrt->spr);
-    ft_freeList((t_list*)mrt->pl);
-    ft_freeList((t_list*)mrt->cydn);
+    t_object *obj = mrt->obj;
+    while (obj)
+    {
+        obj = obj->next;
+        free(mrt->obj);
+        mrt->obj = obj;
+    }
     return (0);
 }

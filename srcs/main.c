@@ -9,9 +9,7 @@ int main(int argc, char **argv)
         return (ft_log("Error\nUsage: ./minirt [file]", 0));
 
     mrt.lght = 0;
-    mrt.spr = 0;
-    mrt.pl = 0;
-    mrt.cydn = 0;
+    mrt.obj = 0;
 
     if (ft_parsing(&mrt, argv[1]))
         return (1);

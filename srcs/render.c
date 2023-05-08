@@ -10,7 +10,6 @@ void ft_render(t_mrt *mrt)
     {
         for (int i = 0; i < mrt->scrn.width; ++i)
         {
-            // t_vec3 vec = ft_pixelToSpace(mrt, i, j);
             t_ray ray = ft_makeRay(mrt, i, j);
             ft_putPixel(&mrt->mlx, i, j, ft_rayColor(mrt, &ray));
         }
@@ -59,32 +58,29 @@ void ft_parameter(t_mrt *mrt)
     }
     i = 0;
     // sphere
-    t_sphere *spr = mrt->spr;
-    while (spr && ++i)
+    t_object *obj = mrt->obj;
+    while (obj && ++i)
     {
-        printf("Sphere %d Origin : ", i); ft_vec3Info(spr->orig);
-        printf("          Dmt : %.1f\n", spr->dmt);
-        printf("          Color : "); ft_vec3Info(spr->color);
-        spr = spr->next;
-    }
-    i = 0;
-    t_plane *pl = mrt->pl;
-    while (pl && ++i)
-    {
-        printf("Plane %d Origin : ", i); ft_vec3Info(pl->p);
-        printf("         Normal : "); ft_vec3Info(pl->normal);
-        printf("         Color : "); ft_vec3Info(pl->color);
-        pl = pl->next;
-    }
-    i = 0;
-    t_cylinder *cydn = mrt->cydn;
-    while (cydn && ++i)
-    {
-        printf("Cylinder %d Origin : ", i); ft_vec3Info(cydn->orig);
-        printf("            Rotation : "); ft_vec3Info(cydn->rot);
-        printf("            Dmt : %.1f\n", cydn->dmt);
-        printf("            Height : %.1f\n", cydn->height);
-        printf("            Color : "); ft_vec3Info(cydn->color);
-        cydn = cydn->next;
+        if (obj->type == SPHERE)
+        {
+            printf("Sphere %d Origin : ", i); ft_vec3Info(obj->orig);
+            printf("          Dmt : %.1f\n", obj->dmt);
+            printf("          Color : "); ft_vec3Info(obj->color);
+        }
+        else if (obj->type == PLANE)
+        {
+            printf("Plane %d Origin : ", i); ft_vec3Info(obj->orig);
+            printf("         Normal : "); ft_vec3Info(obj->normal);
+            printf("         Color : "); ft_vec3Info(obj->color);
+        }
+        else if (obj->type == CYLINDER)
+        {
+            printf("Cylinder %d Origin : ", i); ft_vec3Info(obj->orig);
+            printf("            Rotation : "); ft_vec3Info(obj->normal);
+            printf("            Dmt : %.1f\n", obj->dmt);
+            printf("            Height : %.1f\n", obj->height);
+            printf("            Color : "); ft_vec3Info(obj->color);
+        }
+        obj = obj->next;
     }
 }
