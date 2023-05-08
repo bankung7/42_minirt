@@ -149,7 +149,7 @@ double ft_hitPlane(t_plane *plane, t_ray *r, t_rec *rec);
 void ft_rayInfo(t_ray r);
 t_vec3 ft_lookAt(t_ray *r, double t);
 int ft_rayColor(t_mrt *mrt, t_ray *r);
-t_ray ft_makeRay(t_mrt *mrt, t_vec3 vec);
+t_ray ft_makeRay(t_mrt *mrt, double i, double j);
 
 // hook.c
 int	ft_exit(int keycode, t_mrt *mrt);

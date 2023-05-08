@@ -30,7 +30,6 @@ int ft_getAmbient(t_mrt *mrt, char **input)
 // ∗ FOV : Horizontal field of view in degrees in range [0,180]: 70
 int ft_getCamera(t_mrt *mrt, char **input)
 {
-    ft_readAttr(input);
     if (ft_arrLen(input) != 4)
         return (ft_log("Error\nCamera argument fail", 1));
 

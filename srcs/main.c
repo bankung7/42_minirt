@@ -1,12 +1,5 @@
 #include "minirt.h"
 
-// Basic algorithm
-// 1 Place the camera and the viewport
-// 2 For each pixel on the canvas
-//  2.1 determine which the square on the view port corresponds to pixel
-//  2.2 determine color seen through that square
-//  2.3 paint the pixel with that color
-
 int main(int argc, char **argv)
 {
     t_mrt mrt;
@@ -28,6 +21,9 @@ int main(int argc, char **argv)
     mrt.scrn.height = 480 * 1.2;
     mrt.scrn.aspectRatio = (double)mrt.scrn.width / mrt.scrn.height;
 
+    // set fov
+    mrt.cam.fov = tan(mrt.cam.ifov * 0.5 * M_PI / 180);
+
     // setup basic vector
     mrt.cam.w = ft_vec3Unit(ft_vec3Minus(mrt.cam.orig, (t_vec3){0, 0, -1}));
     mrt.cam.u = ft_vec3Unit(ft_vec3Cross(mrt.cam.rot, mrt.cam.w));
@@ -36,12 +32,6 @@ int main(int argc, char **argv)
     // setup mlx
     ft_setupMLX(&mrt);
     ft_parameter(&mrt);
-
-    // srand
-    srand(0);
-
-    // set fov
-    mrt.cam.fov = tanf(mrt.cam.ifov * 0.5 * M_PI / 180);
 
     ft_render(&mrt);
 

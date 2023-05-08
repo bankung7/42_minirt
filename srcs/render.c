@@ -10,8 +10,8 @@ void ft_render(t_mrt *mrt)
     {
         for (int i = 0; i < mrt->scrn.width; ++i)
         {
-            t_vec3 vec = ft_pixelToSpace(mrt, i, j);
-            t_ray ray = ft_makeRay(mrt, vec);
+            // t_vec3 vec = ft_pixelToSpace(mrt, i, j);
+            t_ray ray = ft_makeRay(mrt, i, j);
             ft_putPixel(&mrt->mlx, i, j, ft_rayColor(mrt, &ray));
         }
     }

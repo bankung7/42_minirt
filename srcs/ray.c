@@ -78,7 +78,7 @@ int ft_rayColor(t_mrt *mrt, t_ray *r)
         reflection = ft_vec3Unit(reflection);
         toCam = ft_vec3Unit(toCam);
         double cosine = pow(fmax(0.0, ft_vec3Dot(reflection, toCam)), 180);
-        
+
         // total light
         double lightIntensity = mrt->ambt.ratio + factor + cosine;
         color = ft_vec3Mul(mrt->ambt.color, lightIntensity);
@@ -95,16 +95,16 @@ int ft_rayColor(t_mrt *mrt, t_ray *r)
     return (ft_vec3ToInt(color));
 }
 
-t_ray ft_makeRay(t_mrt *mrt, t_vec3 vec)
+t_ray ft_makeRay(t_mrt *mrt, double i, double j)
 {
-    // for the direction is not sure to be normalize or not
-    // return ((t_ray){mrt->cam.o, ft_vec3Minus(vec, mrt->cam.o)});
+    double u = (2 * ((i + 0.5) / mrt->scrn.width) - 1) * mrt->scrn.aspectRatio * mrt->cam.fov;
+    double v = (1 - 2 * (j + 0.5) / mrt->scrn.height) * mrt->cam.fov;
+
     t_ray ray;
     ray.orig = mrt->cam.orig;
-    ray.dir.x = vec.x * mrt->cam.u.x + vec.y * mrt->cam.v.x - 1 * mrt->cam.w.x;
-    ray.dir.y = vec.x * mrt->cam.u.y + vec.y * mrt->cam.v.y - 1 * mrt->cam.w.y;
-    ray.dir.z = vec.x * mrt->cam.u.z + vec.y * mrt->cam.v.z - 1 * mrt->cam.w.z;
+    ray.dir.x = u * mrt->cam.u.x + v * mrt->cam.v.x - mrt->cam.fov * mrt->cam.w.x;
+    ray.dir.y = u * mrt->cam.u.y + v * mrt->cam.v.y - mrt->cam.fov * mrt->cam.w.y;
+    ray.dir.z = u * mrt->cam.u.z + v * mrt->cam.v.z - mrt->cam.fov * mrt->cam.w.z;
     ray.dir = ft_vec3Unit(ray.dir);
-    // return ((t_ray){mrt->cam.orig, ft_vec3Unit(ft_vec3Minus(vec, mrt->cam.orig))});
     return (ray);
 }
