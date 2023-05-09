@@ -15,7 +15,7 @@ INCS = -Iincs -Ilibft -Imlx
 LINKER = -Lincs -Llibft -Lmlx -lmlx -framework OpenGL -framework AppKit 
 
 SRCS_DIR = srcs/
-SRCS = main.c mlx.c parsing.c parsing2.c free.c \
+SRCS = main.c mlx.c parsing.c parsing2.c free.c setup.c \
 	vector.c ray.c hits.c utils.c hook.c render.c log.c
 
 OBJS_DIR = objs/

@@ -108,6 +108,7 @@ int ft_getSphere(t_mrt *mrt, char **input)
 {
     if (ft_arrLen(input) != 4)
         return (ft_log("Error\nSphere argument fail", 1));
+
     // coordinate
     t_object *obj = malloc(sizeof(t_object));
     if (!obj)

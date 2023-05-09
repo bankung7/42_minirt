@@ -11,7 +11,7 @@ void ft_render(t_mrt *mrt)
         for (int i = 0; i < mrt->scrn.width; ++i)
         {
             t_ray ray = ft_makeRay(mrt, i, j);
-            ft_putPixel(&mrt->mlx, i, j, ft_rayColor(mrt, &ray));
+            ft_putPixel(&mrt->mlx, i, j, ft_worldTrace(mrt, &ray));
         }
     }
     mlx_put_image_to_window(mrt->mlx.mlx, mrt->mlx.mlx_win, mrt->mlx.img, 0, 0);

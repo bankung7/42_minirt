@@ -20,78 +20,83 @@ void ft_makeColor(t_vec3 *color)
     color->z = ft_clamp(color->z, 0, 255);
 }
 
-int ft_trace(t_mrt *mrt, t_ray *r)
+// record
+void ft_setRecord(t_rec *rec)
 {
-    t_rec rec;
-
-    t_object *head = mrt->obj;
-    while (head)
-    {
-        if (head->type == SPHERE)
-            ft_hitSphere(head, r, &rec);
-        else if (head->type == PLANE)
-            ft_hitPlane(head, r, &rec);
-        head = head->next;
-        if (rec.hit == 1)
-            return (0);
-    }
-    return (1);
+    rec->hit = 0;
+    rec->color = (t_vec3){0, 0 ,0};
+    rec->tmin = 0.0001;
+    rec->tmax = INFINITY;
 }
 
-int ft_rayColor(t_mrt *mrt, t_ray *r)
+// lighting
+int ft_lighting(t_mrt *mrt, t_rec *rec)
 {
-    // hit world
-    t_rec rec;
-    t_vec3 color = (t_vec3){0, 0, 0};
-    rec.hit = 0;
-    rec.color = (t_vec3){0, 0, 0};
-    rec.t = INFINITY;
-    rec.tnear = rec.t;
-    rec.tmin = 0.001;
-    rec.tmax = INFINITY;
+    // ambient light
+    t_vec3 ambient = ft_vec3Mulvec3(rec->color, ft_vec3Mul(mrt->ambt.color, mrt->ambt.ratio));
 
-    // hit world
+    // diffuse light
+    t_vec3 light = ft_vec3Unit(ft_vec3Minus(mrt->lght->orig, rec->phit));
+    double factor = fmax(0.0, ft_vec3Dot(rec->normal, light));
+    t_vec3 diffuse = ft_vec3Mul(rec->color, factor);
+
+    // specular light
+    t_vec3 reflect = ft_vec3Mul(rec->normal, (2.0 * ft_vec3Dot(light, rec->normal)));
+    reflect = ft_vec3Unit(ft_vec3Minus(reflect, light));
+    t_vec3 toCam = ft_vec3Unit(ft_vec3Minus(mrt->cam->orig, rec->phit));
+    double cosine = ft_vec3Dot(reflect, toCam);
+    t_vec3 specular = (t_vec3){0, 0, 0};
+    if (cosine > 0.0)
+        specular = ft_vec3Mul(rec->color, pow(cosine, 100));
+
+    // total light
+    rec->color = ft_vec3Plus(ambient, diffuse);
+    rec->color = ft_vec3Plus(rec->color, specular);
+    return (0);
+}
+
+// tracing
+int ft_trace(t_mrt *mrt, t_ray *r, t_rec *rec, int mode)
+{
     t_object *head = mrt->obj;
+
     while (head)
     {
         if (head->type == SPHERE)
-            ft_hitSphere(head, r, &rec);
+            ft_hitSphere(head, r, rec);
         else if (head->type == PLANE)
-            ft_hitPlane(head, r, &rec);
+            ft_hitPlane(head, r, rec);
+        if (mode == 1 && rec->hit == 1 && rec->t == rec->tnear)
+            return (0);
         head = head->next;
     }
+    if (rec->hit == 1)
+        ft_lighting(mrt, rec);
+    return (rec->hit);
+}
 
-    // try to find light
-    if (rec.hit == 1)
-    {
-        // ambient light
+// preparing world trace
+int ft_worldTrace(t_mrt *mrt, t_ray *r)
+{
+    // record
+    t_rec rec;
 
-        // diffuse light
-        t_vec3 light = ft_vec3Unit(ft_vec3Minus(mrt->lght->orig, rec.phit));
-        double factor = fmax(0.0, ft_vec3Dot(rec.normal, light));
+    ft_setRecord(&rec);
+    ft_trace(mrt, r, &rec, 0);
 
-        // specular light
-        t_vec3 reflection = ft_vec3Minus(ft_vec3Mul(rec.normal, 2.0 * ft_vec3Dot(rec.normal, light)), light);
-        t_vec3 toCam = ft_vec3Mul(rec.phit, -1.0);
-        reflection = ft_vec3Unit(reflection);
-        toCam = ft_vec3Unit(toCam);
-        double cosine = pow(fmax(0.0, ft_vec3Dot(reflection, toCam)), 180);
+    t_ray shadow;
+    shadow.orig = rec.phit;
+    shadow.dir = ft_vec3Minus(mrt->lght->orig, rec.phit);
 
-        // total light
-        double lightIntensity = mrt->ambt.ratio + factor + cosine;
-        color = ft_vec3Mul(mrt->ambt.color, lightIntensity);
-        color = ft_vec3Mulvec3(color, rec.color);
+    t_rec srec;
+    srec.t = rec.tnear;
+    ft_setRecord(&srec);
+    // int inShadow = ft_trace(mrt, &shadow, &srec, 1);
 
-        // // shadow
-        t_ray shadow;
-        shadow.orig = ft_vec3Plus(rec.phit, ft_vec3Mul(rec.normal, 0.00001));
-        shadow.dir = light;
-        color = ft_vec3Mul(color, ft_trace(mrt, &shadow));
-        // shadow still have bug on this custom.rt
-    }
+    rec.color = ft_vec3Mul(rec.color, 1);
 
-    ft_makeColor(&color);
-    return (ft_vec3ToInt(color));
+    ft_makeColor(&rec.color);
+    return (ft_vec3ToInt(rec.color));
 }
 
 t_ray ft_makeRay(t_mrt *mrt, double i, double j)

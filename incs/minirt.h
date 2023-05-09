@@ -114,6 +114,9 @@ typedef struct s_mrt
     t_object *obj;
 }   t_mrt;
 
+// setup.c
+int ft_setup(t_mrt *mrt);
+
 // mlx.c
 void ft_putPixel(t_mlx *data, int x, int y, int color);
 void ft_setupMLX(t_mrt *mrt);
@@ -138,6 +141,7 @@ void ft_rayInfo(t_ray r);
 t_vec3 ft_lookAt(t_ray *r, double t);
 int ft_rayColor(t_mrt *mrt, t_ray *r);
 t_ray ft_makeRay(t_mrt *mrt, double i, double j);
+int ft_worldTrace(t_mrt *mrt, t_ray *ray);
 
 // hook.c
 int	ft_exit(int keycode, t_mrt *mrt);
