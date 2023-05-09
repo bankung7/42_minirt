@@ -73,11 +73,12 @@ typedef struct s_cam
 {
     t_vec3 orig;
     t_vec3 rot;
-    double ifov;
     double fov;
+    double d;
     t_vec3 u;
     t_vec3 v;
     t_vec3 w;
+    struct s_cam *next;
 }   t_cam;
 
 // lighting
@@ -108,7 +109,7 @@ typedef struct s_mrt
     t_mlx mlx;
     t_screen scrn;
     t_ambient ambt;
-    t_cam cam;
+    t_cam *cam;
     t_light *lght;
     t_object *obj;
 }   t_mrt;
@@ -125,10 +126,12 @@ void ft_readAttr(char **attr);
 void ft_vec3Info(t_vec3 v);
 void ft_addLight(t_light **lght, t_light *node);
 void ft_addObject(t_object **obj, t_object *node);
+void ft_addCamera(t_cam **cam, t_cam *node);
 
 // hit.c
 double ft_hitSphere(t_object *spr, t_ray *r, t_rec *rec);
 double ft_hitPlane(t_object *plane, t_ray *r, t_rec *rec);
+int ft_hitCylinder(t_object *obj, t_ray *r, t_rec *rec);
 
 // ray.c
 void ft_rayInfo(t_ray r);
@@ -142,7 +145,6 @@ int	ft_exit(int keycode, t_mrt *mrt);
 // render.c
 void ft_render(t_mrt *mrt);
 int ft_vec3ToInt(t_vec3 v);
-t_vec3 ft_pixelToSpace(t_mrt *mrt, int i, int j);
 void ft_parameter(t_mrt *mrt);
 
 // log.c

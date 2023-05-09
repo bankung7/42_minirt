@@ -9,16 +9,6 @@ double ft_clamp(double v, double min, double max)
     return (v);
 }
 
-double ft_randDouble(double min, double max)
-{
-    return (min + (max - min) * (rand() / (RAND_MAX + 1.0)));
-}
-
-t_vec3 ft_randomColor(void)
-{
-    return ((t_vec3){ft_randDouble(0, 1), ft_randDouble(0, 1), ft_randDouble(0, 1)});
-}
-
 // try read attr
 void ft_readAttr(char **attr)
 {
@@ -62,6 +52,20 @@ void ft_addObject(t_object **obj, t_object *node)
     head = *obj;
     if (!head)
         *obj = node;
+    else
+    {
+        while (head->next)
+            head = head->next;
+        head->next = node;
+    }
+}
+
+void ft_addCamera(t_cam **cam, t_cam *node)
+{
+    t_cam *head;
+    head = *cam;
+    if (!head)
+        *cam = node;
     else
     {
         while (head->next)

@@ -33,19 +33,34 @@ int ft_getCamera(t_mrt *mrt, char **input)
     if (ft_arrLen(input) != 4)
         return (ft_log("Error\nCamera argument fail", 1));
 
+    t_cam *cam = malloc(sizeof(t_cam));
+    if  (!cam)
+        return (1);
+    cam->next = 0;
+
     // get coordinate
-    if (ft_setVec3(&mrt->cam.orig, input[1], -INFINITY, INFINITY))
+    if (ft_setVec3(&cam->orig, input[1], -INFINITY, INFINITY))
         return (ft_log("Error\nCamera coordinate fail", 1));
 
     // get 3d normal orientation vector
-    if (ft_setVec3(&mrt->cam.rot, input[2], -1.0, 1.0))
+    if (ft_setVec3(&cam->rot, input[2], -1.0, 1.0))
         return (ft_log("Error\nCamera rotation fail", 1));
 
     // not sure to normalize it or not
-    mrt->cam.rot = ft_vec3Unit(mrt->cam.rot);
+    cam->rot = ft_vec3Unit(cam->rot);
 
     // get fov
-    mrt->cam.ifov = ft_atoi(input[3]);
+    cam->fov = ft_atoi(input[3]);
+    
+    // set fov
+    cam->d = tan(cam->fov * 0.5 * M_PI / 180);
+
+    // setup basic vector
+    cam->w = ft_vec3Unit(ft_vec3Minus(cam->orig, (t_vec3){0, 0, -1}));
+    cam->u = ft_vec3Unit(ft_vec3Cross(cam->rot, cam->w));
+    cam->v = ft_vec3Cross(cam->w, cam->u);
+    
+    ft_addCamera(&mrt->cam, cam);
     printf("Camera Completed\n");
     return (0);
 }

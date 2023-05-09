@@ -36,5 +36,19 @@ int ft_clean(t_mrt *mrt)
         free(mrt->obj);
         mrt->obj = obj;
     }
+    t_light *lght = mrt->lght;
+    while (lght)
+    {
+        lght = lght->next;
+        free(mrt->lght);
+        mrt->lght = lght;
+    }
+    t_cam *cam = mrt->cam;
+    while (cam)
+    {
+        cam = cam->next;
+        free(mrt->cam);
+        mrt->cam = cam;
+    }
     return (0);
 }

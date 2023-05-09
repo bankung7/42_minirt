@@ -84,7 +84,7 @@ int ft_rayColor(t_mrt *mrt, t_ray *r)
 
         // // shadow
         t_ray shadow;
-        shadow.orig = ft_vec3Plus(rec.phit, ft_vec3Mul(rec.normal, 1e-13));
+        shadow.orig = ft_vec3Plus(rec.phit, ft_vec3Mul(rec.normal, 0.00001));
         shadow.dir = light;
         color = ft_vec3Mul(color, ft_trace(mrt, &shadow));
         // shadow still have bug on this custom.rt
@@ -96,14 +96,14 @@ int ft_rayColor(t_mrt *mrt, t_ray *r)
 
 t_ray ft_makeRay(t_mrt *mrt, double i, double j)
 {
-    double u = (2 * ((i + 0.5) / mrt->scrn.width) - 1) * mrt->scrn.aspectRatio * mrt->cam.fov;
-    double v = (1 - 2 * (j + 0.5) / mrt->scrn.height) * mrt->cam.fov;
+    double u = (2 * ((i + 0.5) / mrt->scrn.width) - 1) * mrt->scrn.aspectRatio * mrt->cam->d;
+    double v = (1 - 2 * (j + 0.5) / mrt->scrn.height) * mrt->cam->d;
 
     t_ray ray;
-    ray.orig = mrt->cam.orig;
-    ray.dir.x = u * mrt->cam.u.x + v * mrt->cam.v.x - mrt->cam.fov * mrt->cam.w.x;
-    ray.dir.y = u * mrt->cam.u.y + v * mrt->cam.v.y - mrt->cam.fov * mrt->cam.w.y;
-    ray.dir.z = u * mrt->cam.u.z + v * mrt->cam.v.z - mrt->cam.fov * mrt->cam.w.z;
+    ray.orig = mrt->cam->orig;
+    ray.dir.x = u * mrt->cam->u.x + v * mrt->cam->v.x - mrt->cam->d * mrt->cam->w.x;
+    ray.dir.y = u * mrt->cam->u.y + v * mrt->cam->v.y - mrt->cam->d * mrt->cam->w.y;
+    ray.dir.z = u * mrt->cam->u.z + v * mrt->cam->v.z - mrt->cam->d * mrt->cam->w.z;
     ray.dir = ft_vec3Unit(ray.dir);
     return (ray);
 }
