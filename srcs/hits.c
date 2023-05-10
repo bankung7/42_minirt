@@ -32,6 +32,7 @@ double ft_hitSphere(t_object *spr, t_ray *r, t_rec *rec)
     return (1);
 }
 
+// still fail to render
 double ft_hitPlane(t_object *plane, t_ray *r, t_rec *rec)
 {
     double t;

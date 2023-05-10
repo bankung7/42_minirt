@@ -66,12 +66,12 @@ int ft_trace(t_mrt *mrt, t_ray *r, t_rec *rec, int mode)
             ft_hitSphere(head, r, rec);
         else if (head->type == PLANE)
             ft_hitPlane(head, r, rec);
-        if (mode == 1 && rec->hit == 1 && rec->t == rec->tnear)
+        if (mode == 1 && rec->hit == 1)
             return (0);
         head = head->next;
     }
-    if (rec->hit == 1)
-        ft_lighting(mrt, rec);
+    if (mode == 1)
+        return (1);
     return (rec->hit);
 }
 
@@ -80,20 +80,27 @@ int ft_worldTrace(t_mrt *mrt, t_ray *r)
 {
     // record
     t_rec rec;
+    t_vec3 color;
 
     ft_setRecord(&rec);
     ft_trace(mrt, r, &rec, 0);
 
-    t_ray shadow;
-    shadow.orig = rec.phit;
-    shadow.dir = ft_vec3Minus(mrt->lght->orig, rec.phit);
+    if (rec.hit == 1)
+    {
+        color = rec.color; // set color
+        rec.hit = 0; // reset hit
+        rec.t = ft_vec3Len(ft_vec3Minus(mrt->lght->orig, rec.phit));
 
-    t_rec srec;
-    srec.t = rec.tnear;
-    ft_setRecord(&srec);
-    // int inShadow = ft_trace(mrt, &shadow, &srec, 1);
+        t_ray shadow;
+        shadow.dir = ft_vec3Minus(mrt->lght->orig, rec.phit);
+        shadow.orig = ft_vec3Plus(rec.phit, ft_vec3Mul(shadow.dir, 0.0001));
+        int inShadow = ft_trace(mrt, &shadow, &rec, 1);
 
-    rec.color = ft_vec3Mul(rec.color, 1);
+        rec.color = color;
+        ft_lighting(mrt, &rec);
+        rec.color = ft_vec3Mul(rec.color, inShadow);
+    }
+
 
     ft_makeColor(&rec.color);
     return (ft_vec3ToInt(rec.color));
@@ -109,6 +116,9 @@ t_ray ft_makeRay(t_mrt *mrt, double i, double j)
     ray.dir.x = u * mrt->cam->u.x + v * mrt->cam->v.x - mrt->cam->d * mrt->cam->w.x;
     ray.dir.y = u * mrt->cam->u.y + v * mrt->cam->v.y - mrt->cam->d * mrt->cam->w.y;
     ray.dir.z = u * mrt->cam->u.z + v * mrt->cam->v.z - mrt->cam->d * mrt->cam->w.z;
-    ray.dir = ft_vec3Unit(ray.dir);
+    
+    // if normalize, it will show like a bound to the edge
+    // ray.dir = ft_vec3Unit(ray.dir);
+
     return (ray);
 }
