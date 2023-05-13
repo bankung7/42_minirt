@@ -54,36 +54,72 @@ double ft_hitPlane(t_object *plane, t_ray *r, t_rec *rec)
     return (0);
 }
 
-int ft_hitCylinder(t_object *obj, t_ray *r, t_rec *rec)
+double ft_hitDisc(t_object *disc, t_ray *r, double rd)
 {
-    double a = pow(r->dir.x, 2) + pow(r->dir.z, 2);
-    double b = 2.0 * (obj->orig.x * r->dir.x + obj->orig.z * r->dir.z);
-    double c = pow(obj->orig.x, 2) + pow(obj->orig.z, 2) - pow(obj->r, 2);
-    double dis = (b * b) - (4.0 * a * c);
-    if (dis < 0)
-        return (0);
-    double sdis = sqrt(dis);
+    t_vec3 oc = ft_vec3Minus(disc->orig, r->orig);
+    if (ft_vec3Dot(r->dir, disc->normal) == 0.0)
+        return (INFINITY);
+    double t = ft_vec3Dot(oc, disc->normal) / ft_vec3Dot(r->dir, disc->normal);
+    t_vec3 p = ft_vec3Plus(r->orig, ft_vec3Mul(r->dir, t));
+    if (ft_vec3Len(ft_vec3Minus(p, disc->orig)) <= rd)
+        return (t);
+    return (INFINITY);
+}
 
-    double t1 = (-b - sdis) / (2. * a);
-    double t2 = (-b + sdis) / (2. * a);
+int ft_hitCylinder(t_object *cy, t_ray *r, t_rec *rec)
+{
+    t_vec3 x = ft_vec3Minus(r->orig, cy->orig);
+	double dv = ft_vec3Dot(r->dir, cy->normal);
+	double xv = ft_vec3Dot(x, cy->normal);
+	double a = pow(ft_vec3Len(r->dir), 2) - pow(dv, 2);
+    double hb = ft_vec3Dot(x, r->dir) - (dv * xv);
+    double c = pow(ft_vec3Len(x), 2) - ((cy->dmt * cy->dmt) / 4.0) - pow(xv, 2);
+    double dis = (hb * hb) - (a * c);
+    if (dis < 0.0 || a == 0)
+        return (INFINITY);
+    double t = (- hb - sqrt(dis)) / a;
+    t_vec3 p = ft_vec3Plus(r->orig, ft_vec3Mul(r->dir, t));
+    t_vec3 diff = ft_vec3Minus(cy->orig, p);
+    if (fabs(ft_vec3Dot(diff, cy->normal)) <= (cy->height / 2))
+        return (t);
+    cy.pl1.crdt = ft_vec3Plus(cy->orig, ft_vec3Mul(cy->normal, (cy->height / 2)));
+    cy.pl2.crdt = ft_vec3Minus(cy->orig, ft_vec3Mul(cy->normal, (cy->height / 2)));
+    cy.pl1.rot = cy->normal;
+    cy.pl2.rot = cy.rot;
+    double tpl1 = ft_hitDisc(cy.pl1, r, cy.dmt / 2);
+    double tpl2 = ft_hitDisc(cy.pl2, r, cy.dmt / 2);
+    if (tpl1 < tpl2)
+        return (tpl1);
+    return (tpl2);
     
-    if (t1 > t2)
-        t1 = t2;
-    if (t1 < 0)
-    {
-        t1 = t2;
-        if (t1 < 0)
-            return (0);
-    }
-    // printf("Hit cynlinder : %.2f\n", t2);
-    if (t1 > rec->tnear)
-        return (0);
-    rec->tnear = t1;
-    // set phit and normal vector
-    rec->hit = 1;
-    rec->phit = ft_lookAt(r, rec->tnear);
-    rec->normal = ft_vec3Unit(ft_vec3Minus(rec->phit, obj->orig));
-    // rec->normal = ft_vec3Unit((t_vec3){rec->phit.x / obj->r, 0, rec->phit.z / obj->r});
-    rec->color = obj->color;
-    return (1);
+    // double a = pow(r->dir.x, 2) + pow(r->dir.z, 2);
+    // double b = 2.0 * (obj->orig.x * r->dir.x + obj->orig.z * r->dir.z);
+    // double c = pow(obj->orig.x, 2) + pow(obj->orig.z, 2) - pow(obj->r, 2);
+    // double dis = (b * b) - (4.0 * a * c);
+    // if (dis < 0)
+    //     return (0);
+    // double sdis = sqrt(dis);
+
+    // double t1 = (-b - sdis) / (2. * a);
+    // double t2 = (-b + sdis) / (2. * a);
+    
+    // if (t1 > t2)
+    //     t1 = t2;
+    // if (t1 < 0)
+    // {
+    //     t1 = t2;
+    //     if (t1 < 0)
+    //         return (0);
+    // }
+    // // printf("Hit cynlinder : %.2f\n", t2);
+    // if (t1 > rec->tnear)
+    //     return (0);
+    // rec->tnear = t1;
+    // // set phit and normal vector
+    // rec->hit = 1;
+    // rec->phit = ft_lookAt(r, rec->tnear);
+    // rec->normal = ft_vec3Unit(ft_vec3Minus(rec->phit, obj->orig));
+    // // rec->normal = ft_vec3Unit((t_vec3){rec->phit.x / obj->r, 0, rec->phit.z / obj->r});
+    // rec->color = obj->color;
+    // return (1);
 }

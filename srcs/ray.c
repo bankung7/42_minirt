@@ -66,6 +66,8 @@ int ft_trace(t_mrt *mrt, t_ray *r, t_rec *rec, int mode)
             ft_hitSphere(head, r, rec);
         else if (head->type == PLANE)
             ft_hitPlane(head, r, rec);
+        else if (head->type == CYLINDER)
+            ft_hitCylinder(head, r, rec);
         if (mode == 1 && rec->hit == 1)
             return (0);
         head = head->next;

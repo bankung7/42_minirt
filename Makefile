@@ -35,7 +35,7 @@ $(LIBFT):
 
 $(NAME): $(OBJS) $(LIBFT)
 	# make bonus -C $(LIBFT_DIR)
-	# make -C $(MLX_DIR)
+	make -C $(MLX_DIR)
 	$(CC) $(CFLAGS) $^ -o $@ $(LINKER) 
 	@echo "minirt is ready"
 
