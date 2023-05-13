@@ -57,6 +57,8 @@ typedef struct s_cynd
     double dmt;
     double hgt;
     t_color color;
+    t_plane pl1;
+    t_plane pl2;
     struct s_cynd *next;
 } t_cynd;
 

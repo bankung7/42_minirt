@@ -35,6 +35,34 @@ double ft_hitPlane(t_plane pl, t_ray r)
     return (t);
 }
 
+double ft_hitDisc(t_plane pl, t_ray r, double rd)
+{
+    t_vec oc = ft_vecMinus(pl.crdt, r.o);
+    if (ft_vecDot(r.dir, pl.rot) == 0.0)
+        return (INFINITY);
+    double t = ft_vecDot(oc, pl.rot) / ft_vecDot(r.dir, pl.rot);
+    t_vec p = ft_vecPlus(r.o, ft_vecMul(r.dir, t));
+    if (ft_vecLen(ft_vecMinus(p, pl.crdt)) <= rd)
+        return (t);
+    return (INFINITY);
+
+    // if (tpl1 != INFINITY)
+    // {
+    //     p = ft_vecPlus(r.o, ft_vecMul(r.dir, tpl1));
+    //     double 
+    //     if (ft_vecLen(ft_vecMinus(cy.pl1.crdt, p)) <= cy.dmt / 2)
+         
+    //     else
+
+    // }
+    // if (tpl2 != INFINITY)
+    // {
+    //     p = ft_vecPlus(r.o, ft_vecMul(r.dir, tpl2));
+    //     if (ft_vecLen(ft_vecMinus(cy.pl2.crdt, p)) <= cy.dmt / 2)
+    //         double 
+    // }
+}
+
 double ft_hitCynd(t_cynd cy, t_ray r)
 {
 	t_vec x = ft_vecMinus(r.o, cy.crdt);
@@ -42,11 +70,24 @@ double ft_hitCynd(t_cynd cy, t_ray r)
 	double xv = ft_vecDot(x, cy.rot);
 	double a = pow(ft_vecLen(r.dir), 2) - pow(dv, 2);
     double hb = ft_vecDot(x, r.dir) - (dv * xv);
-    double c = pow(ft_vecLen(x), 2) - ((cy.dmt / 2.0) * (cy.dmt / 2.0)) - pow(xv, 2);
+    double c = pow(ft_vecLen(x), 2) - ((cy.dmt * cy.dmt) / 4.0) - pow(xv, 2);
     double dis = (hb * hb) - (a * c);
     if (dis < 0.0 || a == 0)
         return (INFINITY);
-    return ((- hb - sqrt(dis)) / a);
+    double t = (- hb - sqrt(dis)) / a;
+    t_vec p = ft_vecPlus(r.o, ft_vecMul(r.dir, t));
+    t_vec diff = ft_vecMinus(cy.crdt, p);
+    if (fabs(ft_vecDot(diff, cy.rot)) <= (cy.hgt / 2))
+        return (t);
+    cy.pl1.crdt = ft_vecPlus(cy.crdt, ft_vecMul(cy.rot, (cy.hgt / 2)));
+    cy.pl2.crdt = ft_vecMinus(cy.crdt, ft_vecMul(cy.rot, (cy.hgt / 2)));
+    cy.pl1.rot = cy.rot;
+    cy.pl2.rot = cy.rot;
+    double tpl1 = ft_hitDisc(cy.pl1, r, cy.dmt / 2);
+    double tpl2 = ft_hitDisc(cy.pl2, r, cy.dmt / 2);
+    if (tpl1 < tpl2)
+        return (tpl1);
+    return (tpl2);
 }
 
 
@@ -78,11 +119,13 @@ int ft_rayColor(t_ray r)
 
 	t_cynd cy;
 	cy.crdt = (t_vec){-1.0,0,-1.5};
-	cy.rot = (t_vec){0,1,0};
+	cy.rot = ft_vecNrml((t_vec){1,0,1});
 	cy.dmt = 0.5;
 	cy.hgt = 1.0;
 	cy.color = (t_color){229,193,253};
 	cy.next = NULL;
+    cy.pl1.color = (t_color){90,188,230};
+    cy.pl2.color = (t_color){90,188,230};
 
 	t_cynd *ptrcy;
 	ptrcy = &cy;
