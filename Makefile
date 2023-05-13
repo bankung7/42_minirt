@@ -1,4 +1,4 @@
-NAME = miniRT
+NAME = minirt
 
 CC = gcc
 
@@ -20,8 +20,8 @@ else
 endif
 
 SRCS_DIR = srcs/
-SRCS = main.c parsing.c utils.c drawing.c free.c vector.c render.c \
-	hook.c
+SRCS = main.c mlx.c parsing.c parsing2.c free.c setup.c \
+	vector.c ray.c hits.c utils.c hook.c render.c log.c
 
 OBJS_DIR = objs/
 OBJS = $(addprefix $(OBJS_DIR), $(SRCS:.c=.o))
@@ -34,13 +34,14 @@ $(LIBFT):
 	make re -C $(LIBFT_DIR)
 
 $(NAME): $(OBJS) $(LIBFT)
-	make -C $(MLX_DIR)
-	$(CC) $(CFLAGS) $^ -o $@ $(LINKER)
+	# make bonus -C $(LIBFT_DIR)
+	# make -C $(MLX_DIR)
+	$(CC) $(CFLAGS) $^ -o $@ $(LINKER) 
 	@echo "minirt is ready"
 
 $(OBJS_DIR)%.o: $(SRCS_DIR)%.c
 	@mkdir -p $(OBJS_DIR)
-	$(CC) $(CFLAGS) $(INCS) -c $^ -o $@
+	$(CC) $(CFLAGS) -c $^ -o $@ $(INCS)
 
 clean:
 	$(RM) $(OBJS_DIR)

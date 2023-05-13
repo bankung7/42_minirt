@@ -1,182 +1,75 @@
 #include "minirt.h"
 
-void ft_info(t_vec v)
+double ft_clamp(double v, double min, double max)
 {
-    printf("x: %f\n", v.x);
-    printf("y: %f\n", v.y);
-    printf("z: %f\n", v.z);
+    if (v < min)
+        return (min);
+    if (v > max)
+        return (max);
+    return (v);
 }
 
-void ft_parr(char **arr)
-{
-    while (arr && *arr)
-    {
-        printf("%s\n", *arr);
-        arr++;
-    }
-}
-
-int ft_arrlen(char **arr)
+// try read attr
+void ft_readAttr(char **attr)
 {
     int i = 0;
-    if (!arr)
-        return (0);
+    while (attr && attr[i])
+        printf("%s\n", attr[i++]);
+}
+
+// arr length
+int ft_arrLen(char **arr)
+{
+    int i = 0;
     while (arr && arr[i])
         i++;
     return (i);
 }
 
-double ft_atof(char *str)
+// vetor info
+void ft_vec3Info(t_vec3 v)
 {
-    int sign;
-    double n;
+    printf("[%.1f][%.1f][%.1f]\n", v.x, v.y, v.z);
+}
 
-    n = 0;
-    if (!str)
-        return (0);
-    sign = 1;
-    if (*str == '+' || *str == '-')
+void ft_addLight(t_light **lght, t_light *node)
+{
+    t_light *head;
+    head = *lght;
+    if (!head)
+        *lght = node;
+    else
     {
-        if (*str == '-')
-            sign = -1;
-        str++;
+        while (head->next)
+            head = head->next;
+        head->next = node;
     }
-    while (str)
+}
+
+void ft_addObject(t_object **obj, t_object *node)
+{
+    t_object *head;
+    head = *obj;
+    if (!head)
+        *obj = node;
+    else
     {
-        if (ft_isdigit(*str))
-            n = n * 10 + (*str - '0');
-        else
-            break ;
-        str++;
+        while (head->next)
+            head = head->next;
+        head->next = node;
     }
-    if (*str == '.' && (str++) != 0 && ft_isdigit(*str))
-        n += (double)(*str - '0') / 10;
-    n *= sign;
-    // printf("atof : %f\n", n);
-    return (n);
 }
 
-void ft_penv(t_mrt *mrt)
+void ft_addCamera(t_cam **cam, t_cam *node)
 {
-    printf("====== Ambient ======\n");
-    printf("lighting raito : %.1f\n", mrt->ambt.ratio);
-    printf("color : %d %d %d\n\n", mrt->ambt.color.r, mrt->ambt.color.g, mrt->ambt.color.b);
-
-    printf("====== Camera ======\n");
-    printf("coordinate : %.1f %.1f %.1f\n", mrt->cam.crdt.x, mrt->cam.crdt.y, mrt->cam.crdt.z);
-    printf("3d Vector : %.1f %.1f %.1f\n", mrt->cam.rot.x, mrt->cam.rot.y, mrt->cam.rot.z);
-    printf("fov : %d\n\n", mrt->cam.fov);
-
-    printf("====== Lighting ======\n");
-    printf("coordinate : %.1f %.1f %.1f\n", mrt->lght.crdt.x, mrt->lght.crdt.y, mrt->lght.crdt.z);
-    printf("brightness ratio : %.1f\n", mrt->lght.brght);
-    printf("color : %d %d %d\n\n", mrt->lght.color.r, mrt->lght.color.g, mrt->lght.color.b);
-
-}
-
-int ft_error(char *str, int res)
-{
-    printf("%s\n", str);
-    return (res);
-}
-
-int ft_error2(char *str, int res, char **f2, char *f1)
-{
-    if (str)
-        printf("%s\n", str);
-    if (f2)
-        ft_free2(f2);
-    if (f1)
-        free(f1);
-    return (res);
-}
-
-// check normal value
-int ft_checkFValue(double *n, double min, double max)
-{
-    if (*n < min || *n > max)
-        return (1);
-    return (0);
-}
-
-int ft_checkIValue(int *n, int min, int max)
-{
-    if (*n < min || *n > max)
-        return (1);
-    return (0);
-}
-
-// check vector value
-int ft_checkVector(t_vec *v, double min, double max)
-{
-    if (v->x < min || v->y < min || v->z < min)
-        return (1);
-    if (v->x > max || v->y > max || v->z > max)
-        return (1);
-    return (0);
-}
-
-// check color value
-int ft_checkColor(t_color *c)
-{
-    if (c->r < 0 || c->g < 0 || c->b < 0)
-        return (1);
-    if (c->r > 255 || c->g > 255 || c->b > 255)
-        return (1);
-    return (0);
-}
-
-// set color
-int ft_setColor(t_color *color, char **attr)
-{
-    if (!attr)
-        return (ft_error2("error: color fail", 1, attr, 0));
-    color->r = ft_atoi(attr[0]);
-    color->g = ft_atoi(attr[1]);
-    color->b = ft_atoi(attr[2]);
-    ft_free2(attr);
-    return (ft_checkColor(color));
-}
-
-// set value
-int ft_setFValue(double *value, char **arr, double min, double max)
-{
-    if (!arr)
-        return (ft_error2("error: value wrong", 1, arr, 0));
-    *value = ft_atof(arr[0]);
-    ft_free2(arr);
-    return (ft_checkFValue(value, min, max));
-}
-
-int ft_setIValue(int *value, char **arr, int min, int max)
-{
-    if (!arr)
-        return (ft_error2("error: value wrong", 1, arr, 0));
-    *value = ft_atoi(arr[0]);
-    ft_free2(arr);
-    return (ft_checkIValue(value, min, max));
-}
-
-int ft_setVector(t_vec *vec, char **arr, double min, double max)
-{
-    if (!arr)
-        return (ft_error2("error: crdt wrong", 1, arr, 0));
-    vec->x = ft_atof(arr[0]);
-    vec->y = ft_atof(arr[1]);
-    vec->z = ft_atof(arr[2]);
-    ft_free2(arr);
-    return (ft_checkVector(vec, min, max));
-}
-
-char **ft_getAttr(char *input, int n)
-{
-    char **attr = ft_split(input, ',');
-
-    if (ft_arrlen(attr) != n)
+    t_cam *head;
+    head = *cam;
+    if (!head)
+        *cam = node;
+    else
     {
-        ft_free2(attr);
-        printf("attr mismatch\n");
-        return (0);
+        while (head->next)
+            head = head->next;
+        head->next = node;
     }
-    return (attr);
 }

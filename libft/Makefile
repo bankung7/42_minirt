@@ -38,9 +38,9 @@ RM = rm -rf
 
 all: $(NAME)
 
-bonus: $(OBJS_B) $(NAME)
+bonus: $(NAME)
 
-$(NAME): $(OBJS)
+$(NAME): $(OBJS) $(OBJS_B)
 	@ar rcs $@ $^
 	@echo "Libft is ready"
 
