@@ -2,7 +2,8 @@
 
 int main(int argc, char **argv)
 {
-    t_mrt mrt;
+    // t_mrt mrt;
+    (void) argv;
     
     // parsing
     if (argc != 2)

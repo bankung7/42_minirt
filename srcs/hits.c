@@ -54,16 +54,23 @@ double ft_hitPlane(t_object *plane, t_ray *r, t_rec *rec)
     return (0);
 }
 
-double ft_hitDisc(t_object *disc, t_ray *r, double rd)
+int ft_hitDisc(t_object *disc, t_ray *r, t_rec *rec, double rd)
 {
     t_vec3 oc = ft_vec3Minus(disc->orig, r->orig);
     if (ft_vec3Dot(r->dir, disc->normal) == 0.0)
-        return (INFINITY);
+        return (0);
     double t = ft_vec3Dot(oc, disc->normal) / ft_vec3Dot(r->dir, disc->normal);
     t_vec3 p = ft_vec3Plus(r->orig, ft_vec3Mul(r->dir, t));
-    if (ft_vec3Len(ft_vec3Minus(p, disc->orig)) <= rd)
-        return (t);
-    return (INFINITY);
+    if (t < rec->tnear && ft_vec3Len(ft_vec3Minus(p, disc->orig)) <= rd)
+    {
+        rec->hit = 1;
+        rec->normal = ft_vec3Unit(disc->normal);
+        rec->phit = ft_lookAt(r, t);
+        rec->color = disc->color;
+        rec->tnear = t;
+        return (1);
+    }
+    return (0);
 }
 
 int ft_hitCylinder(t_object *cy, t_ray *r, t_rec *rec)
@@ -76,21 +83,19 @@ int ft_hitCylinder(t_object *cy, t_ray *r, t_rec *rec)
     double c = pow(ft_vec3Len(x), 2) - ((cy->dmt * cy->dmt) / 4.0) - pow(xv, 2);
     double dis = (hb * hb) - (a * c);
     if (dis < 0.0 || a == 0)
-        return (INFINITY);
+        return (0);
     double t = (- hb - sqrt(dis)) / a;
     t_vec3 p = ft_vec3Plus(r->orig, ft_vec3Mul(r->dir, t));
     t_vec3 diff = ft_vec3Minus(cy->orig, p);
     if (fabs(ft_vec3Dot(diff, cy->normal)) <= (cy->height / 2))
         return (t);
-    cy.pl1.crdt = ft_vec3Plus(cy->orig, ft_vec3Mul(cy->normal, (cy->height / 2)));
-    cy.pl2.crdt = ft_vec3Minus(cy->orig, ft_vec3Mul(cy->normal, (cy->height / 2)));
-    cy.pl1.rot = cy->normal;
-    cy.pl2.rot = cy.rot;
-    double tpl1 = ft_hitDisc(cy.pl1, r, cy.dmt / 2);
-    double tpl2 = ft_hitDisc(cy.pl2, r, cy.dmt / 2);
-    if (tpl1 < tpl2)
-        return (tpl1);
-    return (tpl2);
+    cy->pl1->orig = ft_vec3Plus(cy->orig, ft_vec3Mul(cy->normal, (cy->height / 2)));
+    cy->pl2->orig = ft_vec3Minus(cy->orig, ft_vec3Mul(cy->normal, (cy->height / 2)));
+    cy->pl1->normal = cy->normal;
+    cy->pl2->normal = cy->normal;
+    if (ft_hitDisc(cy->pl1, r, rec, cy->dmt / 2) && ft_hitDisc(cy->pl2, r, rec, cy->dmt / 2))
+        return (1);
+    return (0);
     
     // double a = pow(r->dir.x, 2) + pow(r->dir.z, 2);
     // double b = 2.0 * (obj->orig.x * r->dir.x + obj->orig.z * r->dir.z);

@@ -100,6 +100,8 @@ typedef struct s_object
     double r;
     double height;
     t_vec3 color;
+    struct s_object *pl1;
+    struct s_object *pl2;
     struct s_object *next;
 }   t_object;
 
