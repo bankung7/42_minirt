@@ -2,87 +2,107 @@
 # define MINIRT_H
 
 # include <stdio.h>
-# include <stdlib.h>
-# include <fcntl.h>
-# include <errno.h>
 # include <math.h>
-# include <stdbool.h>
 # include <limits.h>
 # include "mlx.h"
 # include "libft.h"
 # include "vector.h"
-# include "structure.h"
 
-#ifndef W_WIDTH
-#define W_WIDTH 800
-#endif
+// structure
 
-#ifndef CAM_RATIO
-#define CAM_RATIO (16.0 / 9.0)
-#endif
+typedef struct s_ambient
+{
+    double ratio;
+    t_vec3 color;
+}   t_ambient;
 
-#ifndef W_HEIGHT
-#define W_HEIGHT (int)(W_WIDTH / CAM_RATIO)
-#endif
+typedef struct s_ligth
+{
+    t_vec3 orig;
+    double ratio;
+    t_vec3 color;
+    struct s_light *next;
+}   t_light;
+
+typedef struct s_camera
+{
+    t_vec3 orig;
+    t_vec3 rot;
+    double fov;
+    t_vec3 u;
+    t_vec3 v;
+    t_vec3 w;
+    double d;
+}   t_camera;
+
+typedef struct s_object
+{
+    int type;
+    t_vec3 orig;
+    t_vec3 rot;
+    double raduis;
+    double height;
+    t_vec3 color;
+    struct s_object *next;
+}   t_object;
+
+typedef struct s_mlx
+{
+    void *mlx;
+    void *mlx_win;
+    void *img;
+    char *addr;
+    int bpp;
+    int llen;
+    int endian;
+}   t_mlx;
+
+typedef struct s_mrt
+{
+    t_mlx mlx;
+    int width;
+    int height;
+    double aspectRatio;
+    t_ambient ambt;
+    t_camera *cam;
+    t_light *lght;
+    t_object *obj;
+}   t_mrt;
+
+typedef struct s_ray
+{
+    t_vec3 orig;
+    t_vec3 dir;
+}   t_ray;
+
+typedef struct s_rec
+{
+    double tnear;
+    double tmin;
+    double tmax;
+    t_vec3 phit;
+    t_vec3 normal;
+    t_vec3 color;
+    int hit;
+}   t_rec;
 
 // render.c
-int ft_setup(t_mrt *mrt);
-int ft_recal(t_mrt *mrt);
-void ft_render(t_mrt *mrt);
+void putPixel(t_mlx *data, int x, int y, int color);
+void setup(t_mrt *mrt);
+int render(t_mrt *mrt);
+int makeColor(t_vec3 color);
 
-// parsing.c
-int ft_parsing(t_mrt *mrt, char *file);
-int ft_readline(t_mrt *mrt, char *line);
-int ft_getAmbient(t_mrt *mrt, char **attr);
-int ft_getCamera(t_mrt *mrt, char **attr);
-int ft_getLight(t_mrt *mrt, char **attr);
-int ft_getPlane(t_mrt *mrt, char **attr);
-int ft_getSphere(t_mrt *mrt, char **attr);
-int ft_getCylinder(t_mrt *mrt, char **attr);
+// shading.c
+int shading(t_mrt *mrt, t_rec *rec);
 
-// parsing1.c
-char **ft_getAttr(char *line, int n, int c);
-int ft_getColor(t_color *color, char **attr);
-int ft_getVector(t_vec *vec, char **attr);
+// camera.c
+int camera(t_mrt *mrt);
 
-int ft_checkValueD(double value, double min, double max);
-int ft_checkValueI(int value, int min, int max);
-int ft_checkColor(t_color color);
-int ft_checkVector(t_vec vec, double min, double max);
+// ray.c
+int trace(t_mrt *mrt, int i, int j);
 
-
-// utils.c
-int ft_arrLen(char **arr);
-int ft_printArr(char **arr);
-double ft_atod(char *str);
-
-// free.c
-int ft_free2(char **arr);
-int ft_freeList(t_list *list);
-int ft_clean(t_mrt *mrt);
-
-// error.c
-int ft_error(char *str, int res);
-int ft_error2(char *str, int res, char **f2, char *f1);
-
-// drawing.c
-void ft_mlx_put_pixel(t_data *data, int x, int y, int color);
-int ft_makeColor(t_color c);
-double ft_hitSphere(t_vec o, double rd, t_ray r);
-int ft_rayColor(t_mrt *mrt, t_ray ray);
-t_ray ft_createRay(t_cam cam, double u, double v);
-double ft_convertVP(t_mrt *mrt, double n);
-t_vec ft_convertVec(t_mrt *mrt, t_vec v);
-
-// hook.c
-int	ft_keyhook(int keycode, t_mrt *mrt);
-int ft_recal(t_mrt *mrt);
-int ft_close(t_mrt *mrt);
-
-// test function
-void ft_readVector(t_vec vec);
-void ft_readSphere(t_mrt *mrt);
-void ft_readColor(t_color color);
-void ft_readEnv(t_mrt *mrt);
+// object.c
+int addObject(t_mrt *mrt, t_object *node);
+int addLight(t_mrt *mrt, t_light *node);
 
 #endif

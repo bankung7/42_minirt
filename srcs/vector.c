@@ -1,63 +1,53 @@
 #include "vector.h"
 
-// vector length
-double ft_vecLen(t_vec v)
+t_vec3 vec3(double x, double y, double z)
 {
-    return (sqrt(ft_vecDot(v, v)));
+    return ((t_vec3){x, y, z});
 }
 
-// dot product
-double ft_vecDot(t_vec v1, t_vec v2)
+t_vec3 vec3Plus(t_vec3 v1, t_vec3 v2)
+{
+    return ((t_vec3){v1.x + v2.x, v1.y + v2.y, v1.z + v2.z});
+}
+
+t_vec3 vec3Minus(t_vec3 v1, t_vec3 v2)
+{
+    return ((t_vec3){v1.x - v2.x, v1.y - v2.y, v1.z - v2.z});
+}
+
+t_vec3 vec3Mul(t_vec3 v, double n)
+{
+    return ((t_vec3){v.x * n, v.y * n, v.z * n});
+}
+
+t_vec3 vec3Div(t_vec3 v, double n)
+{
+    return (vec3Mul(v, 1.0 / n));
+}
+
+double vec3Dot(t_vec3 v1, t_vec3 v2)
 {
     return (v1.x * v2.x + v1.y * v2.y + v1.z * v2.z);
 }
 
-// cross product
-t_vec ft_vecCross(t_vec v1, t_vec v2)
+double vec3Len(t_vec3 v)
 {
-    t_vec v;
-
-    v.x = v1.y * v2.z - v1.z * v2.y;
-    v.y = v1.z * v2.x - v1.x * v2.z;
-    v.z = v1.x * v2.y - v1.y * v2.x;
-    return (v);
+    return (sqrt(vec3Dot(v, v)));
 }
 
-// normalize vector
-t_vec ft_vecNrml(t_vec v)
+t_vec3 vec3Unit(t_vec3 v)
 {
-    return (ft_vecDev(v, ft_vecLen(v)));
+    return (vec3Div(v, vec3Len(v)));
 }
 
-// vector operations
-t_vec ft_vecPlus(t_vec v1, t_vec v2)
+t_vec3 vec3Cross(t_vec3 v1, t_vec3 v2)
 {
-    t_vec v;
-    v.x = v1.x + v2.x;
-    v.y = v1.y + v2.y;
-    v.z = v1.z + v2.z;
-    return (v);
+    return ((t_vec3){v1.y * v2.z - v1.z * v2.y
+        , v1.z * v2.x - v1.x * v2.z
+        , v1.x * v2.y - v1.y * v2.x});
 }
 
-t_vec ft_vecMinus(t_vec v1, t_vec v2)
+t_vec3 vec3Mulvec3(t_vec3 v1, t_vec3 v2)
 {
-    t_vec v;
-    v.x = v1.x - v2.x;
-    v.y = v1.y - v2.y;
-    v.z = v1.z - v2.z;
-    return (v);
-}
-
-t_vec ft_vecMul(t_vec v1, double n)
-{
-    t_vec v;
-    v.x = v1.x * n;
-    v.y = v1.y * n;
-    v.z = v1.z * n;
-    return (v);
-}
-
-t_vec ft_vecDev(t_vec v, double n)
-{
-    return (ft_vecMul(v, (1 / n)));
+    return ((t_vec3){v1.x * v2.x, v1.y * v2.y, v1.z * v2.z});
 }

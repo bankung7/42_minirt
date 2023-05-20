@@ -1,4 +1,4 @@
-NAME = miniRT
+NAME = minirt
 
 CC = gcc
 
@@ -15,8 +15,7 @@ INCS = -Iincs -Ilibft -Imlx
 LINKER = -Lincs -Llibft -Lmlx -lmlx -framework OpenGL -framework AppKit 
 
 SRCS_DIR = srcs/
-SRCS = main.c parsing.c parsing1.c utils.c drawing.c free.c vector.c render.c \
-	hook.c tests.c setup.c error.c
+SRCS = main.c vector.c render.c camera.c object.c ray.c shading.c
 
 OBJS_DIR = objs/
 OBJS = $(addprefix $(OBJS_DIR), $(SRCS:.c=.o))
@@ -26,8 +25,8 @@ all: $(NAME)
 bonus: $(NAME)
 
 $(NAME): $(OBJS) $(LIBFT)
-	make bonus -C $(LIBFT_DIR)
-	make -C $(MLX_DIR)
+#	@make bonus -C $(LIBFT_DIR)
+#	@make -C $(MLX_DIR)
 	$(CC) $(CFLAGS) $(LINKER) $^ -o $@
 	@echo "minirt is ready"
 
@@ -37,12 +36,12 @@ $(OBJS_DIR)%.o: $(SRCS_DIR)%.c
 
 clean:
 	$(RM) $(OBJS_DIR)
-	# @make clean -C $(LIBFT_DIR)
+# @make clean -C $(LIBFT_DIR)
 
 fclean: clean
 	$(RM) $(NAME) *.dSYM
-	# @make fclean -C $(LIBFT_DIR)
-	# @make clean -C $(MLX_DIR)
+# @make fclean -C $(LIBFT_DIR)
+# @make clean -C $(MLX_DIR)
 
 re: fclean all
 
