@@ -100,6 +100,8 @@ int camera(t_mrt *mrt);
 
 // ray.c
 int trace(t_mrt *mrt, int i, int j);
+double hitSphere(t_mrt *mrt, t_ray *r, t_object *obj, t_rec *rec);
+double hitPlane(t_mrt *mrt, t_ray *r, t_object *obj, t_rec *rec);
 
 // object.c
 int addObject(t_mrt *mrt, t_object *node);

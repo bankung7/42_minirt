@@ -20,6 +20,14 @@ int main(void)
     // set object
     {
         // set circle
+        t_object *obj0 = malloc(sizeof(t_object));
+        obj0->type = 0;
+        obj0->orig = vec3(-1, 5, -12);
+        obj0->raduis = 3;
+        obj0->color = vec3(1, 0 ,1);
+        obj0->next = 0;
+        addObject(&mrt, obj0);
+
         t_object *obj1 = malloc(sizeof(t_object));
         obj1->type = 0;
         obj1->orig = vec3(-6, 1, -25);
@@ -30,7 +38,7 @@ int main(void)
 
         t_object *obj2 = malloc(sizeof(t_object));
         obj2->type = 0;
-        obj2->orig = vec3(6, -2, -20);
+        obj2->orig = vec3(6, -4, -18);
         obj2->raduis = 5;
         obj2->color = vec3(0, 1 ,0);
         obj2->next = 0;
@@ -80,7 +88,7 @@ int main(void)
 
     // set light
     t_light *lght = malloc(sizeof(t_light));
-    lght->orig = vec3(0, 20, -10);
+    lght->orig = vec3(-10, 15, 0);
     lght->ratio = 0.5;
     lght->color = vec3(1, 1, 1);
     lght->next = 0;
