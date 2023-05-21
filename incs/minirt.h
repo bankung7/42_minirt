@@ -14,6 +14,7 @@ typedef struct s_ambient
 {
     double ratio;
     t_vec3 color;
+    struct s_ambient *next;
 }   t_ambient;
 
 typedef struct s_ligth
@@ -63,10 +64,11 @@ typedef struct s_mrt
     int width;
     int height;
     double aspectRatio;
-    t_ambient ambt;
+    t_ambient *ambt;
     t_camera *cam;
     t_light *lght;
     t_object *obj;
+    int qcode;
 }   t_mrt;
 
 typedef struct s_ray
@@ -106,5 +108,21 @@ double hitPlane(t_mrt *mrt, t_ray *r, t_object *obj, t_rec *rec);
 // object.c
 int addObject(t_mrt *mrt, t_object *node);
 int addLight(t_mrt *mrt, t_light *node);
+
+// log.c
+int elog(char *str, int res);
+
+// parsing.c
+int qCode(t_mrt *mrt, int n);
+t_vec3 getVec3(char *str);
+int parsing(t_mrt *mrt, char *str);
+
+// parsing2.c
+int getAmbient(t_mrt *mrt, char **attr);
+
+// utils.c
+double getDouble(char *str);
+int arrLen(char **arr);
+int free2(char **arr);
 
 #endif

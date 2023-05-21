@@ -1,12 +1,22 @@
 #include "minirt.h"
 
-int main(void)
+int main(int argc, char **argv)
 {
     t_mrt mrt;
+
+    mrt.qcode = 0;
+    
+    if (argc == 1)
+        return (elog("Usage: ./minirt [file]", 1));
+
+    // parsing phase
+    if (parsing(&mrt, argv[1]))
+        return (1);
 
     setup(&mrt);
 
     // set to null
+    mrt.ambt = 0;
     mrt.cam = 0;
     mrt.lght = 0;
     mrt.obj = 0;
@@ -14,8 +24,9 @@ int main(void)
     camera(&mrt);
 
     // set ambient
-    mrt.ambt.color = vec3(1, 1, 1);
-    mrt.ambt.ratio = 0.2;
+    mrt.ambt = malloc(sizeof(t_ambient));
+    mrt.ambt->color = vec3(1, 1, 1);
+    mrt.ambt->ratio = 0.2;
 
     // set object
     {

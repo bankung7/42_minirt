@@ -28,7 +28,7 @@ int shading(t_mrt *mrt, t_rec *rec)
         return (0);
     
     // ambient
-    t_vec3 ambient = vec3Mul(mrt->ambt.color, mrt->ambt.ratio);
+    t_vec3 ambient = vec3Mul(mrt->ambt->color, mrt->ambt->ratio);
     // ambient = vec3(0, 0, 0);
     
     // shadow
@@ -61,7 +61,6 @@ int shading(t_mrt *mrt, t_rec *rec)
     // printf("spec : %.2f %.2f %.2f\n", specular.x, specular.y, specular.z);
 
     // total color
-    t_vec3 color = vec3Mulvec3(vec3Plus(vec3Plus(ambient, diffuse), specular), rec->color);
-    rec->color = color;
+    rec->color = vec3Mulvec3(vec3Plus(vec3Plus(ambient, diffuse), specular), rec->color);
     return (0);
 }
