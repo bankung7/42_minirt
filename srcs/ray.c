@@ -26,7 +26,7 @@ double hitSphere(t_mrt *mrt, t_ray *r, t_object *obj, t_rec *rec)
     t_vec3 oc = vec3Minus(r->orig, obj->orig);
     double a = vec3Dot(r->dir, r->dir);
     double b = 2 * vec3Dot(oc, r->dir);
-    double c = vec3Dot(oc, oc) - (obj->raduis * obj->raduis);
+    double c = vec3Dot(oc, oc) - (obj->radius * obj->radius);
     double dis = b * b - (4 * a * c);
     if (dis < 0)
         return (0);
@@ -110,9 +110,9 @@ int trace(t_mrt *mrt, int i, int j)
     t_object *obj = mrt->obj;
     while (obj)
     {
-        if (obj->type == 0)
+        if (obj->type == SPHERE)
             hitSphere(mrt, &ray, obj, &rec);
-        else if (obj->type == 1)
+        else if (obj->type == PLANE)
             hitPlane(mrt, &ray, obj, &rec);
         obj = obj->next;
     }

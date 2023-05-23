@@ -1,19 +1,66 @@
 #include "minirt.h"
 
+// add Light
+int addLight(t_mrt *mrt, t_light *node)
+{
+    t_light *head;
+
+    head = mrt->lght;
+    if (!head)
+        mrt->lght = node;
+    else
+    {
+        while (head->next)
+            head = head->next;
+        head->next = node;
+    }    
+    return (0);
+}
+
+// get Light
+int getLight(t_mrt *mrt, char **attr, int unique)
+{
+    t_light *lght;
+
+    if (mrt->lght && mrt->lght->unique == 1)
+        return (0);
+    if (mrt->lght && unique == 1)
+        freeList((t_list*)mrt->lght);
+    lght = malloc(sizeof(t_light));
+    if (!lght)
+        return (qCode(mrt, 1));
+    lght->orig = getVec3(mrt, attr[1], 1);
+    lght->ratio = getDouble(attr[2]);
+    lght->color = getVec3(mrt, attr[3], 255);
+    free2(attr);
+    lght->unique = unique;
+    lght->next = 0;
+    checkVec3(mrt, lght->orig, -INFINITY, INFINITY);
+    checkValue(mrt, lght->ratio, 0, 1.0);
+    checkVec3(mrt, lght->color, 0, 1);
+    if (mrt->qcode)
+        return (elog("Light parsing fail", mrt->qcode));
+    addLight(mrt, lght);
+    printf("Light parsing completed\n");
+    return (mrt->qcode);
+}
+
+// Shadowing
 int shadow(t_mrt *mrt , t_ray *r, double length)
 {
     t_rec rec;
+    t_object *obj;
+
     rec.hit = 0;
     rec.tnear = INFINITY;
     rec.tmin = 1;
     rec.tmax = INFINITY;
-    t_object *obj = mrt->obj;
-
+    obj = mrt->obj;
     while (obj)
     {
-        if (obj->type == 0)
+        if (obj->type == SPHERE)
             hitSphere(mrt, r, obj, &rec);
-        else if (obj->type == 1)
+        else if (obj->type == PLANE)
             hitPlane(mrt, r, obj, &rec);
         if (rec.hit == 1 && rec.tnear < length)
             return (1);
@@ -22,6 +69,7 @@ int shadow(t_mrt *mrt , t_ray *r, double length)
     return (0);
 }
 
+// shading
 int shading(t_mrt *mrt, t_rec *rec)
 {
     if (rec->hit == 0)
@@ -33,7 +81,7 @@ int shading(t_mrt *mrt, t_rec *rec)
     
     // shadow
     t_ray sray;
-    sray.orig = rec->phit;
+    sray.orig = vec3Plus(rec->phit, vec3Mul(rec->normal, 1e-4));
     sray.dir = vec3Minus(mrt->lght->orig, rec->phit);
     double length = vec3Len(sray.dir);
     sray.dir = vec3Unit(sray.dir);
