@@ -20,8 +20,8 @@ else
 endif
 
 SRCS_DIR = srcs/
-SRCS = main.c mlx.c parsing.c parsing2.c free.c setup.c \
-	vector.c ray.c hits.c utils.c hook.c render.c log.c
+SRCS = main.c vector.c render.c camera.c object.c ray.c light.c \
+	parsing.c ambient.c log.c utils.c event.c
 
 OBJS_DIR = objs/
 OBJS = $(addprefix $(OBJS_DIR), $(SRCS:.c=.o))
@@ -45,7 +45,7 @@ $(OBJS_DIR)%.o: $(SRCS_DIR)%.c
 
 clean:
 	$(RM) $(OBJS_DIR)
-	# @make clean -C $(LIBFT_DIR)
+# @make clean -C $(LIBFT_DIR)
 
 fclean: clean
 	$(RM) $(NAME) *.dSYM

@@ -1,49 +1,74 @@
 #include "minirt.h"
 
-double ft_clamp(double v, double min, double max)
+int arrLen(char **arr)
 {
-    if (v < min)
-        return (min);
-    if (v > max)
-        return (max);
-    return (v);
-}
+    int i;
 
-// try read attr
-void ft_readAttr(char **attr)
-{
-    int i = 0;
-    while (attr && attr[i])
-        printf("%s\n", attr[i++]);
-}
-
-// arr length
-int ft_arrLen(char **arr)
-{
-    int i = 0;
+    i = 0;
     while (arr && arr[i])
         i++;
     return (i);
 }
 
-// vetor info
-void ft_vec3Info(t_vec3 v)
+// get vector
+t_vec3 getVec3(t_mrt *mrt, char *str, int div)
 {
-    printf("[%.1f][%.1f][%.1f]\n", v.x, v.y, v.z);
+    char **attr;
+
+    attr = ft_split(str, ',');
+    if (arrLen(attr) != 3)
+    {
+        free2(attr);
+        mrt->qcode = 1;
+        return (vec3(0, 0, 0));
+    }
+
+    t_vec3 vec;
+    vec.x = ft_atoi(attr[0]);
+    vec.y = ft_atoi(attr[1]);
+    vec.z = ft_atoi(attr[2]);
+    vec = vec3Div(vec, div);
+    free2(attr);
+    return (vec);
 }
 
-void ft_addLight(t_light **lght, t_light *node)
+double getDouble(char *str)
 {
-    t_light *head;
-    head = *lght;
-    if (!head)
-        *lght = node;
-    else
+    int sign;
+    int e;
+    double n;
+
+    e = 1;
+    n = ft_atoi(str);
+    sign = 1;
+    if (str[0] == '-')
     {
-        while (head->next)
-            head = head->next;
-        head->next = node;
+        str++;
+        sign = -1;
     }
+    while (ft_isdigit(*str) == 1)
+        str++;
+    if (*str != '.')
+        return (n);
+    while (ft_isdigit(*(++str)))
+        n += ((*str - '0') / pow(10.0, e++)) * sign;
+    return (n);
+}
+
+int checkValue(t_mrt *mrt, double n, double min, double max)
+{
+    if (n < min || n > max)
+        mrt->qcode = 1;
+    return (0);
+}
+
+int checkVec3(t_mrt *mrt, t_vec3 v, double min, double max)
+{
+    if (v.x < min || v.x > max
+        || v.y < min || v.y > max
+        || v.z < min || v.z > max)
+        mrt->qcode = 1;
+    return (0);
 }
 
 void ft_addObject(t_object **obj, t_object *node)
