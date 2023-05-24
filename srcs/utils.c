@@ -70,31 +70,3 @@ int checkVec3(t_mrt *mrt, t_vec3 v, double min, double max)
         mrt->qcode = 1;
     return (0);
 }
-
-void ft_addObject(t_object **obj, t_object *node)
-{
-    t_object *head;
-    head = *obj;
-    if (!head)
-        *obj = node;
-    else
-    {
-        while (head->next)
-            head = head->next;
-        head->next = node;
-    }
-}
-
-void ft_addCamera(t_cam **cam, t_cam *node)
-{
-    t_cam *head;
-    head = *cam;
-    if (!head)
-        *cam = node;
-    else
-    {
-        while (head->next)
-            head = head->next;
-        head->next = node;
-    }
-}
