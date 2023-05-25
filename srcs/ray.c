@@ -13,10 +13,14 @@ double    updateRec(t_ray *r, t_object *obj, t_rec *rec, double t)
     rec->hit = 1;
     rec->tnear = t;
     rec->phit = vec3Plus(r->orig, vec3Mul(r->dir, t));
-    if (obj->type == SPHERE || obj->type == CYLINDER)
+    if (obj->type == SPHERE)
         rec->normal = vec3Unit(vec3Minus(rec->phit, obj->orig));
     else if (obj->type == PLANE)
         rec->normal = obj->rot;
+    // else if (obj->type == CYLINDER)
+    // {
+    //     rec->normal = vec3Unit(vec3Minus(rec->phit, vec3Minus(, )));
+    // }
     rec->color = obj->color;    
     return (1); 
 }
@@ -137,7 +141,17 @@ double hitCylinder(t_mrt *mrt, t_ray *r, t_object *obj, t_rec *rec)
     t_vec3 p = vec3Plus(r->orig, vec3Mul(r->dir, t));
     t_vec3 diff = vec3Minus(obj->orig, p);
     if (t < rec->tnear && fabs(vec3Dot(diff, obj->rot)) <= (obj->height / 2))
-        return (updateRec(r, obj, rec, t));     
+    {
+        rec->hit = 1;
+        rec->tnear = t;
+        rec->phit = p;
+        double m = (t * dv) + xv;
+        t_vec3 C = vec3Plus(obj->orig, vec3Mul(obj->rot, obj->height / 2)); 
+        rec->normal = vec3Unit(vec3Minus(rec->phit, vec3Minus(C, vec3Mul(obj->rot, m))));
+        rec->color = obj->color;
+        return (1);
+    }
+        // return (updateRec(r, obj, rec, t));     
     hitDisc(obj, r, rec);
        
     // obj->pl1->orig = vec3Plus(obj->orig, vec3Mul(obj->rot, (obj->height / 2)));
