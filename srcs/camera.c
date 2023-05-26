@@ -25,19 +25,19 @@ int getCamera(t_mrt *mrt, char **attr, int unique)
     if (mrt->cam && mrt->cam->unique == 1)
         return (free2(attr));
     if (mrt->cam && unique == 1)
-        freeList((t_list*)mrt->cam);
+        freelist((t_list*)mrt->cam);
     cam = malloc(sizeof(t_camera));
     if (!cam)
         return (qCode(mrt, 1));
-    cam->orig = getVec3(mrt, attr[1], 1);
-    cam->rot = getVec3(mrt, attr[2], 1);
+    cam->orig = getvec3(mrt, attr[1], 1);
+    cam->rot = getvec3(mrt, attr[2], 1);
     cam->fov = ft_atoi(attr[3]);
     free2(attr);
     cam->unique = unique;
     cam->next = 0;
-    checkVec3(mrt, cam->orig, -INFINITY, INFINITY);
-    checkVec3(mrt, cam->rot, -1.0, 1.0);
-    checkValue(mrt, cam->fov, 0, 180);
+    checkvec3(mrt, cam->orig, -INFINITY, INFINITY);
+    checkvec3(mrt, cam->rot, -1.0, 1.0);
+    checkvalue(mrt, cam->fov, 0, 180);
     if (mrt->qcode)
         return (elog("Camera parsing fail", mrt->qcode));
     addCamera(mrt, cam);
@@ -50,7 +50,7 @@ int camera(t_mrt *mrt)
     if (vec3Len(mrt->cam->rot) == 0) // if rotation is not define
         mrt->cam->rot = vec3(0, 1, 0);
     // printf("%.2f, %.2f, %.2f\n", mrt->cam->rot.x, mrt->cam->rot.y, mrt->cam->rot.z);
-    mrt->cam->w = vec3Unit(vec3Minus(mrt->cam->orig, (t_vec3){0, 0, -1}));
+    mrt->cam->w = vec3Unit(vec3minus(mrt->cam->orig, (t_vec3){0, 0, -1}));
     mrt->cam->u = vec3Unit(vec3Cross(vec3Unit(mrt->cam->rot), mrt->cam->w));
     mrt->cam->v = vec3Cross(mrt->cam->w, mrt->cam->u);
     mrt->cam->d = tan(mrt->cam->fov * 0.5* M_PI / 180);

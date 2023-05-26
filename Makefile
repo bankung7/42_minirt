@@ -20,7 +20,7 @@ else
 endif
 
 SRCS_DIR = srcs/
-SRCS = main.c vector.c render.c camera.c object.c ray.c light.c \
+SRCS = main.c vector1.c vector2.c render.c camera.c object.c ray.c light.c \
 	parsing.c ambient.c log.c utils.c event.c
 
 OBJS_DIR = objs/

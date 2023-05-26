@@ -131,19 +131,20 @@ int makeColor(t_vec3 color);
 int trace(t_mrt *mrt, int i, int j);
 double hitSphere(t_mrt *mrt, t_ray *r, t_object *obj, t_rec *rec);
 double hitPlane(t_mrt *mrt, t_ray *r, t_object *obj, t_rec *rec);
+double hitCylinder(t_mrt *mrt, t_ray *r, t_object *obj, t_rec *rec);
 
 // log.c
 int elog(char *str, int res);
 int free2(char **arr);
-int freeList(t_list *list);
+int freelist(t_list *list);
 int clean(t_mrt *mrt, int res);
 
 // utils.c
-t_vec3 getVec3(t_mrt *mrt, char *str, int color);
-double getDouble(char *str);
-int checkValue(t_mrt *mrt, double n, double min, double max);
-int checkVec3(t_mrt *mrt, t_vec3 v, double min, double max);
-int arrLen(char **arr);
+t_vec3 getvec3(t_mrt *mrt, char *str, int color);
+double getdouble(char *str);
+int checkvalue(t_mrt *mrt, double n, double min, double max);
+int checkvec3(t_mrt *mrt, t_vec3 v, double min, double max);
+int arr_len(char **arr);
 
 // event.c
 int mClose(int keycode, t_mrt *mrt);

@@ -2,10 +2,10 @@
 
 double ft_hitSphere(t_object *spr, t_ray *r, t_rec *rec)
 {
-    t_vec3 oc = ft_vec3Minus(r->orig, spr->orig);
-    double a = ft_vec3Dot(r->dir, r->dir);
-    double b = 2 * ft_vec3Dot(oc, r->dir);
-    double c = ft_vec3Dot(oc, oc) - (spr->r * spr->r);
+    t_vec3 oc = ft_vec3minus(r->orig, spr->orig);
+    double a = ft_vec3dot(r->dir, r->dir);
+    double b = 2 * ft_vec3dot(oc, r->dir);
+    double c = ft_vec3dot(oc, oc) - (spr->r * spr->r);
     double dis = b * b - (4 * a * c);
     if (dis < 0)
         return (0);
@@ -27,7 +27,7 @@ double ft_hitSphere(t_object *spr, t_ray *r, t_rec *rec)
     // set phit and normal vector
     rec->hit = 1;
     rec->phit = ft_lookAt(r, rec->tnear);
-    rec->normal = ft_vec3Unit(ft_vec3Minus(rec->phit, spr->orig));
+    rec->normal = ft_vec3Unit(ft_vec3minus(rec->phit, spr->orig));
     rec->color = spr->color;
     return (1);
 }
@@ -36,11 +36,11 @@ double ft_hitSphere(t_object *spr, t_ray *r, t_rec *rec)
 double ft_hitPlane(t_object *plane, t_ray *r, t_rec *rec)
 {
     double t;
-    double denom = ft_vec3Dot(plane->normal, r->dir);
+    double denom = ft_vec3dot(plane->normal, r->dir);
     if (fabs(denom) > 0.0001)
     {
-        t_vec3 pl = ft_vec3Minus(plane->orig, r->orig);
-        t = ft_vec3Dot(pl, plane->normal) / denom;
+        t_vec3 pl = ft_vec3minus(plane->orig, r->orig);
+        t = ft_vec3dot(pl, plane->normal) / denom;
         if (t > 0.0001 && t < rec->tnear)
         {
             rec->hit = 1;
@@ -56,12 +56,12 @@ double ft_hitPlane(t_object *plane, t_ray *r, t_rec *rec)
 
 int ft_hitDisc(t_object *disc, t_ray *r, t_rec *rec, double rd)
 {
-    t_vec3 oc = ft_vec3Minus(disc->orig, r->orig);
-    if (ft_vec3Dot(r->dir, disc->normal) == 0.0)
+    t_vec3 oc = ft_vec3minus(disc->orig, r->orig);
+    if (ft_vec3dot(r->dir, disc->normal) == 0.0)
         return (0);
-    double t = ft_vec3Dot(oc, disc->normal) / ft_vec3Dot(r->dir, disc->normal);
-    t_vec3 p = ft_vec3Plus(r->orig, ft_vec3Mul(r->dir, t));
-    if (t < rec->tnear && ft_vec3Len(ft_vec3Minus(p, disc->orig)) <= rd)
+    double t = ft_vec3dot(oc, disc->normal) / ft_vec3dot(r->dir, disc->normal);
+    t_vec3 p = ft_vec3plus(r->orig, ft_vec3mul(r->dir, t));
+    if (t < rec->tnear && ft_vec3Len(ft_vec3minus(p, disc->orig)) <= rd)
     {
         rec->hit = 1;
         rec->normal = ft_vec3Unit(disc->normal);
@@ -75,22 +75,22 @@ int ft_hitDisc(t_object *disc, t_ray *r, t_rec *rec, double rd)
 
 int ft_hitCylinder(t_object *cy, t_ray *r, t_rec *rec)
 {
-    t_vec3 x = ft_vec3Minus(r->orig, cy->orig);
-	double dv = ft_vec3Dot(r->dir, cy->normal);
-	double xv = ft_vec3Dot(x, cy->normal);
+    t_vec3 x = ft_vec3minus(r->orig, cy->orig);
+	double dv = ft_vec3dot(r->dir, cy->normal);
+	double xv = ft_vec3dot(x, cy->normal);
 	double a = pow(ft_vec3Len(r->dir), 2) - pow(dv, 2);
-    double hb = ft_vec3Dot(x, r->dir) - (dv * xv);
+    double hb = ft_vec3dot(x, r->dir) - (dv * xv);
     double c = pow(ft_vec3Len(x), 2) - ((cy->dmt * cy->dmt) / 4.0) - pow(xv, 2);
     double dis = (hb * hb) - (a * c);
     if (dis < 0.0 || a == 0)
         return (0);
     double t = (- hb - sqrt(dis)) / a;
-    t_vec3 p = ft_vec3Plus(r->orig, ft_vec3Mul(r->dir, t));
-    t_vec3 diff = ft_vec3Minus(cy->orig, p);
-    if (fabs(ft_vec3Dot(diff, cy->normal)) <= (cy->height / 2))
+    t_vec3 p = ft_vec3plus(r->orig, ft_vec3mul(r->dir, t));
+    t_vec3 diff = ft_vec3minus(cy->orig, p);
+    if (fabs(ft_vec3dot(diff, cy->normal)) <= (cy->height / 2))
         return (t);
-    cy->pl1->orig = ft_vec3Plus(cy->orig, ft_vec3Mul(cy->normal, (cy->height / 2)));
-    cy->pl2->orig = ft_vec3Minus(cy->orig, ft_vec3Mul(cy->normal, (cy->height / 2)));
+    cy->pl1->orig = ft_vec3plus(cy->orig, ft_vec3mul(cy->normal, (cy->height / 2)));
+    cy->pl2->orig = ft_vec3minus(cy->orig, ft_vec3mul(cy->normal, (cy->height / 2)));
     cy->pl1->normal = cy->normal;
     cy->pl2->normal = cy->normal;
     if (ft_hitDisc(cy->pl1, r, rec, cy->dmt / 2) && ft_hitDisc(cy->pl2, r, rec, cy->dmt / 2))
@@ -123,7 +123,7 @@ int ft_hitCylinder(t_object *cy, t_ray *r, t_rec *rec)
     // // set phit and normal vector
     // rec->hit = 1;
     // rec->phit = ft_lookAt(r, rec->tnear);
-    // rec->normal = ft_vec3Unit(ft_vec3Minus(rec->phit, obj->orig));
+    // rec->normal = ft_vec3Unit(ft_vec3minus(rec->phit, obj->orig));
     // // rec->normal = ft_vec3Unit((t_vec3){rec->phit.x / obj->r, 0, rec->phit.z / obj->r});
     // rec->color = obj->color;
     // return (1);

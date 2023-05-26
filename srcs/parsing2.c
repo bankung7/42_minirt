@@ -11,14 +11,14 @@ int ft_getAmbient(t_mrt *mrt, char **input)
 
     // get intensity ratio
     mrt->ambt.ratio = ft_getDouble(input[1]);
-    if (ft_checkValue(mrt->ambt.ratio, 0.0, 1.0))
+    if (ft_checkvalue(mrt->ambt.ratio, 0.0, 1.0))
         return (ft_log("Error\nAmbient ratio value fail", 1));
 
     // color
     if (ft_setVec3(&mrt->ambt.color, input[2], 0.0, 255.0))
         return (ft_log("Error\nAmbient color argument fail", 1));
-    mrt->ambt.color = ft_vec3Div(mrt->ambt.color, 255);
-    printf("Ambient Completed\n");
+    mrt->ambt.color = ft_vec3div(mrt->ambt.color, 255);
+	printf("Ambient Completed\n");
     return (0);
 }
 
@@ -56,7 +56,7 @@ int ft_getCamera(t_mrt *mrt, char **input)
     cam->d = tan(cam->fov * 0.5 * M_PI / 180);
 
     // setup basic vector
-    cam->w = ft_vec3Unit(ft_vec3Minus(cam->orig, (t_vec3){0, 0, -1}));
+    cam->w = ft_vec3Unit(ft_vec3minus(cam->orig, (t_vec3){0, 0, -1}));
     cam->u = ft_vec3Unit(ft_vec3Cross(cam->rot, cam->w));
     cam->v = ft_vec3Cross(cam->w, cam->u);
     
@@ -85,14 +85,14 @@ int ft_getLight(t_mrt *mrt, char **input)
         return (ft_log("Error\nLight coordinate fail", 1));
 
     // get ratio
-    lght->ratio = ft_getDouble(input[2]);
-    if (ft_checkValue(lght->ratio, 0.0 , 1.0))
+    lght->ratio = ft_getdouble(input[2]);
+    if (ft_checkvalue(lght->ratio, 0.0 , 1.0))
         return (ft_log("Error\nLight ratio fail", 1));
 
     // color
     if (ft_setVec3(&lght->color, input[3], 0.0, 255.0))
         return (ft_log("Error\nLight color argument fail", 1));
-    lght->color = ft_vec3Div(lght->color, 255);
+    lght->color = ft_vec3div(lght->color, 255);
 
     ft_addLight(&mrt->lght, lght);
     printf("Light Completed\n");
@@ -119,15 +119,15 @@ int ft_getSphere(t_mrt *mrt, char **input)
         return (ft_log("Error\nSphere coordinate fail", 1));
 
     // diameter
-    obj->dmt = ft_getDouble(input[2]);
-    if (ft_checkValue(obj->dmt, 0.0 , LIMIT_SIZE))
+    obj->dmt = ft_getdouble(input[2]);
+    if (ft_checkvalue(obj->dmt, 0.0 , LIMIT_SIZE))
         return (ft_log("Error\nSphere ratio fail", 1));
     obj->r = obj->dmt / 2.0;
 
     // color
     if (ft_setVec3(&obj->color, input[3], 0.0, 255.0))
         return (ft_log("Error\nSphere color argument fail", 1));
-    obj->color = ft_vec3Div(obj->color, 255);
+    obj->color = ft_vec3div(obj->color, 255);
 
     ft_addObject(&mrt->obj, obj);
 
@@ -162,7 +162,7 @@ int ft_getPlane(t_mrt *mrt, char **input)
     // color
     if (ft_setVec3(&obj->color, input[3], 0.0, 255.0))
         return (ft_log("Error\nPlane color argument fail", 1));
-    obj->color = ft_vec3Div(obj->color, 255);
+    obj->color = ft_vec3div(obj->color, 255);
 
     ft_addObject(&mrt->obj, obj);
     printf("Plane Completed\n");
@@ -197,20 +197,20 @@ int ft_getCylinder(t_mrt *mrt, char **input)
         return (ft_log("Error\nCylinder normal vector fail", 1));
 
     // diameter
-    obj->dmt = ft_getDouble(input[3]);
-    if (ft_checkValue(obj->dmt, 0.0 , LIMIT_SIZE))
+    obj->dmt = ft_getdouble(input[3]);
+    if (ft_checkvalue(obj->dmt, 0.0 , LIMIT_SIZE))
         return (ft_log("Error\nCylinder diameter fail", 1));
     obj->r = obj->dmt / 2.0;
 
     // height
-    obj->height = ft_getDouble(input[4]);
-    if (ft_checkValue(obj->height, 0.0 , LIMIT_SIZE))
+    obj->height = ft_getdouble(input[4]);
+    if (ft_checkvalue(obj->height, 0.0 , LIMIT_SIZE))
         return (ft_log("Error\nCylinder height fail", 1));
 
     // color
     if (ft_setVec3(&obj->color, input[5], 0.0, 255.0))
         return (ft_log("Error\nCylinder color argument fail", 1));
-    obj->color = ft_vec3Div(obj->color, 255);
+    obj->color = ft_vec3div(obj->color, 255);
 
     ft_addObject(&mrt->obj, obj);
     printf("Cylinder Completed\n");
