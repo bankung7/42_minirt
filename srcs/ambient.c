@@ -23,7 +23,10 @@ int getAmbient(t_mrt *mrt, char **attr, int unique)
     t_ambient *ambt;
 
     if (mrt->ambt && mrt->ambt->unique == 1)
+	{
+		printf("Dulicated!!\n");
         return (free2(attr));
+	}
     if (mrt->ambt && !ft_strncmp(attr[0], "A", 2))
         freelist((t_list*)mrt->ambt);
     ambt = malloc(sizeof(t_ambient));

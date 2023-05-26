@@ -149,9 +149,12 @@ double hitCylinder(t_mrt *mrt, t_ray *r, t_object *obj, t_rec *rec)
         rec->hit = 1;
         rec->tnear = t;
         rec->phit = p;
-        t_vec3 C = vec3minus(obj->orig, vec3mul(obj->rot, obj->height / 2)); 
-		double m = (dv * t) + xv;
-        rec->normal = vec3Unit(vec3minus(rec->phit, vec3plus(C, vec3mul(obj->rot, m))));
+        // t_vec3 C = vec3minus(obj->orig, vec3mul(obj->rot, obj->height / 2)); 
+		// double m = (dv * t) + xv;
+		double dtop = vec3dot(diff, obj->rot);
+		t_vec3 pcent = vec3plus(obj->orig, vec3mul(obj->rot, -dtop));
+        rec->normal = vec3Unit(vec3minus(rec->phit, pcent));
+        // rec->normal = vec3Unit(vec3minus(rec->phit, vec3plus(C, vec3mul(obj->rot, m))));
         rec->color = obj->color;
         return (1);
     }
