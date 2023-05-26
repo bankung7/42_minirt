@@ -142,28 +142,20 @@ double hitCylinder(t_mrt *mrt, t_ray *r, t_object *obj, t_rec *rec)
     double t = (- hb - sqrt(dis)) / a;
     t_vec3 p = vec3plus(r->orig, vec3mul(r->dir, t));
     t_vec3 diff = vec3minus(obj->orig, p);
-    double m = vec3dot(diff, obj->rot);
-    if (t < rec->tnear && fabs(vec3dot(diff, obj->rot)) <= (obj->height / 2))
+    if (t > rec->tnear || t < rec->tmin || t > rec->tmax)
+        return (0);
+	if (t < rec->tnear && fabs(vec3dot(diff, obj->rot)) <= (obj->height / 2))
     {
         rec->hit = 1;
         rec->tnear = t;
         rec->phit = p;
-        // t_vec3 C = vec3minus(obj->orig, vec3mul(obj->rot, obj->height / 2)); 
-
-        rec->normal = vec3Unit(vec3minus(rec->phit, vec3plus(obj->orig, vec3mul(obj->rot, -m))));
-        // printf("Form Hit-> %.2f\t%.2f\t%.2f\n", rec->normal.x, rec->normal.y, rec->normal.z);
+        t_vec3 C = vec3minus(obj->orig, vec3mul(obj->rot, obj->height / 2)); 
+		double m = (dv * t) + xv;
+        rec->normal = vec3Unit(vec3minus(rec->phit, vec3plus(C, vec3mul(obj->rot, m))));
         rec->color = obj->color;
         return (1);
     }
-        // return (updateRec(r, obj, rec, t));     
     return(hitDisc(obj, r, rec));
-       
-    // obj->pl1->orig = vec3plus(obj->orig, vec3mul(obj->rot, (obj->height / 2)));
-    // obj->pl2->orig = vec3minus(obj->orig, vec3mul(obj->rot, (obj->height / 2)));
-    // if (t < rec->tnear && hitDisc(obj->rot, r, rec, obj->radius / 2))
-    //     return (updateRec(r, obj, rec, t));
-        // return (1);
-    // return (0);
 }
 
 int trace(t_mrt *mrt, int i, int j)

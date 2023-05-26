@@ -90,7 +90,6 @@ int shading(t_mrt *mrt, t_rec *rec)
     if (shadow(mrt, &sray, length) == 1)
     {
         rec->color = vec3mulvec3(ambient, rec->color);
-        // printf("Form Light-> %.2f\t%.2f\t%.2f\n", rec->normal.x, rec->normal.y, rec->normal.z);
         return (0);
     }
     
@@ -113,6 +112,5 @@ int shading(t_mrt *mrt, t_rec *rec)
 
     // total color
     rec->color = vec3mulvec3(vec3plus(vec3plus(ambient, diffuse), specular), rec->color);
-    // rec->color = vec3mulvec3(ambient, rec->color);
     return (0);
 }
