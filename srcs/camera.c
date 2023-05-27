@@ -59,7 +59,7 @@ int camera(t_mrt *mrt)
 }
 
 // switch cam => should be okay now
-int switchCam(t_mrt *mrt)
+int switch_cam(t_mrt *mrt)
 {
     t_camera *head1 = mrt->cam;
     t_camera *head2;

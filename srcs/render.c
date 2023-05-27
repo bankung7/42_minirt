@@ -16,10 +16,6 @@ void	setup(t_mrt *mrt)
 	mrt->mlx.mlx = mlx_init();
 	mrt->mlx.mlx_win = mlx_new_window(mrt->mlx.mlx, mrt->width,
 			mrt->height, "My minirt");
-	mrt->mlx.img = mlx_new_image(mrt->mlx.mlx, mrt->width,
-			mrt->height);
-	mrt->mlx.addr = mlx_get_data_addr(mrt->mlx.img, &mrt->mlx.bpp,
-			&mrt->mlx.llen, &mrt->mlx.endian);
 }
 
 int	render(t_mrt *mrt)
@@ -27,6 +23,10 @@ int	render(t_mrt *mrt)
 	int	i;
 	int	j;
 
+	mrt->mlx.img = mlx_new_image(mrt->mlx.mlx, mrt->width,
+			mrt->height);
+	mrt->mlx.addr = mlx_get_data_addr(mrt->mlx.img, &mrt->mlx.bpp,
+			&mrt->mlx.llen, &mrt->mlx.endian);
 	j = 0;
 	while (j < mrt->height)
 	{
@@ -40,7 +40,7 @@ int	render(t_mrt *mrt)
 	}
 	printf("rendering completed\n");
 	mlx_put_image_to_window(mrt->mlx.mlx, mrt->mlx.mlx_win, mrt->mlx.img, 0, 0);
-	mlx_hook(mrt->mlx.mlx_win, 2, 1L << 0, mClose, mrt);
+	mlx_hook(mrt->mlx.mlx_win, 3, 1L << 1, mClose, mrt);
 	mlx_loop(mrt->mlx.mlx);
 	return (0);
 }
