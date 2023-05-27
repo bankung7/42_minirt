@@ -8,8 +8,8 @@ int	m_close(int keycode, t_mrt *mrt)
 		clean(mrt, 0);
 		exit(0);
 	}
-	// if (keycode == 8)
-	// 	return (switch_cam(mrt));
+	if (keycode == 8)
+		return (switchCam(mrt));
 	return (0);
 }
 

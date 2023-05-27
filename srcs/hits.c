@@ -37,11 +37,11 @@ double ft_hitPlane(t_object *plane, t_ray *r, t_rec *rec)
 {
     double t;
     double denom = ft_vec3dot(plane->normal, r->dir);
-    if (fabs(denom) > 0.0001)
+    if (fabs(denom) > EPSILON)
     {
         t_vec3 pl = ft_vec3minus(plane->orig, r->orig);
         t = ft_vec3dot(pl, plane->normal) / denom;
-        if (t > 0.0001 && t < rec->tnear)
+        if (t > EPSILON && t < rec->tnear)
         {
             rec->hit = 1;
             rec->normal = ft_vec3Unit(plane->normal);

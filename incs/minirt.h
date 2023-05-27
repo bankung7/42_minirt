@@ -16,6 +16,8 @@
 #define MRTW 800
 #define MRTH 600 
 
+#define EPSILON 0.00001
+
 // structure
 typedef struct s_ambient
 {
@@ -110,6 +112,7 @@ int getambient(t_mrt *mrt, char **attr, int unique);
 // camera.c
 int getCamera(t_mrt *mrt, char **attr, int unique);
 int camera(t_mrt *mrt);
+int switchCam(t_mrt *mrt);
 
 // light.c
 int getlight(t_mrt *mrt, char **attr, int unique);

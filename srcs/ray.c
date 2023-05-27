@@ -70,11 +70,11 @@ double hitPlane(t_mrt *mrt, t_ray *r, t_object *obj, t_rec *rec)
     (void)mrt;
     double t;
     double denom = vec3dot(obj->rot, r->dir);
-    if (fabs(denom) > 0.0001)
+    if (fabs(denom) > EPSILON)
     {
         t_vec3 pl = vec3minus(obj->orig, r->orig);
         t = vec3dot(pl, obj->rot) / denom;
-        if (t > 0.0001 && t < rec->tnear)
+        if (t > EPSILON && t < rec->tnear)
         {
             rec->hit = 1;
             rec->tnear = t;
@@ -87,32 +87,17 @@ double hitPlane(t_mrt *mrt, t_ray *r, t_object *obj, t_rec *rec)
     return (0);
 }
 
-double hitDisc(t_object *cy, t_ray *r, t_rec *rec)
+double hitDisc(t_object *cy, t_ray *r, t_rec *rec, t_object *pl)
 {
-    t_object pl1;
-    t_object pl2;
-    pl1.type = PLANE, pl1.orig = vec3plus(cy->orig, vec3mul(cy->rot, (cy->height / 2))), pl1.color = cy->color;
-    pl2.type = PLANE, pl2.orig = vec3minus(cy->orig, vec3mul(cy->rot, (cy->height / 2))), pl2.color = cy->color;
+    double t = vec3dot(vec3minus(pl->orig, r->orig), cy->rot) / vec3dot(r->dir, cy->rot);
     if (vec3dot(r->dir, cy->rot) == 0.0)
         return (0);
-    double t1 = vec3dot(vec3minus(pl1.orig, r->orig), cy->rot) / vec3dot(r->dir, cy->rot);
-    double t2 = vec3dot(vec3minus(pl2.orig, r->orig), cy->rot) / vec3dot(r->dir, cy->rot);
-    t_vec3 p1 = vec3plus(r->orig, vec3mul(r->dir, t1));
-    t_vec3 p2 = vec3plus(r->orig, vec3mul(r->dir, t2));
-    if (t1 <= t2 && t1 < rec->tnear && sqrtf(vec3dot(vec3minus(p1, pl1.orig), vec3minus(p1, pl1.orig))) <= cy->radius)
+    t_vec3 p = vec3plus(r->orig, vec3mul(r->dir, t));
+    if (t > rec->tmin && t < rec->tmax && t < rec->tnear && sqrtf(vec3dot(vec3minus(p, pl->orig), vec3minus(p, pl->orig))) <= cy->radius)
     {
         rec->hit = 1;
-        rec->tnear = t1;
-        rec->phit = vec3plus(r->orig, vec3mul(r->dir, t1));
-        rec->normal = vec3unit(cy->rot);
-        rec->color = cy->color;
-        return (1);
-    }
-    else if (t2 < t1 && t2 < rec->tnear && sqrtf(vec3dot(vec3minus(p2, pl2.orig), vec3minus(p2, pl2.orig))) <= cy->radius)
-    {
-        rec->hit = 1;
-        rec->tnear = t2;
-        rec->phit = vec3plus(r->orig, vec3mul(r->dir, t2));
+        rec->tnear = t;
+        rec->phit = vec3plus(r->orig, vec3mul(r->dir, t));
         rec->normal = vec3unit(cy->rot);
         rec->color = cy->color;
         return (1);
@@ -120,7 +105,7 @@ double hitDisc(t_object *cy, t_ray *r, t_rec *rec)
     return (0);
 }
 
-double hitCylinder(t_mrt *mrt, t_ray *r, t_object *obj, t_rec *rec)
+double hitBody(t_mrt *mrt, t_ray *r, t_object *obj, t_rec *rec)
 {
     (void) mrt;
     t_vec3 x = vec3minus(r->orig, obj->orig);
@@ -135,24 +120,41 @@ double hitCylinder(t_mrt *mrt, t_ray *r, t_object *obj, t_rec *rec)
     double t = (- hb - sqrt(dis)) / a;
     t_vec3 p = vec3plus(r->orig, vec3mul(r->dir, t));
     t_vec3 diff = vec3minus(obj->orig, p);
-    if (t > rec->tnear || t < rec->tmin || t > rec->tmax)
-        return (0);
+	if (t > rec->tnear || t < rec->tmin || t > rec->tmax)
+		return (0);
+	// if (hitDisc(obj, r, rec))
+	// {
 	if (t < rec->tnear && fabs(vec3dot(diff, obj->rot)) <= (obj->height / 2))
-    {
-        rec->hit = 1;
-        rec->tnear = t;
-        rec->phit = p;
-        // t_vec3 C = vec3minus(obj->orig, vec3mul(obj->rot, obj->height / 2)); 
+	{
+		rec->hit = 1;
+		rec->tnear = t;
+		rec->phit = p;
+		// t_vec3 C = vec3minus(obj->orig, vec3mul(obj->rot, obj->height / 2)); 
 		// double m = (dv * t) + xv;
 		double dtop = vec3dot(diff, obj->rot);
 		t_vec3 pcent = vec3plus(obj->orig, vec3mul(obj->rot, -dtop));
-        rec->normal = vec3unit(vec3minus(rec->phit, pcent));
-        // rec->normal = vec3unit(vec3minus(rec->phit, vec3plus(C, vec3mul(obj->rot, m))));
-        rec->color = obj->color;
-        return (1);
-    }
-    return(hitDisc(obj, r, rec));
+		rec->normal = vec3unit(vec3minus(rec->phit, pcent));
+		// rec->normal = vec3unit(vec3minus(rec->phit, vec3plus(C, vec3mul(obj->rot, m))));
+		rec->color = obj->color;
+		return (1);
+	}
+	// }
+    // return(hitDisc(obj, r, rec));
+	return (0);
 }
+
+double hitCylinder(t_mrt *mrt, t_ray *r, t_object *obj, t_rec *rec)
+{
+	t_object pl1;
+    t_object pl2;
+    pl1.type = PLANE, pl1.orig = vec3plus(obj->orig, vec3mul(obj->rot, (obj->height / 2))), pl1.color = obj->color, pl1.rot = obj->rot;
+    pl2.type = PLANE, pl2.orig = vec3minus(obj->orig, vec3mul(obj->rot, (obj->height / 2))), pl2.color = obj->color, pl2.rot = vec3mul(obj->rot, -1);
+	if (hitBody(mrt, r, obj, rec) || hitDisc(obj, r, rec, &pl1) || hitDisc(obj, r, rec, &pl2))
+		return (1);
+	else
+		return (0);
+}
+
 
 int trace(t_mrt *mrt, int i, int j)
 {
