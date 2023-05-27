@@ -116,6 +116,7 @@ int shading(t_mrt *mrt, t_rec *rec);
 // camera.c
 int getCamera(t_mrt *mrt, char **attr, int unique);
 int camera(t_mrt *mrt);
+int switch_cam(t_mrt *mrt);
 
 // object.c
 int addObject(t_mrt *mrt, t_object *node);

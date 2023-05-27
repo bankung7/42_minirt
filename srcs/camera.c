@@ -22,10 +22,8 @@ int getCamera(t_mrt *mrt, char **attr, int unique)
 {
     t_camera *cam;
 
-    if (mrt->cam && mrt->cam->unique == 1)
-        return (free2(attr));
-    if (mrt->cam && unique == 1)
-        freelist((t_list*)mrt->cam);
+    if (mrt->cam && (mrt->cam->unique == 1 || unique == 1))
+        return (elog("Camera Duplicated", qCode(mrt, 1)));
     cam = malloc(sizeof(t_camera));
     if (!cam)
         return (qCode(mrt, 1));
@@ -59,7 +57,7 @@ int camera(t_mrt *mrt)
 }
 
 // switch cam => should be okay now
-int switchCam(t_mrt *mrt)
+int switch_cam(t_mrt *mrt)
 {
     t_camera *head1 = mrt->cam;
     t_camera *head2;

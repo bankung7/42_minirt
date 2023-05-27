@@ -22,10 +22,8 @@ int getLight(t_mrt *mrt, char **attr, int unique)
 {
     t_light *lght;
 
-    if (mrt->lght && mrt->lght->unique == 1)
-        return (0);
-    if (mrt->lght && unique == 1)
-        freelist((t_list*)mrt->lght);
+    if (mrt->lght && (mrt->lght->unique == 1 || unique == 1))
+        return (elog("Light Duplicated", qCode(mrt, 1)));
     lght = malloc(sizeof(t_light));
     if (!lght)
         return (qCode(mrt, 1));
