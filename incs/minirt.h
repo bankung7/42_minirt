@@ -13,6 +13,8 @@
 #define PLANE 20
 #define CYLINDER 30
 
+#define MRTW 800
+#define MRTH 600 
 
 // structure
 typedef struct s_ambient
@@ -103,14 +105,14 @@ int qCode(t_mrt *mrt, int n);
 int parsing(t_mrt *mrt, char *str);
 
 // ambient.c
-int getAmbient(t_mrt *mrt, char **attr, int unique);
+int getambient(t_mrt *mrt, char **attr, int unique);
 
 // camera.c
 int getCamera(t_mrt *mrt, char **attr, int unique);
 int camera(t_mrt *mrt);
 
 // light.c
-int getLight(t_mrt *mrt, char **attr, int unique);
+int getlight(t_mrt *mrt, char **attr, int unique);
 int shading(t_mrt *mrt, t_rec *rec);
 
 // camera.c
@@ -125,9 +127,9 @@ int getObject(t_mrt *mrt, char **attr);
 void putPixel(t_mlx *data, int x, int y, int color);
 void setup(t_mrt *mrt);
 int render(t_mrt *mrt);
-int makeColor(t_vec3 color);
 
 // ray.c
+int makeColor(t_vec3 color);
 int trace(t_mrt *mrt, int i, int j);
 double hitSphere(t_mrt *mrt, t_ray *r, t_object *obj, t_rec *rec);
 double hitPlane(t_mrt *mrt, t_ray *r, t_object *obj, t_rec *rec);
@@ -136,12 +138,14 @@ double hitCylinder(t_mrt *mrt, t_ray *r, t_object *obj, t_rec *rec);
 // log.c
 int elog(char *str, int res);
 int free2(char **arr);
+int clean(t_mrt *mrt, int res);
+
+//freelist.c
 int freelist(t_list *list);
 int freelista(t_ambient *list);
 int freelistc(t_camera *list);
 int freelistl(t_light *list);
 int freelisto(t_object *list);
-int clean(t_mrt *mrt, int res);
 
 // utils.c
 t_vec3 getvec3(t_mrt *mrt, char *str, int color);
@@ -151,7 +155,7 @@ int checkvec3(t_mrt *mrt, t_vec3 v, double min, double max);
 int arr_len(char **arr);
 
 // event.c
-int mClose(int keycode, t_mrt *mrt);
-int	mExit(t_mrt *mrt);
+int m_close(int keycode, t_mrt *mrt);
+int	m_exit(t_mrt *mrt);
 
 #endif

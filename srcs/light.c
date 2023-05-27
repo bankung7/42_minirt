@@ -1,7 +1,7 @@
 #include "minirt.h"
 
 // add Light
-int addLight(t_mrt *mrt, t_light *node)
+int addlight(t_mrt *mrt, t_light *node)
 {
     t_light *head;
 
@@ -18,7 +18,7 @@ int addLight(t_mrt *mrt, t_light *node)
 }
 
 // get Light
-int getLight(t_mrt *mrt, char **attr, int unique)
+int getlight(t_mrt *mrt, char **attr, int unique)
 {
     t_light *lght;
 
@@ -40,7 +40,7 @@ int getLight(t_mrt *mrt, char **attr, int unique)
     checkvec3(mrt, lght->color, 0, 1);
     if (mrt->qcode)
         return (elog("Light parsing fail", mrt->qcode));
-    addLight(mrt, lght);
+    addlight(mrt, lght);
     printf("Light parsing completed\n");
     return (mrt->qcode);
 }

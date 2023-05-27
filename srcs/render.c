@@ -10,8 +10,8 @@ void	putpixel(t_mlx *data, int x, int y, int color)
 
 void	setup(t_mrt *mrt)
 {
-	mrt->width = 800;
-	mrt->height = 600;
+	mrt->width = MRTW;
+	mrt->height = MRTH;
 	mrt->aspectRatio = (double)mrt->width / mrt->height;
 	mrt->mlx.mlx = mlx_init();
 	mrt->mlx.mlx_win = mlx_new_window(mrt->mlx.mlx, mrt->width,
@@ -40,8 +40,8 @@ int	render(t_mrt *mrt)
 	}
 	printf("rendering completed\n");
 	mlx_put_image_to_window(mrt->mlx.mlx, mrt->mlx.mlx_win, mrt->mlx.img, 0, 0);
-	mlx_hook(mrt->mlx.mlx_win, 2, 1L << 0, mClose, mrt);
-	mlx_hook(mrt->mlx.mlx_win, 17, 1L << 0, mExit, mrt);
+	mlx_hook(mrt->mlx.mlx_win, 2, 1L << 0, m_close, mrt);
+	mlx_hook(mrt->mlx.mlx_win, 17, 1L << 0, m_exit, mrt);
 	mlx_loop(mrt->mlx.mlx);
 	return (0);
 }

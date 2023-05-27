@@ -62,11 +62,6 @@ double hitSphere(t_mrt *mrt, t_ray *r, t_object *obj, t_rec *rec)
     rec->phit = vec3plus(r->orig, vec3mul(r->dir, t1));
     rec->normal = vec3unit(vec3minus(rec->phit, obj->orig));
     rec->color = obj->color;
-    // printf("%.4f\n", vec3dot(rec->phit, rec->normal));
-    // printf("%.2f, %.2f, %.2f\n", obj->orig.x, obj->orig.y, obj->orig.z);
-    // printf("phit : %.2f, %.2f, %.2f\n", rec->phit.x, rec->phit.y, rec->phit.z);
-    // printf("normal : %.2f, %.2f, %.2f\n", rec->normal.x, rec->normal.y, rec->normal.z);
-    // printf("%.2f, %.2f, %.2f\n", rec->color.x, rec->color.y, rec->color.z);
     return (1);
 }
 
@@ -104,7 +99,6 @@ double hitDisc(t_object *cy, t_ray *r, t_rec *rec)
     double t2 = vec3dot(vec3minus(pl2.orig, r->orig), cy->rot) / vec3dot(r->dir, cy->rot);
     t_vec3 p1 = vec3plus(r->orig, vec3mul(r->dir, t1));
     t_vec3 p2 = vec3plus(r->orig, vec3mul(r->dir, t2));
-    // if (t1 <= t2 && t1 < rec->tnear && vec3len(vec3minus(p1, pl1.orig)) <= cy->radius)
     if (t1 <= t2 && t1 < rec->tnear && sqrtf(vec3dot(vec3minus(p1, pl1.orig), vec3minus(p1, pl1.orig))) <= cy->radius)
     {
         rec->hit = 1;
@@ -116,7 +110,6 @@ double hitDisc(t_object *cy, t_ray *r, t_rec *rec)
     }
     else if (t2 < t1 && t2 < rec->tnear && sqrtf(vec3dot(vec3minus(p2, pl2.orig), vec3minus(p2, pl2.orig))) <= cy->radius)
     {
-    // else if (t2 < t1 && t2 < rec->tnear && vec3len(vec3minus(p2, pl2.orig)) <= cy->radius)
         rec->hit = 1;
         rec->tnear = t2;
         rec->phit = vec3plus(r->orig, vec3mul(r->dir, t2));
