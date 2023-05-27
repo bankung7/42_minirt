@@ -2,7 +2,6 @@
 
 int	mClose(int keycode, t_mrt *mrt)
 {
-    printf("keycode : %d\n", keycode);
     if (keycode == 53)
     {
 	    mlx_destroy_window(mrt->mlx.mlx, mrt->mlx.mlx_win);

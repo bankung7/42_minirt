@@ -21,19 +21,20 @@ int freeType(t_mrt *mrt, int type)
     return (0);
 }
 
-///////////////// error here ///////////////////
-int checkUnique(t_mrt *mrt, int type, int unique)
+// jsut check there is any that type of object in the loop
+int check_unique(t_mrt *mrt, int type, int unique)
 {
     t_object *head = mrt->obj;
 
-    if (!head)
-        return (0); 
+    if (!mrt->obj)
+        return (0);
     while (head)
     {
-        if (head->type == type && head->unique == 1)
-            return (1);
-        else if (head->type == type && unique == 1)
-            return (freeType(mrt, type));
+        if (head->type == type)
+        {
+            if (unique == 1 || head->unique == 1)
+                return (qCode(mrt, 1));
+        }
         head = head->next;
     }
     return (0);
@@ -57,8 +58,8 @@ int addObject(t_mrt *mrt, t_object *node)
 int getSphere(t_mrt *mrt, char **attr, int unique)
 {
     // check unique
-    if (checkUnique(mrt, SPHERE, unique))
-        return (free2(attr));
+    if (check_unique(mrt, SPHERE, unique))
+        return (elog("Duplicated Sphere", 1));
     t_object *obj = malloc(sizeof(t_object));
     if (!obj)
         return (qCode(mrt, 1));
@@ -82,6 +83,8 @@ int getSphere(t_mrt *mrt, char **attr, int unique)
 int getPlane(t_mrt *mrt, char **attr, int unique)
 {
     // check unique
+    if (check_unique(mrt, PLANE, unique))
+        return (elog("Duplicated Plane", 1));
     t_object *obj = malloc(sizeof(t_object));
     if (!obj)
         return (qCode(mrt, 1));
@@ -106,6 +109,8 @@ int getPlane(t_mrt *mrt, char **attr, int unique)
 int getCylinder(t_mrt *mrt, char **attr, int unique)
 {
     // check unique
+    if (check_unique(mrt, CYLINDER, unique))
+        return (elog("Duplicated Cylinder", 1));
     t_object *obj = malloc(sizeof(t_object));
     if (!obj)
         return (qCode(mrt, 1));

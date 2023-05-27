@@ -22,13 +22,8 @@ int getAmbient(t_mrt *mrt, char **attr, int unique)
 {
     t_ambient *ambt;
 
-    if (mrt->ambt && mrt->ambt->unique == 1)
-	{
-		printf("Dulicated!!\n");
-        return (free2(attr));
-	}
-    if (mrt->ambt && !ft_strncmp(attr[0], "A", 2))
-        freelist((t_list*)mrt->ambt);
+    if (mrt->ambt && (mrt->ambt->unique == 1 || unique == 1))
+        return (elog("Ambient Duplicated", qCode(mrt, 1)));
     ambt = malloc(sizeof(t_ambient));
     if (!ambt)
         return (qCode(mrt, 1));
