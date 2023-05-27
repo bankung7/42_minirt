@@ -1,3 +1,9 @@
 *.md
 *.pdf
 *.txt
+objs/
+minirt
+libft/obj/
+libft/libft.a
+mlx/*.o
+mlx/libmlx.a

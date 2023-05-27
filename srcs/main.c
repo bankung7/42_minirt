@@ -35,3 +35,6 @@ int main(int argc, char **argv)
 // bug //
 // shadow have something wrong => fixed maybe
 // rotation, it should be with up first, then rotatage
+
+// define hwidth height
+// normalise input

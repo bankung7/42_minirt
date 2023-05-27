@@ -137,6 +137,10 @@ double hitCylinder(t_mrt *mrt, t_ray *r, t_object *obj, t_rec *rec);
 int elog(char *str, int res);
 int free2(char **arr);
 int freelist(t_list *list);
+int freelista(t_ambient *list);
+int freelistc(t_camera *list);
+int freelistl(t_light *list);
+int freelisto(t_object *list);
 int clean(t_mrt *mrt, int res);
 
 // utils.c
@@ -148,5 +152,6 @@ int arr_len(char **arr);
 
 // event.c
 int mClose(int keycode, t_mrt *mrt);
+int	mExit(t_mrt *mrt);
 
 #endif

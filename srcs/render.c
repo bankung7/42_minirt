@@ -41,6 +41,7 @@ int	render(t_mrt *mrt)
 	printf("rendering completed\n");
 	mlx_put_image_to_window(mrt->mlx.mlx, mrt->mlx.mlx_win, mrt->mlx.img, 0, 0);
 	mlx_hook(mrt->mlx.mlx_win, 2, 1L << 0, mClose, mrt);
+	mlx_hook(mrt->mlx.mlx_win, 17, 1L << 0, mExit, mrt);
 	mlx_loop(mrt->mlx.mlx);
 	return (0);
 }
