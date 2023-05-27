@@ -85,8 +85,8 @@ int shading(t_mrt *mrt, t_rec *rec)
     t_ray sray;
     sray.orig = vec3plus(rec->phit, vec3mul(rec->normal, 1e-4));
     sray.dir = vec3minus(mrt->lght->orig, rec->phit);
-    double length = vec3Len(sray.dir);
-    sray.dir = vec3Unit(sray.dir);
+    double length = vec3len(sray.dir);
+    sray.dir = vec3unit(sray.dir);
     if (shadow(mrt, &sray, length) == 1)
     {
         rec->color = vec3mulvec3(ambient, rec->color);
@@ -95,7 +95,7 @@ int shading(t_mrt *mrt, t_rec *rec)
     
     // diffuse
     double dratio = 0.6;
-    t_vec3 light = vec3Unit(vec3minus(mrt->lght->orig, rec->phit));
+    t_vec3 light = vec3unit(vec3minus(mrt->lght->orig, rec->phit));
     double factor = fmax(0.0, vec3dot(rec->normal, light));
     // printf("factor : %.2f\n", factor);
     t_vec3 diffuse = vec3mul(mrt->lght->color, factor * dratio);
@@ -103,9 +103,9 @@ int shading(t_mrt *mrt, t_rec *rec)
 
     // specular
     double sratio = 0.5;
-    t_vec3 viewDir = vec3Unit(vec3minus(mrt->cam->orig, rec->phit));
+    t_vec3 viewDir = vec3unit(vec3minus(mrt->cam->orig, rec->phit));
     t_vec3 reflect = vec3mul(rec->normal, (2.0 * vec3dot(light, rec->normal)));
-    reflect = vec3Unit(vec3minus(reflect, light));
+    reflect = vec3unit(vec3minus(reflect, light));
     double spec = pow(fmax(vec3dot(viewDir, reflect), 0.0), 32);
     t_vec3 specular = vec3mul(mrt->lght->color, spec * sratio);
     // printf("spec : %.2f %.2f %.2f\n", specular.x, specular.y, specular.z);

@@ -1,7 +1,7 @@
 #include "minirt.h"
 
 // add Camera
-int addCamera(t_mrt *mrt, t_camera *node)
+int add_camera(t_mrt *mrt, t_camera *node)
 {
     t_camera *head;
 
@@ -40,20 +40,42 @@ int getCamera(t_mrt *mrt, char **attr, int unique)
     checkvalue(mrt, cam->fov, 0, 180);
     if (mrt->qcode)
         return (elog("Camera parsing fail", mrt->qcode));
-    addCamera(mrt, cam);
+    add_camera(mrt, cam);
     printf("Camera parsing completed\n");
     return (mrt->qcode);
 }
 
 int camera(t_mrt *mrt)
 {
-    if (vec3Len(mrt->cam->rot) == 0) // if rotation is not define
+    if (vec3len(mrt->cam->rot) == 0) // if rotation is not define
         mrt->cam->rot = vec3(0, 1, 0);
-    // printf("%.2f, %.2f, %.2f\n", mrt->cam->rot.x, mrt->cam->rot.y, mrt->cam->rot.z);
-    mrt->cam->w = vec3Unit(vec3minus(mrt->cam->orig, (t_vec3){0, 0, -1}));
-    mrt->cam->u = vec3Unit(vec3Cross(vec3Unit(mrt->cam->rot), mrt->cam->w));
-    mrt->cam->v = vec3Cross(mrt->cam->w, mrt->cam->u);
+    printf("%.2f, %.2f, %.2f\n", mrt->cam->rot.x, mrt->cam->rot.y, mrt->cam->rot.z);
+    mrt->cam->w = vec3unit(vec3minus(mrt->cam->orig, (t_vec3){0, 0, -1}));
+    mrt->cam->u = vec3unit(vec3cross(vec3unit(mrt->cam->rot), mrt->cam->w));
+    mrt->cam->v = vec3cross(mrt->cam->w, mrt->cam->u);
     mrt->cam->d = tan(mrt->cam->fov * 0.5* M_PI / 180);
-    // printf("%.2f, %.2f, %.2f\n", mrt->cam->u.x, mrt->cam->u.y, mrt->cam->u.z);
+    printf("%.2f, %.2f, %.2f\n", mrt->cam->u.x, mrt->cam->u.y, mrt->cam->u.z);
     return (0);
 }
+
+// switch cam => should be okay now
+int switchCam(t_mrt *mrt)
+{
+    t_camera *head1 = mrt->cam;
+    t_camera *head2;
+
+    if (!mrt->cam || !mrt->cam->next)
+        return (0);
+    printf("switch cam\n");
+    mrt->cam = head1->next;
+    head2 = head1;
+    while (head2->next)
+        head2 = head2->next;
+    head2->next = head1;
+    head1->next = 0;
+    camera(mrt);
+    mlx_destroy_image(mrt->mlx.mlx, mrt->mlx.img);
+    return (render(mrt));
+}
+
+// rotation view of the camera

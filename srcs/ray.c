@@ -14,7 +14,7 @@ double    updateRec(t_ray *r, t_object *obj, t_rec *rec, double t)
     rec->tnear = t;
     rec->phit = vec3plus(r->orig, vec3mul(r->dir, t));
     if (obj->type == SPHERE)
-        rec->normal = vec3Unit(vec3minus(rec->phit, obj->orig));
+        rec->normal = vec3unit(vec3minus(rec->phit, obj->orig));
     else if (obj->type == PLANE)
         rec->normal = obj->rot;
     rec->color = obj->color;    
@@ -60,7 +60,7 @@ double hitSphere(t_mrt *mrt, t_ray *r, t_object *obj, t_rec *rec)
     rec->hit = 1;
     rec->tnear = t1;
     rec->phit = vec3plus(r->orig, vec3mul(r->dir, t1));
-    rec->normal = vec3Unit(vec3minus(rec->phit, obj->orig));
+    rec->normal = vec3unit(vec3minus(rec->phit, obj->orig));
     rec->color = obj->color;
     // printf("%.4f\n", vec3dot(rec->phit, rec->normal));
     // printf("%.2f, %.2f, %.2f\n", obj->orig.x, obj->orig.y, obj->orig.z);
@@ -104,23 +104,23 @@ double hitDisc(t_object *cy, t_ray *r, t_rec *rec)
     double t2 = vec3dot(vec3minus(pl2.orig, r->orig), cy->rot) / vec3dot(r->dir, cy->rot);
     t_vec3 p1 = vec3plus(r->orig, vec3mul(r->dir, t1));
     t_vec3 p2 = vec3plus(r->orig, vec3mul(r->dir, t2));
-    // if (t1 <= t2 && t1 < rec->tnear && vec3Len(vec3minus(p1, pl1.orig)) <= cy->radius)
+    // if (t1 <= t2 && t1 < rec->tnear && vec3len(vec3minus(p1, pl1.orig)) <= cy->radius)
     if (t1 <= t2 && t1 < rec->tnear && sqrtf(vec3dot(vec3minus(p1, pl1.orig), vec3minus(p1, pl1.orig))) <= cy->radius)
     {
         rec->hit = 1;
         rec->tnear = t1;
         rec->phit = vec3plus(r->orig, vec3mul(r->dir, t1));
-        rec->normal = vec3Unit(cy->rot);
+        rec->normal = vec3unit(cy->rot);
         rec->color = cy->color;
         return (1);
     }
     else if (t2 < t1 && t2 < rec->tnear && sqrtf(vec3dot(vec3minus(p2, pl2.orig), vec3minus(p2, pl2.orig))) <= cy->radius)
     {
-    // else if (t2 < t1 && t2 < rec->tnear && vec3Len(vec3minus(p2, pl2.orig)) <= cy->radius)
+    // else if (t2 < t1 && t2 < rec->tnear && vec3len(vec3minus(p2, pl2.orig)) <= cy->radius)
         rec->hit = 1;
         rec->tnear = t2;
         rec->phit = vec3plus(r->orig, vec3mul(r->dir, t2));
-        rec->normal = vec3Unit(cy->rot);
+        rec->normal = vec3unit(cy->rot);
         rec->color = cy->color;
         return (1);
     }
@@ -133,9 +133,9 @@ double hitCylinder(t_mrt *mrt, t_ray *r, t_object *obj, t_rec *rec)
     t_vec3 x = vec3minus(r->orig, obj->orig);
 	double dv = vec3dot(r->dir, obj->rot);
 	double xv = vec3dot(x, obj->rot);
-	double a = pow(vec3Len(r->dir), 2) - pow(dv, 2);
+	double a = pow(vec3len(r->dir), 2) - pow(dv, 2);
     double hb = vec3dot(x, r->dir) - (dv * xv);
-    double c = pow(vec3Len(x), 2) - (obj->radius * obj->radius) - pow(xv, 2);
+    double c = pow(vec3len(x), 2) - (obj->radius * obj->radius) - pow(xv, 2);
     double dis = (hb * hb) - (a * c);
     if (dis < 0.0 || a == 0)
         return (0);
@@ -153,8 +153,8 @@ double hitCylinder(t_mrt *mrt, t_ray *r, t_object *obj, t_rec *rec)
 		// double m = (dv * t) + xv;
 		double dtop = vec3dot(diff, obj->rot);
 		t_vec3 pcent = vec3plus(obj->orig, vec3mul(obj->rot, -dtop));
-        rec->normal = vec3Unit(vec3minus(rec->phit, pcent));
-        // rec->normal = vec3Unit(vec3minus(rec->phit, vec3plus(C, vec3mul(obj->rot, m))));
+        rec->normal = vec3unit(vec3minus(rec->phit, pcent));
+        // rec->normal = vec3unit(vec3minus(rec->phit, vec3plus(C, vec3mul(obj->rot, m))));
         rec->color = obj->color;
         return (1);
     }
@@ -183,7 +183,7 @@ int trace(t_mrt *mrt, int i, int j)
     ray.dir.y = u * mrt->cam->u.y + v * mrt->cam->v.y - mrt->cam->d * mrt->cam->w.y;
     ray.dir.z = u * mrt->cam->u.z + v * mrt->cam->v.z - mrt->cam->d * mrt->cam->w.z;
 
-    ray.dir = vec3Unit(ray.dir);
+    ray.dir = vec3unit(ray.dir);
 
     // printf("%.2f, %.2f, %.2f\n", ray.dir.x, ray.dir.y, ray.dir.z);
 
