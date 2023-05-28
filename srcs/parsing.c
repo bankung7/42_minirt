@@ -7,23 +7,35 @@ int	qcode(t_mrt *mrt, int n)
 	return (mrt->qcode);
 }
 
+void parr(char **arr)
+{
+	int i = 0;
+	while (arr && arr[i])
+		printf("%s\n", arr[i++]);
+	printf("total : %d\n", i);
+}
+
+
+
 int	check_input(t_mrt *mrt, char *line)
 {
 	char	**attr;
 
-	attr = ft_split(line, ' ');
+	char *nw = ft_strtrim(line, " \n");
+	attr = ft_split(nw, ' ');
 	free(line);
-	if (ft_strncmp(attr[0], "A", 2) == 0 && arr_len(attr) == 3)
+	free(nw);
+	if (ft_strncmp(attr[0], "A", 2) == 0)
 		return (get_ambient(mrt, attr, 1));
-	if (ft_strncmp(attr[0], "a", 2) == 0 && arr_len(attr) == 3)
+	if (ft_strncmp(attr[0], "a", 2) == 0)
 		return (get_ambient(mrt, attr, 0));
-	if (ft_strncmp(attr[0], "C", 2) == 0 && arr_len(attr) == 4)
+	if (ft_strncmp(attr[0], "C", 2) == 0)
 		return (get_camera(mrt, attr, 1));
-	if (ft_strncmp(attr[0], "c", 2) == 0 && arr_len(attr) == 4)
+	if (ft_strncmp(attr[0], "c", 2) == 0)
 		return (get_camera(mrt, attr, 0));
-	if (ft_strncmp(attr[0], "L", 2) == 0 && arr_len(attr) == 4)
+	if (ft_strncmp(attr[0], "L", 2) == 0)
 		return (get_light(mrt, attr, 1));
-	if (ft_strncmp(attr[0], "l", 2) == 0 && arr_len(attr) == 4)
+	if (ft_strncmp(attr[0], "l", 2) == 0)
 		return (get_light(mrt, attr, 0));
 	get_object(mrt, attr);
 	return (mrt->qcode);

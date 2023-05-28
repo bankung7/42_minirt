@@ -22,6 +22,8 @@ int	get_ambient(t_mrt *mrt, char **attr, int unique)
 {
 	t_ambient	*ambt;
 
+	if (arr_len(attr) != 3)
+		return (elog("Ambient error", 1));
 	if (mrt->ambt && (mrt->ambt->unique == 1 || unique == 1))
 		return (elog("Ambient Duplicated", qcode(mrt, 1)));
 	ambt = malloc(sizeof(t_ambient));

@@ -21,8 +21,8 @@ int	get_sphere(t_mrt *mrt, char **attr, int unique)
 {
 	t_object	*obj;
 
-	if (check_unique(mrt, SPHERE, unique))
-		return (elog("Duplicated Sphere", 1));
+	if (check_unique(mrt, SPHERE, unique) || arr_len(attr) != 4)
+		return (elog("Sphere error", qcode(mrt, 1)));
 	obj = malloc(sizeof(t_object));
 	if (!obj)
 		return (qcode(mrt, 1));
@@ -48,8 +48,8 @@ int	get_plane(t_mrt *mrt, char **attr, int unique)
 {
 	t_object	*obj;
 
-	if (check_unique(mrt, PLANE, unique))
-		return (elog("Duplicated Plane", 1));
+	if (check_unique(mrt, PLANE, unique) || arr_len(attr) != 4)
+		return (elog("Duplicated Plane", qcode(mrt, 1)));
 	obj = malloc(sizeof(t_object));
 	if (!obj)
 		return (qcode(mrt, 1));
@@ -76,8 +76,8 @@ int	get_cylinder(t_mrt *mrt, char **attr, int unique)
 {
 	t_object	*obj;
 
-	if (check_unique(mrt, CYLINDER, unique))
-		return (elog("Duplicated Cylinder", 1));
+	if (check_unique(mrt, CYLINDER, unique) || arr_len(attr) != 6)
+		return (elog("Cylinder error", qcode(mrt, 1)));
 	obj = malloc(sizeof(t_object));
 	if (!obj)
 		return (qcode(mrt, 1));
@@ -103,17 +103,17 @@ int	get_cylinder(t_mrt *mrt, char **attr, int unique)
 
 int	get_object(t_mrt *mrt, char **attr)
 {
-	if (!ft_strncmp(attr[0], "SP", 3) && arr_len(attr) == 4)
+	if (!ft_strncmp(attr[0], "SP", 3))
 		return (get_sphere(mrt, attr, 1));
-	if (!ft_strncmp(attr[0], "sp", 3) && arr_len(attr) == 4)
+	if (!ft_strncmp(attr[0], "sp", 3))
 		return (get_sphere(mrt, attr, 0));
-	if (!ft_strncmp(attr[0], "PL", 3) && arr_len(attr) == 4)
+	if (!ft_strncmp(attr[0], "PL", 3))
 		return (get_plane(mrt, attr, 1));
-	if (!ft_strncmp(attr[0], "pl", 3) && arr_len(attr) == 4)
+	if (!ft_strncmp(attr[0], "pl", 3))
 		return (get_plane(mrt, attr, 0));
-	if (!ft_strncmp(attr[0], "CY", 3) && arr_len(attr) == 6)
+	if (!ft_strncmp(attr[0], "CY", 3))
 		return (get_cylinder(mrt, attr, 1));
-	if (!ft_strncmp(attr[0], "cy", 3) && arr_len(attr) == 6)
+	if (!ft_strncmp(attr[0], "cy", 3))
 		return (get_cylinder(mrt, attr, 0));
 	free2(attr);
 	return (0);

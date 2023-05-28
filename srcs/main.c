@@ -11,7 +11,7 @@ int	main(int argc, char **argv)
 	mrt.cam = 0;
 	mrt.lght = 0;
 	mrt.obj = 0;
-	if (parsing(&mrt, argv[1]))
+	if (parsing(&mrt, argv[1]) != 0)
 		return (1);
 	setup(&mrt);
 	camera(&mrt);

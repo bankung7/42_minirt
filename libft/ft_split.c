@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vnilprap <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: vnilprap <vnilprap@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/04 10:44:54 by vnilprap          #+#    #+#             */
-/*   Updated: 2022/03/12 20:17:48 by vnilprap         ###   ########.fr       */
+/*   Updated: 2023/05/28 15:13:19 by vnilprap         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include "libft.h"
 
+#include "libft.h"
 static	int	ft_cstsplit(char const *s, char c)
 {
 	int	i;

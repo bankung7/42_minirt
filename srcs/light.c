@@ -20,6 +20,8 @@ int	get_light(t_mrt *mrt, char **attr, int unique)
 {
 	t_light	*lght;
 
+	if (arr_len(attr) != 4)
+		return (elog("Light error", qcode(mrt, 1)));
 	if (mrt->lght && (mrt->lght->unique == 1 || unique == 1))
 		return (elog("Light Duplicated", qcode(mrt, 1)));
 	lght = malloc(sizeof(t_light));
