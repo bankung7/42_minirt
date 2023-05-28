@@ -7,21 +7,12 @@ int	qcode(t_mrt *mrt, int n)
 	return (mrt->qcode);
 }
 
-void parr(char **arr)
-{
-	int i = 0;
-	while (arr && arr[i])
-		printf("%s\n", arr[i++]);
-	printf("total : %d\n", i);
-}
-
-
-
 int	check_input(t_mrt *mrt, char *line)
 {
 	char	**attr;
+	char	*nw;
 
-	char *nw = ft_strtrim(line, " \n");
+	nw = ft_strtrim(line, " \n");
 	attr = ft_split(nw, ' ');
 	free(line);
 	free(nw);

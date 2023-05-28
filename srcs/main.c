@@ -12,7 +12,7 @@ int	main(int argc, char **argv)
 	mrt.lght = 0;
 	mrt.obj = 0;
 	if (parsing(&mrt, argv[1]) != 0)
-		return (1);
+		return (clean(&mrt, 1));
 	setup(&mrt);
 	camera(&mrt);
 	render(&mrt);

@@ -6,7 +6,7 @@ int	elog(char *str, int res)
 	return (res);
 }
 
-int	free2(char **arr)
+int	free2(char **arr, int res)
 {
 	int	i;
 
@@ -14,7 +14,7 @@ int	free2(char **arr)
 	while (arr && arr[i])
 		free(arr[i++]);
 	free(arr);
-	return (0);
+	return (res);
 }
 
 int	clean(t_mrt *mrt, int res)

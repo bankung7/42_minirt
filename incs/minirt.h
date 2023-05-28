@@ -174,7 +174,7 @@ double	update_rec(t_ray *r, t_object *obj, t_rec *rec, t_hit hit);
 
 // log.c
 int		elog(char *str, int res);
-int		free2(char **arr);
+int		free2(char **arr, int i);
 int		clean(t_mrt *mrt, int res);
 
 //freelist.c

@@ -34,8 +34,8 @@ $(LIBFT):
 	make re -C $(LIBFT_DIR)
 
 $(NAME): $(OBJS) $(LIBFT)
-	# make bonus -C $(LIBFT_DIR)
-#	make -C $(MLX_DIR)
+	make bonus -C $(LIBFT_DIR)
+	make -C $(MLX_DIR)
 	$(CC) $(CFLAGS) $^ $(LINKER) -o $@  
 	@echo "minirt is ready"
 
@@ -45,12 +45,12 @@ $(OBJS_DIR)%.o: $(SRCS_DIR)%.c
 
 clean:
 	$(RM) $(OBJS_DIR)
-# @make clean -C $(LIBFT_DIR)
+	@make clean -C $(LIBFT_DIR)
 
 fclean: clean
 	$(RM) $(NAME) *.dSYM
-#	@make fclean -C $(LIBFT_DIR)
-#	@make clean -C $(MLX_DIR)
+	@make fclean -C $(LIBFT_DIR)
+	@make clean -C $(MLX_DIR)
 
 re: fclean all
 

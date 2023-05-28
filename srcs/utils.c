@@ -19,7 +19,7 @@ t_vec3	getvec3(t_mrt *mrt, char *str, int div)
 	attr = ft_split(str, ',');
 	if (arr_len(attr) != 3)
 	{
-		free2(attr);
+		free2(attr, 0);
 		mrt->qcode = 1;
 		return (vec3(0, 0, 0));
 	}
@@ -27,7 +27,7 @@ t_vec3	getvec3(t_mrt *mrt, char *str, int div)
 	vec.y = ft_atoi(attr[1]);
 	vec.z = ft_atoi(attr[2]);
 	vec = vec3div(vec, div);
-	free2(attr);
+	free2(attr, 0);
 	return (vec);
 }
 

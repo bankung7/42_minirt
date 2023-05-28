@@ -23,7 +23,7 @@ int	get_ambient(t_mrt *mrt, char **attr, int unique)
 	t_ambient	*ambt;
 
 	if (arr_len(attr) != 3)
-		return (elog("Ambient error", 1));
+		return (elog("Ambient error", free2(attr, 1)));
 	if (mrt->ambt && (mrt->ambt->unique == 1 || unique == 1))
 		return (elog("Ambient Duplicated", qcode(mrt, 1)));
 	ambt = malloc(sizeof(t_ambient));
@@ -31,7 +31,7 @@ int	get_ambient(t_mrt *mrt, char **attr, int unique)
 		return (qcode(mrt, 1));
 	ambt->ratio = getdouble(attr[1]);
 	ambt->color = getvec3(mrt, attr[2], 255);
-	free2(attr);
+	free2(attr, 0);
 	checkvalue(mrt, ambt->ratio, 0, 1);
 	checkvec3(mrt, ambt->color, 0, 1);
 	if (mrt->qcode)

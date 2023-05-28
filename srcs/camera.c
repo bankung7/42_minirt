@@ -23,7 +23,7 @@ int	get_camera(t_mrt *mrt, char **attr, int unique)
 	t_camera	*cam;
 
 	if (arr_len(attr) != 4)
-		return (elog("Camera error", qcode(mrt, 1)));
+		return (elog("Camera error", qcode(mrt, free2(attr, 1))));
 	if (mrt->cam && (mrt->cam->unique == 1 || unique == 1))
 		return (elog("Camera Duplicated", qcode(mrt, 1)));
 	cam = malloc(sizeof(t_camera));
@@ -32,7 +32,7 @@ int	get_camera(t_mrt *mrt, char **attr, int unique)
 	cam->orig = getvec3(mrt, attr[1], 1);
 	cam->rot = getvec3(mrt, attr[2], 1);
 	cam->fov = ft_atoi(attr[3]);
-	free2(attr);
+	free2(attr, 0);
 	cam->unique = unique;
 	cam->next = 0;
 	checkvec3(mrt, cam->orig, -INFINITY, INFINITY);

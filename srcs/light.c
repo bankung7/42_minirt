@@ -21,7 +21,7 @@ int	get_light(t_mrt *mrt, char **attr, int unique)
 	t_light	*lght;
 
 	if (arr_len(attr) != 4)
-		return (elog("Light error", qcode(mrt, 1)));
+		return (elog("Light error", qcode(mrt, free2(attr, 1))));
 	if (mrt->lght && (mrt->lght->unique == 1 || unique == 1))
 		return (elog("Light Duplicated", qcode(mrt, 1)));
 	lght = malloc(sizeof(t_light));
@@ -30,7 +30,7 @@ int	get_light(t_mrt *mrt, char **attr, int unique)
 	lght->orig = getvec3(mrt, attr[1], 1);
 	lght->ratio = getdouble(attr[2]);
 	lght->color = getvec3(mrt, attr[3], 255);
-	free2(attr);
+	free2(attr, 0);
 	lght->unique = unique;
 	lght->next = 0;
 	checkvec3(mrt, lght->orig, -INFINITY, INFINITY);

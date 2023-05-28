@@ -22,14 +22,14 @@ int	get_sphere(t_mrt *mrt, char **attr, int unique)
 	t_object	*obj;
 
 	if (check_unique(mrt, SPHERE, unique) || arr_len(attr) != 4)
-		return (elog("Sphere error", qcode(mrt, 1)));
+		return (elog("Sphere error", qcode(mrt, free2(attr, 1))));
 	obj = malloc(sizeof(t_object));
 	if (!obj)
 		return (qcode(mrt, 1));
 	obj->orig = getvec3(mrt, attr[1], 1);
 	obj->radius = getdouble(attr[2]) / 2.0;
 	obj->color = getvec3(mrt, attr[3], 255);
-	free2(attr);
+	free2(attr, 0);
 	obj->type = SPHERE;
 	obj->unique = unique;
 	obj->next = 0;
@@ -49,14 +49,14 @@ int	get_plane(t_mrt *mrt, char **attr, int unique)
 	t_object	*obj;
 
 	if (check_unique(mrt, PLANE, unique) || arr_len(attr) != 4)
-		return (elog("Duplicated Plane", qcode(mrt, 1)));
+		return (elog("Duplicated Plane", qcode(mrt, free2(attr, 1))));
 	obj = malloc(sizeof(t_object));
 	if (!obj)
 		return (qcode(mrt, 1));
 	obj->orig = getvec3(mrt, attr[1], 1);
 	obj->rot = vec3unit(getvec3(mrt, attr[2], 1));
 	obj->color = getvec3(mrt, attr[3], 255);
-	free2(attr);
+	free2(attr, 0);
 	obj->type = PLANE;
 	obj->unique = unique;
 	obj->next = 0;
@@ -77,7 +77,7 @@ int	get_cylinder(t_mrt *mrt, char **attr, int unique)
 	t_object	*obj;
 
 	if (check_unique(mrt, CYLINDER, unique) || arr_len(attr) != 6)
-		return (elog("Cylinder error", qcode(mrt, 1)));
+		return (elog("Cylinder error", qcode(mrt, free2(attr, 1))));
 	obj = malloc(sizeof(t_object));
 	if (!obj)
 		return (qcode(mrt, 1));
@@ -86,7 +86,7 @@ int	get_cylinder(t_mrt *mrt, char **attr, int unique)
 	obj->radius = getdouble(attr[3]) / 2.0;
 	obj->height = getdouble(attr[4]);
 	obj->color = getvec3(mrt, attr[5], 255);
-	free2(attr);
+	free2(attr, 0);
 	obj->type = CYLINDER;
 	obj->unique = unique;
 	obj->next = 0;
@@ -115,6 +115,6 @@ int	get_object(t_mrt *mrt, char **attr)
 		return (get_cylinder(mrt, attr, 1));
 	if (!ft_strncmp(attr[0], "cy", 3))
 		return (get_cylinder(mrt, attr, 0));
-	free2(attr);
+	free2(attr, 0);
 	return (0);
 }
