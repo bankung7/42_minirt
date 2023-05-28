@@ -119,8 +119,8 @@ int getlight(t_mrt *mrt, char **attr, int unique);
 int shading(t_mrt *mrt, t_rec *rec);
 
 // object.c
-int addObject(t_mrt *mrt, t_object *node);
-int getObject(t_mrt *mrt, char **attr);
+int add_object(t_mrt *mrt, t_object *node);
+int get_object(t_mrt *mrt, char **attr);
 
 // render.c
 void putPixel(t_mlx *data, int x, int y, int color);
