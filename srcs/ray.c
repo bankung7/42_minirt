@@ -70,11 +70,11 @@ double hitPlane(t_mrt *mrt, t_ray *r, t_object *obj, t_rec *rec)
     (void)mrt;
     double t;
     double denom = vec3dot(obj->rot, r->dir);
-    if (fabs(denom) > 0.0001)
+    if (fabs(denom) > EPSILON)
     {
         t_vec3 pl = vec3minus(obj->orig, r->orig);
         t = vec3dot(pl, obj->rot) / denom;
-        if (t > 0.0001 && t < rec->tnear)
+        if (t > EPSILON && t < rec->tnear)
         {
             rec->hit = 1;
             rec->tnear = t;
@@ -87,76 +87,74 @@ double hitPlane(t_mrt *mrt, t_ray *r, t_object *obj, t_rec *rec)
     return (0);
 }
 
-double hitDisc(t_object *cy, t_ray *r, t_rec *rec)
+double hitDisc(t_object *cy, t_ray *r, t_rec *rec, t_object *pl)
 {
-    t_object pl1;
-    t_object pl2;
-    pl1.type = PLANE, pl1.orig = vec3plus(cy->orig, vec3mul(cy->rot, (cy->height / 2))), pl1.color = cy->color, pl1.rot = cy->rot;
-    pl2.type = PLANE, pl2.orig = vec3minus(cy->orig, vec3mul(cy->rot, (cy->height / 2))), pl2.color = cy->color, pl2.rot = vec3mul(cy->rot, -1);
-    double denom1 = vec3dot(pl1.rot, r->dir);
-    double denom2 = vec3dot(pl2.rot, r->dir);
-    // if (vec3dot(r->dir, cy->rot) < 0.0001)
-    //     return (0);
-    double t1 = vec3dot(vec3minus(pl1.orig, r->orig), pl1.rot) / denom1;
-    double t2 = vec3dot(vec3minus(pl2.orig, r->orig), pl2.rot) / denom2;
-    t_vec3 p1 = vec3plus(r->orig, vec3mul(r->dir, t1));
-    t_vec3 p2 = vec3plus(r->orig, vec3mul(r->dir, t2));
-    // if (t1 <= t2 && t1 < rec->tnear && sqrtf(vec3dot(vec3minus(p1, pl1.orig), vec3minus(p1, pl1.orig))) <= cy->radius && t1 > 0)
-    if (t1 <= t2 && t1 < rec->tnear && vec3len(vec3minus(p1, pl1.orig)) < cy->radius)
+    double t = vec3dot(vec3minus(pl->orig, r->orig), cy->rot) / vec3dot(r->dir, cy->rot);
+    if (vec3dot(r->dir, cy->rot) == 0.0)
+        return (0);
+    t_vec3 p = vec3plus(r->orig, vec3mul(r->dir, t));
+    if (t > rec->tmin && t < rec->tmax && t < rec->tnear && sqrtf(vec3dot(vec3minus(p, pl->orig), vec3minus(p, pl->orig))) <= cy->radius)
     {
         rec->hit = 1;
-        rec->tnear = t1;
-        rec->phit = vec3plus(r->orig, vec3mul(r->dir, t1));
+        rec->tnear = t;
+        rec->phit = vec3plus(r->orig, vec3mul(r->dir, t));
         rec->normal = vec3unit(cy->rot);
-        rec->color = cy->color;
-        return (1);
-    }
-    // if (t2 < t1 && t2 < rec->tnear && sqrtf(vec3dot(vec3minus(p2, pl2.orig), vec3minus(p2, pl2.orig))) <= cy->radius && t2 > 0)
-    if (t2 < t1 && t2 < rec->tnear && vec3len(vec3minus(p2, pl2.orig)) < cy->radius)
-    {
-        rec->hit = 1;
-        rec->tnear = t2;
-        rec->phit = vec3plus(r->orig, vec3mul(r->dir, t2));
-        rec->normal = vec3unit(vec3mul(cy->rot, -1));
         rec->color = cy->color;
         return (1);
     }
     return (0);
 }
 
-double hitCylinder(t_mrt *mrt, t_ray *r, t_object *obj, t_rec *rec)
+double hitBody(t_mrt *mrt, t_ray *r, t_object *obj, t_rec *rec)
 {
     (void) mrt;
-    // t_vec3 x = vec3minus(r->orig, obj->orig);
-	// double dv = vec3dot(r->dir, obj->rot);
-	// double xv = vec3dot(x, obj->rot);
-	// double a = pow(vec3len(r->dir), 2) - pow(dv, 2);
-    // double hb = vec3dot(x, r->dir) - (dv * xv);
-    // double c = pow(vec3len(x), 2) - (obj->radius * obj->radius) - pow(xv, 2);
-    // double dis = (hb * hb) - (a * c);
-    // if (dis < 0.0 || a == 0)
-    //     return (0);
-    // double t = (- hb - sqrt(dis)) / a;
-    // t_vec3 p = vec3plus(r->orig, vec3mul(r->dir, t));
-    // t_vec3 diff = vec3minus(obj->orig, p);
-    // if (t > rec->tnear || t < rec->tmin || t > rec->tmax)
-    //     return (0);
-	// if (t < rec->tnear && fabs(vec3dot(diff, obj->rot)) <= (obj->height / 2))
-    // {
-    //     rec->hit = 1;
-    //     rec->tnear = t;
-    //     rec->phit = p;
-    //     // t_vec3 C = vec3minus(obj->orig, vec3mul(obj->rot, obj->height / 2)); 
-	// 	// double m = (dv * t) + xv;
-	// 	double dtop = vec3dot(diff, obj->rot);
-	// 	t_vec3 pcent = vec3plus(obj->orig, vec3mul(obj->rot, -dtop));
-    //     rec->normal = vec3unit(vec3minus(rec->phit, pcent));
-    //     // rec->normal = vec3unit(vec3minus(rec->phit, vec3plus(C, vec3mul(obj->rot, m))));
-    //     rec->color = obj->color;
-    //     return (hitDisc(obj, r, rec));
-    // }
-    return(hitDisc(obj, r, rec));
+    t_vec3 x = vec3minus(r->orig, obj->orig);
+	double dv = vec3dot(r->dir, obj->rot);
+	double xv = vec3dot(x, obj->rot);
+	double a = pow(vec3len(r->dir), 2) - pow(dv, 2);
+    double hb = vec3dot(x, r->dir) - (dv * xv);
+    double c = pow(vec3len(x), 2) - (obj->radius * obj->radius) - pow(xv, 2);
+    double dis = (hb * hb) - (a * c);
+    if (dis < 0.0 || a == 0)
+        return (0);
+    double t = (- hb - sqrt(dis)) / a;
+    t_vec3 p = vec3plus(r->orig, vec3mul(r->dir, t));
+    t_vec3 diff = vec3minus(obj->orig, p);
+	if (t > rec->tnear || t < rec->tmin || t > rec->tmax)
+		return (0);
+	// if (hitDisc(obj, r, rec))
+	// {
+	if (t < rec->tnear && fabs(vec3dot(diff, obj->rot)) <= (obj->height / 2))
+	{
+		rec->hit = 1;
+		rec->tnear = t;
+		rec->phit = p;
+		// t_vec3 C = vec3minus(obj->orig, vec3mul(obj->rot, obj->height / 2)); 
+		// double m = (dv * t) + xv;
+		double dtop = vec3dot(diff, obj->rot);
+		t_vec3 pcent = vec3plus(obj->orig, vec3mul(obj->rot, -dtop));
+		rec->normal = vec3unit(vec3minus(rec->phit, pcent));
+		// rec->normal = vec3unit(vec3minus(rec->phit, vec3plus(C, vec3mul(obj->rot, m))));
+		rec->color = obj->color;
+		return (1);
+	}
+	// }
+    // return(hitDisc(obj, r, rec));
+	return (0);
 }
+
+double hitCylinder(t_mrt *mrt, t_ray *r, t_object *obj, t_rec *rec)
+{
+	t_object pl1;
+    t_object pl2;
+    pl1.type = PLANE, pl1.orig = vec3plus(obj->orig, vec3mul(obj->rot, (obj->height / 2))), pl1.color = obj->color, pl1.rot = obj->rot;
+    pl2.type = PLANE, pl2.orig = vec3minus(obj->orig, vec3mul(obj->rot, (obj->height / 2))), pl2.color = obj->color, pl2.rot = vec3mul(obj->rot, -1);
+	if (hitBody(mrt, r, obj, rec) || hitDisc(obj, r, rec, &pl1) || hitDisc(obj, r, rec, &pl2))
+		return (1);
+	else
+		return (0);
+}
+
 
 int trace(t_mrt *mrt, int i, int j)
 {
@@ -167,14 +165,14 @@ int trace(t_mrt *mrt, int i, int j)
     rec.hit = 0;
     rec.color = vec3(0, 0, 0);
     rec.tnear = INFINITY;
-    rec.tmin = 0.00001;
+    rec.tmin = 1;
     rec.tmax = INFINITY;
 
     // make ray
     ray.orig = mrt->cam->orig;
 
-    double u = (2 * ((i + 0.5) / mrt->width) - 1) * mrt->aspectRatio * mrt->cam->d;
-    double v = (1 - 2 * (j + 0.5) / mrt->height) * mrt->cam->d;
+    double u = (2 * ((i + 0.5) / mrt->width) - 1) * mrt->aspectRatio;
+    double v = (1 - 2 * (j + 0.5) / mrt->height);
 
     ray.dir.x = u * mrt->cam->u.x + v * mrt->cam->v.x - mrt->cam->d * mrt->cam->w.x;
     ray.dir.y = u * mrt->cam->u.y + v * mrt->cam->v.y - mrt->cam->d * mrt->cam->w.y;

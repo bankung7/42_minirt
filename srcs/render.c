@@ -22,6 +22,9 @@ int	render(t_mrt *mrt)
 	int	i;
 	int	j;
 
+	if (!mrt->ambt || !mrt->cam || !mrt->lght)
+		return (elog("Not enough info", 1));
+
 	mrt->mlx.img = mlx_new_image(mrt->mlx.mlx, mrt->width, mrt->height);
 	mrt->mlx.addr = mlx_get_data_addr(mrt->mlx.img, &mrt->mlx.bpp, &mrt->mlx.llen, &mrt->mlx.endian);
 	j = 0;

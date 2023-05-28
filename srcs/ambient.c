@@ -20,23 +20,23 @@ int	add_ambient(t_mrt *mrt, t_ambient *node)
 // get ambient
 int	getambient(t_mrt *mrt, char **attr, int unique)
 {
-	t_ambient *ambt;
+	t_ambient	*ambt;
 
-    if (mrt->ambt && (mrt->ambt->unique == 1 || unique == 1))
-        return (elog("Ambient Duplicated", qCode(mrt, 1)));
-    ambt = malloc(sizeof(t_ambient));
-    if (!ambt)
-        return (qCode(mrt, 1));
-    ambt->ratio = getdouble(attr[1]);
-    ambt->color = getvec3(mrt, attr[2], 255);
-    free2(attr);
-    checkvalue(mrt, ambt->ratio, 0, 1);
-    checkvec3(mrt, ambt->color, 0, 1);
-    if (mrt->qcode)
-        return (elog("Ambient parsing fail", mrt->qcode));
-    ambt->unique = unique;
-    ambt->next = 0;
-    add_ambient(mrt, ambt);
-    printf("Ambient parsing completed\n");
-    return (mrt->qcode);
+	if (mrt->ambt && (mrt->ambt->unique == 1 || unique == 1))
+		return (elog("Ambient Duplicated", qCode(mrt, 1)));
+	ambt = malloc(sizeof(t_ambient));
+	if (!ambt)
+		return (qCode(mrt, 1));
+	ambt->ratio = getdouble(attr[1]);
+	ambt->color = getvec3(mrt, attr[2], 255);
+	free2(attr);
+	checkvalue(mrt, ambt->ratio, 0, 1);
+	checkvec3(mrt, ambt->color, 0, 1);
+	if (mrt->qcode)
+		return (elog("Ambient parsing fail", mrt->qcode));
+	ambt->unique = unique;
+	ambt->next = 0;
+	add_ambient(mrt, ambt);
+	printf("Ambient parsing completed\n");
+	return (mrt->qcode);
 }
