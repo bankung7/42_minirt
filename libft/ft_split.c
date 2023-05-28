@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "libft.h"
+
 static	int	ft_cstsplit(char const *s, char c)
 {
 	int	i;
