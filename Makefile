@@ -21,7 +21,7 @@ endif
 
 SRCS_DIR = srcs/
 SRCS = main.c vector1.c vector2.c render.c camera.c object.c ray.c light.c \
-	parsing.c ambient.c log.c utils.c event.c freelist.c
+	parsing.c ambient.c log.c utils.c event.c freelist.c hit.c
 
 OBJS_DIR = objs/
 OBJS = $(addprefix $(OBJS_DIR), $(SRCS:.c=.o))

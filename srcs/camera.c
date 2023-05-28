@@ -18,7 +18,7 @@ int	add_camera(t_mrt *mrt, t_camera *node)
 }
 
 // get camera
-int	getcamera(t_mrt *mrt, char **attr, int unique)
+int	get_camera(t_mrt *mrt, char **attr, int unique)
 {
 	t_camera	*cam;
 
@@ -46,8 +46,10 @@ int	camera(t_mrt *mrt)
 {
 	if (vec3len(mrt->cam->rot) == 0)
 		mrt->cam->rot = vec3(0, 1, 0);
-	mrt->cam->d = tan(mrt->cam->fov * 0.5 * M_PI / 180);
-	mrt->cam->w = vec3unit(vec3minus(mrt->cam->orig, vec3(0, 0, -mrt->cam->d)));
+	mrt->cam->d = 1.0 / tanf(mrt->cam->fov * 0.5 * 3.1415 / 180.0);
+	printf("value %.4f\n", mrt->cam->fov * 0.5 * M_PI / 180.0);
+	printf("fov : %.1f d : %.2f\n", mrt->cam->fov, mrt->cam->d);
+	mrt->cam->w = vec3unit(vec3minus(mrt->cam->orig, vec3(0, 0, -1)));
 	mrt->cam->u = vec3unit(vec3cross(vec3unit(mrt->cam->rot), mrt->cam->w));
 	mrt->cam->v = vec3cross(mrt->cam->w, mrt->cam->u);
 	return (0);

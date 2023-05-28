@@ -36,29 +36,29 @@ int	get_light(t_mrt *mrt, char **attr, int unique)
 	checkvec3(mrt, lght->color, 0, 1);
 	if (mrt->qcode)
 		return (elog("Light parsing fail", mrt->qcode));
-	addlight(mrt, lght);
+	add_light(mrt, lght);
 	printf("Light parsing completed\n");
 	return (mrt->qcode);
 }
 
-int	shadow(t_mrt *mrt, t_vec3 *color, t_ray *r, double length)
+int	shadow(t_mrt *mrt, t_ray *r, double length)
 {
 	t_rec		rec;
 	t_object	*obj;
 
 	rec.hit = 0;
 	rec.tnear = INFINITY;
-	rec.tmin = 0.00001;
+	rec.tmin = EPSILON;
 	rec.tmax = INFINITY;
 	obj = mrt->obj;
 	while (obj)
 	{
 		if (obj->type == SPHERE)
-			hitSphere(mrt, r, obj, &rec);
+			hit_sphere(r, obj, &rec);
 		else if (obj->type == PLANE)
-			hitPlane(mrt, r, obj, &rec);
+			hit_plane(r, obj, &rec);
 		else if (obj->type == CYLINDER)
-			hitCylinder(mrt, r, obj, &rec);
+			hit_cylinder(r, obj, &rec);
 		if (rec.hit == 1 && rec.tnear < length)
 			return (1);
 		obj = obj->next;
@@ -77,7 +77,7 @@ int	shading(t_mrt *mrt, t_rec *rec)
 	sd.sray.dir = vec3minus(mrt->lght->orig, rec->phit);
 	sd.length = vec3len(sd.sray.dir);
 	sd.sray.dir = vec3unit(sd.sray.dir);
-	if (shadow(mrt, &rec->color, &sd.sray, sd.length) == 1)
+	if (shadow(mrt, &sd.sray, sd.length) == 1)
 	{
 		rec->color = vec3mulvec3(sd.ambient, rec->color);
 		return (0);

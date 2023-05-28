@@ -12,9 +12,10 @@ void	setup(t_mrt *mrt)
 {
 	mrt->width = MRTW;
 	mrt->height = MRTH;
-	mrt->aspectRatio = (double)mrt->width / mrt->height;
+	mrt->aspect_ratio = (double)mrt->width / mrt->height;
 	mrt->mlx.mlx = mlx_init();
-	mrt->mlx.mlx_win = mlx_new_window(mrt->mlx.mlx, mrt->width, mrt->height, "My minirt");
+	mrt->mlx.mlx_win = mlx_new_window(mrt->mlx.mlx,
+			mrt->width, mrt->height, "My minirt");
 }
 
 int	render(t_mrt *mrt)
@@ -24,9 +25,9 @@ int	render(t_mrt *mrt)
 
 	if (!mrt->ambt || !mrt->cam || !mrt->lght)
 		return (elog("Not enough info", 1));
-
 	mrt->mlx.img = mlx_new_image(mrt->mlx.mlx, mrt->width, mrt->height);
-	mrt->mlx.addr = mlx_get_data_addr(mrt->mlx.img, &mrt->mlx.bpp, &mrt->mlx.llen, &mrt->mlx.endian);
+	mrt->mlx.addr = mlx_get_data_addr(mrt->mlx.img, &mrt->mlx.bpp,
+			&mrt->mlx.llen, &mrt->mlx.endian);
 	j = 0;
 	while (j < mrt->height)
 	{

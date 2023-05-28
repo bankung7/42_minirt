@@ -117,12 +117,37 @@ typedef struct s_shade
 	t_vec3	color;
 }	t_shade;
 
+typedef struct s_hit
+{
+	t_vec3	x;
+	t_vec3	p;
+	t_vec3	diff;
+	t_vec3	pcent;
+	double	dv;
+	double	xv;
+	double	a;
+	double	hb;
+	double	c;
+	double	dis;
+	double	t;
+	double	t2;
+	double	sdis;
+	double	dtop;
+}	t_hit;
+
+typedef struct s_u
+{
+	double	u;
+	double	v;
+}	t_u;
+
 // parsing.c
 int		qcode(t_mrt *mrt, int n);
 int		parsing(t_mrt *mrt, char *str);
 
 // ambient.c
 int		get_ambient(t_mrt *mrt, char **attr, int unique);
+int		check_unique(t_mrt *mrt, int type, int unique);
 
 // camera.c
 int		get_camera(t_mrt *mrt, char **attr, int unique);
@@ -134,8 +159,8 @@ int		get_light(t_mrt *mrt, char **attr, int unique);
 int		shading(t_mrt *mrt, t_rec *rec);
 
 // object.c
-int		addObject(t_mrt *mrt, t_object *node);
-int		getObject(t_mrt *mrt, char **attr);
+int		add_object(t_mrt *mrt, t_object *node);
+int		get_object(t_mrt *mrt, char **attr);
 
 // render.c
 void	putPixel(t_mlx *data, int x, int y, int color);
@@ -143,11 +168,9 @@ void	setup(t_mrt *mrt);
 int		render(t_mrt *mrt);
 
 // ray.c
-int		makeColor(t_vec3 color);
+int		make_color(t_vec3 color);
 int		trace(t_mrt *mrt, int i, int j);
-double	hitSphere(t_mrt *mrt, t_ray *r, t_object *obj, t_rec *rec);
-double	hitPlane(t_mrt *mrt, t_ray *r, t_object *obj, t_rec *rec);
-double	hitCylinder(t_mrt *mrt, t_ray *r, t_object *obj, t_rec *rec);
+double	update_rec(t_ray *r, t_object *obj, t_rec *rec, t_hit hit);
 
 // log.c
 int		elog(char *str, int res);
@@ -171,5 +194,12 @@ int		arr_len(char **arr);
 // event.c
 int		m_close(int keycode, t_mrt *mrt);
 int		m_exit(t_mrt *mrt);
+
+//hit.c
+double	hit_sphere(t_ray *r, t_object *obj, t_rec *rec);
+double	hit_plane(t_ray *r, t_object *obj, t_rec *rec);
+double	hit_disc(t_object *cy, t_ray *r, t_rec *rec, t_object *pl);
+double	hit_body(t_ray *r, t_object *o, t_rec *rec);
+double	hit_cylinder(t_ray *r, t_object *obj, t_rec *rec);
 
 #endif
