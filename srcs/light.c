@@ -1,114 +1,96 @@
 #include "minirt.h"
 
-// add Light
-int addlight(t_mrt *mrt, t_light *node)
+int	add_light(t_mrt *mrt, t_light *node)
 {
-    t_light *head;
+	t_light	*head;
 
-    head = mrt->lght;
-    if (!head)
-        mrt->lght = node;
-    else
-    {
-        while (head->next)
-            head = head->next;
-        head->next = node;
-    }    
-    return (0);
+	head = mrt->lght;
+	if (!head)
+		mrt->lght = node;
+	else
+	{
+		while (head->next)
+			head = head->next;
+		head->next = node;
+	}
+	return (0);
 }
 
-// get Light
-int getlight(t_mrt *mrt, char **attr, int unique)
+int	get_light(t_mrt *mrt, char **attr, int unique)
 {
-    t_light *lght;
+	t_light	*lght;
 
-    if (mrt->lght && (mrt->lght->unique == 1 || unique == 1))
-        return (elog("Light Duplicated", qCode(mrt, 1)));
-    lght = malloc(sizeof(t_light));
-    if (!lght)
-        return (qCode(mrt, 1));
-    lght->orig = getvec3(mrt, attr[1], 1);
-    lght->ratio = getdouble(attr[2]);
-    lght->color = getvec3(mrt, attr[3], 255);
-    free2(attr);
-    lght->unique = unique;
-    lght->next = 0;
-    checkvec3(mrt, lght->orig, -INFINITY, INFINITY);
-    checkvalue(mrt, lght->ratio, 0, 1.0);
-    checkvec3(mrt, lght->color, 0, 1);
-    if (mrt->qcode)
-        return (elog("Light parsing fail", mrt->qcode));
-    addlight(mrt, lght);
-    printf("Light parsing completed\n");
-    return (mrt->qcode);
+	if (mrt->lght && (mrt->lght->unique == 1 || unique == 1))
+		return (elog("Light Duplicated", qcode(mrt, 1)));
+	lght = malloc(sizeof(t_light));
+	if (!lght)
+		return (qcode(mrt, 1));
+	lght->orig = getvec3(mrt, attr[1], 1);
+	lght->ratio = getdouble(attr[2]);
+	lght->color = getvec3(mrt, attr[3], 255);
+	free2(attr);
+	lght->unique = unique;
+	lght->next = 0;
+	checkvec3(mrt, lght->orig, -INFINITY, INFINITY);
+	checkvalue(mrt, lght->ratio, 0, 1.0);
+	checkvec3(mrt, lght->color, 0, 1);
+	if (mrt->qcode)
+		return (elog("Light parsing fail", mrt->qcode));
+	addlight(mrt, lght);
+	printf("Light parsing completed\n");
+	return (mrt->qcode);
 }
 
-// Shadowing
-int shadow(t_mrt *mrt , t_ray *r, double length)
+int	shadow(t_mrt *mrt, t_vec3 *color, t_ray *r, double length)
 {
-    t_rec rec;
-    t_object *obj;
+	t_rec		rec;
+	t_object	*obj;
 
-    rec.hit = 0;
-    rec.tnear = INFINITY;
-    rec.tmin = 0.00001;
-    rec.tmax = INFINITY;
-    obj = mrt->obj;
-    while (obj)
-    {
-        if (obj->type == SPHERE)
-            hitSphere(mrt, r, obj, &rec);
-        else if (obj->type == PLANE)
-            hitPlane(mrt, r, obj, &rec);
-        else if (obj->type == CYLINDER)
-            hitCylinder(mrt, r, obj, &rec);
-        if (rec.hit == 1 && rec.tnear < length)
-            return (1);
-        obj = obj->next;
-    }
-    return (0);
+	rec.hit = 0;
+	rec.tnear = INFINITY;
+	rec.tmin = 0.00001;
+	rec.tmax = INFINITY;
+	obj = mrt->obj;
+	while (obj)
+	{
+		if (obj->type == SPHERE)
+			hitSphere(mrt, r, obj, &rec);
+		else if (obj->type == PLANE)
+			hitPlane(mrt, r, obj, &rec);
+		else if (obj->type == CYLINDER)
+			hitCylinder(mrt, r, obj, &rec);
+		if (rec.hit == 1 && rec.tnear < length)
+			return (1);
+		obj = obj->next;
+	}
+	return (0);
 }
 
-// shading
-int shading(t_mrt *mrt, t_rec *rec)
+int	shading(t_mrt *mrt, t_rec *rec)
 {
-    if (rec->hit == 0)
-        return (0);
-    
-    // ambient
-    t_vec3 ambient = vec3mul(mrt->ambt->color, mrt->ambt->ratio);
-    // ambient = vec3(0, 0, 0);
-    
-    // shadow
-    t_ray sray;
-    sray.orig = vec3plus(rec->phit, vec3mul(rec->normal, 1e-4));
-    sray.dir = vec3minus(mrt->lght->orig, rec->phit);
-    double length = vec3len(sray.dir);
-    sray.dir = vec3unit(sray.dir);
-    if (shadow(mrt, &sray, length) == 1)
-    {
-        rec->color = vec3mulvec3(ambient, rec->color);
-        return (0);
-    }
-    
-    // diffuse
-    double dratio = 0.6;
-    t_vec3 light = vec3unit(vec3minus(mrt->lght->orig, rec->phit));
-    double factor = fmax(0.0, vec3dot(rec->normal, light));
-    // printf("factor : %.2f\n", factor);
-    t_vec3 diffuse = vec3mul(mrt->lght->color, factor * dratio);
-    // diffuse = vec3(0,0 ,0);
+	t_shade	sd;
 
-    // specular
-    double sratio = 0.5;
-    t_vec3 viewDir = vec3unit(vec3minus(mrt->cam->orig, rec->phit));
-    t_vec3 reflect = vec3mul(rec->normal, (2.0 * vec3dot(light, rec->normal)));
-    reflect = vec3unit(vec3minus(reflect, light));
-    double spec = pow(fmax(vec3dot(viewDir, reflect), 0.0), 32);
-    t_vec3 specular = vec3mul(mrt->lght->color, spec * sratio);
-    // printf("spec : %.2f %.2f %.2f\n", specular.x, specular.y, specular.z);
-
-    // total color
-    rec->color = vec3mulvec3(vec3plus(vec3plus(ambient, diffuse), specular), rec->color);
-    return (0);
+	if (rec->hit == 0)
+		return (0);
+	sd.ambient = vec3mul(mrt->ambt->color, mrt->ambt->ratio);
+	sd.sray.orig = vec3plus(rec->phit, vec3mul(rec->normal, EPSILON));
+	sd.sray.dir = vec3minus(mrt->lght->orig, rec->phit);
+	sd.length = vec3len(sd.sray.dir);
+	sd.sray.dir = vec3unit(sd.sray.dir);
+	if (shadow(mrt, &rec->color, &sd.sray, sd.length) == 1)
+	{
+		rec->color = vec3mulvec3(sd.ambient, rec->color);
+		return (0);
+	}
+	sd.light = vec3unit(vec3minus(mrt->lght->orig, rec->phit));
+	sd.dfactor = fmax(0.0, vec3dot(rec->normal, sd.light));
+	sd.diffuse = vec3mul(mrt->lght->color, sd.dfactor * 0.6);
+	sd.viewdir = vec3unit(vec3minus(mrt->cam->orig, rec->phit));
+	sd.reflect = vec3mul(rec->normal, (2.0 * vec3dot(sd.light, rec->normal)));
+	sd.reflect = vec3unit(vec3minus(sd.reflect, sd.light));
+	sd.sfactor = pow(fmax(vec3dot(sd.viewdir, sd.reflect), 0.0), 32);
+	sd.specular = vec3mul(mrt->lght->color, sd.sfactor * 0.5);
+	sd.color = vec3plus(vec3plus(sd.ambient, sd.diffuse), sd.specular);
+	rec->color = vec3mulvec3(sd.color, rec->color);
+	return (0);
 }

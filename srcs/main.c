@@ -1,28 +1,22 @@
 #include "minirt.h"
 
-int main(int argc, char **argv)
+int	main(int argc, char **argv)
 {
-    t_mrt mrt;
+	t_mrt	mrt;
 
-    if (argc == 1)
-        return (elog("Usage: ./minirt [file]", 1));
-
-    // set to null
-    mrt.qcode = 0;
-    mrt.ambt = 0;
-    mrt.cam = 0;
-    mrt.lght = 0;
-    mrt.obj = 0;
-
-    // parsing phase
-    if (parsing(&mrt, argv[1]))
-        return (1);
-
-    setup(&mrt);
-    camera(&mrt);
-    render(&mrt);
-
-    return (0);
+	if (argc == 1)
+		return (elog("Usage: ./minirt [file]", 1));
+	mrt.qcode = 0;
+	mrt.ambt = 0;
+	mrt.cam = 0;
+	mrt.lght = 0;
+	mrt.obj = 0;
+	if (parsing(&mrt, argv[1]))
+		return (1);
+	setup(&mrt);
+	camera(&mrt);
+	render(&mrt);
+	return (0);
 }
 
 // to do //
