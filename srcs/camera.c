@@ -47,12 +47,14 @@ int camera(t_mrt *mrt)
 {
     if (vec3len(mrt->cam->rot) == 0) // if rotation is not define
         mrt->cam->rot = vec3(0, 1, 0);
+    mrt->cam->d = tan(mrt->cam->fov * 0.5* M_PI / 180);
     printf("%.2f, %.2f, %.2f\n", mrt->cam->rot.x, mrt->cam->rot.y, mrt->cam->rot.z);
-    mrt->cam->w = vec3unit(vec3minus(mrt->cam->orig, (t_vec3){0, 0, -1}));
+    mrt->cam->w = vec3unit(vec3minus(mrt->cam->orig, (t_vec3){0, 0, -mrt->cam->d}));
     mrt->cam->u = vec3unit(vec3cross(vec3unit(mrt->cam->rot), mrt->cam->w));
     mrt->cam->v = vec3cross(mrt->cam->w, mrt->cam->u);
-    mrt->cam->d = tan(mrt->cam->fov * 0.5* M_PI / 180);
-    printf("%.2f, %.2f, %.2f\n", mrt->cam->u.x, mrt->cam->u.y, mrt->cam->u.z);
+    printf("u: %.2f, %.2f, %.2f\n", mrt->cam->u.x, mrt->cam->u.y, mrt->cam->u.z);
+    printf("v: %.2f, %.2f, %.2f\n", mrt->cam->v.x, mrt->cam->v.y, mrt->cam->v.z);
+    printf("w: %.2f, %.2f, %.2f\n", mrt->cam->w.x, mrt->cam->w.y, mrt->cam->w.z);
     return (0);
 }
 

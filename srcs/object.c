@@ -1,24 +1,24 @@
 #include "minirt.h"
 
-int freeType(t_mrt *mrt, int type)
+int	freeType(t_mrt *mrt, int type)
 {
-    t_object *head = mrt->obj;
-    t_object *head2 = head;
-    if (!head)
-        return (0);
-    printf("this case\n");
-    while (head)
-    {
-        if (head->type == type)
-        {
-            head = head->next;
-            free(head2);
-            head2->next = head;
-        }
-        head = head->next;
-        head2 = head;
-    }
-    return (0);
+	t_object *head = mrt->obj;
+	t_object *head2 = head;
+	if (!head)
+		return (0);
+	printf("this case\n");
+	while (head)
+	{
+		if (head->type == type)
+		{
+			head = head->next;
+			free(head2);
+			head2->next = head;
+		}
+		head = head->next;
+		head2 = head;
+	}
+	return (0);
 }
 
 // jsut check there is any that type of object in the loop
@@ -40,19 +40,19 @@ int check_unique(t_mrt *mrt, int type, int unique)
     return (0);
 }
 
-int addObject(t_mrt *mrt, t_object *node)
+int	add_object(t_mrt *mrt, t_object *node)
 {
-    t_object *head;
-    head = mrt->obj;
-    if (!head)
-        mrt->obj = node;
-    else
-    {
-        while (head->next)
-            head = head->next;
-        head->next = node;
-    }
-    return (0);
+	t_object *head;
+	head = mrt->obj;
+	if (!head)
+		mrt->obj = node;
+	else
+	{
+		while (head->next)
+			head = head->next;
+		head->next = node;
+	}
+	return (0);
 }
 
 int getSphere(t_mrt *mrt, char **attr, int unique)
@@ -75,7 +75,7 @@ int getSphere(t_mrt *mrt, char **attr, int unique)
     checkvec3(mrt, obj->color, 0, 1);
     if (mrt->qcode)
         return (elog("Sphere parsing fail", mrt->qcode));
-    addObject(mrt, obj);
+    add_object(mrt, obj);
     printf("Sphere parsing completed\n");
     return (mrt->qcode);
 }
@@ -89,7 +89,7 @@ int getPlane(t_mrt *mrt, char **attr, int unique)
     if (!obj)
         return (qCode(mrt, 1));
     obj->orig = getvec3(mrt, attr[1], 1);
-    obj->rot = getvec3(mrt, attr[2], 1);
+    obj->rot = vec3unit(getvec3(mrt, attr[2], 1));
     obj->color = getvec3(mrt, attr[3], 255);
     free2(attr);
     obj->type = PLANE;
@@ -100,7 +100,7 @@ int getPlane(t_mrt *mrt, char **attr, int unique)
     checkvec3(mrt, obj->color, 0, 1);
     if (mrt->qcode)
         return (elog("Plane parsing fail", mrt->qcode));
-    addObject(mrt, obj);
+    add_object(mrt, obj);
     printf("Plane parsing completed\n");
     return (mrt->qcode);
 }
@@ -115,7 +115,7 @@ int getCylinder(t_mrt *mrt, char **attr, int unique)
     if (!obj)
         return (qCode(mrt, 1));
     obj->orig = getvec3(mrt, attr[1], 1);
-    obj->rot = getvec3(mrt, attr[2], 1);
+    obj->rot = vec3unit(getvec3(mrt, attr[2], 1));
     obj->radius = getdouble(attr[3]) / 2.0;
     obj->height = getdouble(attr[4]);
     obj->color = getvec3(mrt, attr[5], 255);
@@ -130,7 +130,7 @@ int getCylinder(t_mrt *mrt, char **attr, int unique)
     checkvec3(mrt, obj->color, 0, 1);
     if (mrt->qcode)
         return (elog("Sphere parsing fail", mrt->qcode));
-    addObject(mrt, obj);
+    add_object(mrt, obj);
     printf("Sphere parsing completed\n");
     return (mrt->qcode);
 }

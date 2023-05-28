@@ -17,32 +17,15 @@ int	free2(char **arr)
 	return (0);
 }
 
-int	freelist(t_list *list)
-{
-	t_list	*head;
-
-	head = list;
-	if (!head)
-		return (0);
-	while (head)
-	{
-		head = head->next;
-		free(list);
-		list = head;
-	}
-	list = 0;
-	return (0);
-}
-
 int	clean(t_mrt *mrt, int res)
 {
 	if (mrt->ambt)
-		freelist((t_list *)mrt->ambt);
+		freelista(mrt->ambt);
 	if (mrt->cam)
-		freelist((t_list *)mrt->cam);
+		freelistc(mrt->cam);
 	if (mrt->lght)
-		freelist((t_list *)mrt->lght);
+		freelistl(mrt->lght);
 	if (mrt->obj)
-		freelist((t_list *)mrt->obj);
+		freelisto(mrt->obj);
 	return (res);
 }

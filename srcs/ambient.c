@@ -18,9 +18,9 @@ int	add_ambient(t_mrt *mrt, t_ambient *node)
 }
 
 // get ambient
-int getAmbient(t_mrt *mrt, char **attr, int unique)
+int	getambient(t_mrt *mrt, char **attr, int unique)
 {
-    t_ambient *ambt;
+	t_ambient *ambt;
 
     if (mrt->ambt && (mrt->ambt->unique == 1 || unique == 1))
         return (elog("Ambient Duplicated", qCode(mrt, 1)));
